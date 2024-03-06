@@ -19,8 +19,8 @@ public abstract class BaseMemberEntity {
 
     @CreatedDate
     @Column(updatable = false) // 생성일은 수정 불가
-    private LocalDateTime create_time;
+    private LocalDateTime createDate;
 
     @LastModifiedDate
-    private LocalDateTime modified_time;
+    private LocalDateTime modifiedDate;
 }
