@@ -27,6 +27,8 @@ public class Student extends BaseMemberEntity {
     private String phone_number;
     private String school_name;
     private int grade; // TODO: 굳이 Long으로 하지 않아도 될 것 같음
+
+    @Enumerated(EnumType.STRING)
     private AttendanceStatus attendance_status;
 
     @Enumerated(EnumType.STRING)
