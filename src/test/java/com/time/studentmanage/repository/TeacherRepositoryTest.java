@@ -1,4 +1,4 @@
-package com.time.studentmanage;
+package com.time.studentmanage.repository;
 
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;

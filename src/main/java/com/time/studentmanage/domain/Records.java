@@ -6,23 +6,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter @Setter
-public class Records {
+@Getter
+@Setter
+public class Records extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
     private Long id;
 
     private String content;
-    private LocalDateTime createDate;
-    private LocalDateTime modifiedDate;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "teacher_id")
@@ -35,9 +34,28 @@ public class Records {
     @OneToMany(mappedBy = "records")
     private List<Answer> answerList = new ArrayList<>();
 
-    //===연관관계 편의 메서드===//
+    /**
+     * ===연관관계 편의 메서드===
+     */
     public void addTeacher(Teacher teacher) {
         this.teacher = teacher;
         teacher.getRecordsList().add(this);
+    }
+
+    public void addStudent(Student student) {
+        this.student = student;
+        student.getRecordsList().add(this);
+    }
+
+    /**
+     * 생성자 메서드
+     */
+    protected Records() {
+    }
+
+    public Records(Teacher teacher, Student student, String content) {
+        this.content = content;
+        this.teacher = teacher;
+        this.student = student;
     }
 }

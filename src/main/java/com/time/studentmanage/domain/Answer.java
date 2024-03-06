@@ -7,21 +7,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
-public class Answer {
+public class Answer extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long id;
 
     private String content;
-    private LocalDateTime createDate;
+
+    @Enumerated(EnumType.STRING)
+    private AnswerStatus status; // 비밀 댓글 유무: GENERAL, SECRET
 
     @OneToOne(fetch = LAZY)
     private Answer parentAnswer; // 부모 댓글
@@ -38,13 +39,33 @@ public class Answer {
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    @Enumerated(EnumType.STRING)
-    private AnswerStatus status; // 비밀 댓글 유무: GENERAL, SECRET
-
-
-    //===연관관계 편의 메서드===//
+    /**
+     * ===연관관계 편의 메서드===
+     */
     public void addRecords(Records records) {
         this.records = records;
         records.getAnswerList().add(this);
+    }
+
+    public void addTeacher(Teacher teacher) {
+        this.teacher = teacher;
+        teacher.getAnswerList().add(this);
+    }
+
+    public void addParent(Parent parent) {
+        this.parent = parent;
+        parent.getAnswerList().add(this);
+    }
+
+    /**
+     * 생성자 메서드
+     */
+    protected Answer() {
+    }
+
+    public Answer(Records records, String content, AnswerStatus status) {
+        this.content = content;
+        this.status = status;
+        this.records = records;
     }
 }
