@@ -73,4 +73,9 @@ public class Student extends BaseMemberEntity {
         this.classType = classType;
         this.address = address;
     }
+
+    //===연관관계 편의 메서드===//
+    public void addParent(Parent parent) {
+        parentList.add(parent);
+    }
 }
