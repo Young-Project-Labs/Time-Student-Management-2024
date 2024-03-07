@@ -1,17 +1,16 @@
-package com.time.studentmanage;
+package com.time.studentmanage.repository;
 
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.repository.TeacherRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @SpringBootTest
 class TeacherRepositoryTest {

@@ -1,6 +1,7 @@
 package com.time.studentmanage.domain.member;
 
 import com.time.studentmanage.domain.Address;
+import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
@@ -11,6 +12,8 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
@@ -45,6 +48,14 @@ public class Student extends BaseMemberEntity {
 
     @OneToMany(mappedBy = "student")
     private List<Parent> parentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "student")
+    private List<Records> recordsList = new ArrayList<>();
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+    
 
     protected Student() {
     }

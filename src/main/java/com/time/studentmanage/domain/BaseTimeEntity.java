@@ -1,4 +1,4 @@
-package com.time.studentmanage.domain.member;
+package com.time.studentmanage.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseMemberEntity {
+public abstract class BaseTimeEntity {
 
     @CreatedDate
     @Column(updatable = false) // 생성일은 수정 불가

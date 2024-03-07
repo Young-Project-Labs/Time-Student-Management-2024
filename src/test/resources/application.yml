@@ -6,7 +6,6 @@ spring:
     url: jdbc:h2:mem:test
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     properties:

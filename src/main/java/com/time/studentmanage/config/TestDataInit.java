@@ -1,13 +1,15 @@
-package com.time.studentmanage;
+package com.time.studentmanage.config;
 
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.repository.ParentRepository;
+import com.time.studentmanage.repository.StudentRepository;
+import com.time.studentmanage.repository.TeacherRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 public class TestDataInit {
