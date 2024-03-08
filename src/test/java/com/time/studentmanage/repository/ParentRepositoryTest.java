@@ -86,14 +86,15 @@ class ParentRepositoryTest {
         //given
         Parent parent = createParent();
         Parent parent2 = createParent();
+        Parent parent3 = createParent();
         Parent saveParent = parentRepository.save(parent);
         Parent saveParent2 = parentRepository.save(parent2);
+        Parent saveParent3 = parentRepository.save(parent3);
         //when
-        parentRepository.delete(saveParent2);
+        parentRepository.delete(saveParent);
 
         //then
-        Optional<Parent> findParent = parentRepository.findById(saveParent.getId());
-        assertThat(findParent.get().getId()).isEqualTo(saveParent.getId());
+        assertThat(parentRepository.findAll().size()).isEqualTo(3);
 
 
     }
