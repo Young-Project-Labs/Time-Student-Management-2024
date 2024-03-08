@@ -27,12 +27,12 @@ public class Student extends BaseMemberEntity {
     private String userId;
     private String password;
     private String name;
-    private String phone_number;
-    private String school_name;
-    private int grade; // TODO: 굳이 Long으로 하지 않아도 될 것 같음
+    private String phoneNumber;
+    private String schoolName;
+    private int grade;
 
     @Enumerated(EnumType.STRING)
-    private AttendanceStatus attendance_status;
+    private AttendanceStatus attendanceStatus;
 
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
@@ -60,14 +60,14 @@ public class Student extends BaseMemberEntity {
     protected Student() {
     }
 
-    public Student(String name, String userId, String password,String phone_number, String school_name, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendance_status) {
+    public Student(String name, String userId, String password,String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus) {
         this.name = name;
         this.userId = userId;
         this.password = password;
-        this.phone_number = phone_number;
-        this.school_name = school_name;
+        this.phoneNumber = phoneNumber;
+        this.schoolName = schoolName;
         this.grade = grade;
-        this.attendance_status = attendance_status;
+        this.attendanceStatus = attendanceStatus;
         this.memberType = memberType;
         this.gender = gender;
         this.classType = classType;
