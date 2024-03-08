@@ -6,6 +6,7 @@ import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Setter
+@DynamicUpdate
 public class Parent extends BaseMemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,7 @@ public class Parent extends BaseMemberEntity {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "student_id")
     private Student student;
 
