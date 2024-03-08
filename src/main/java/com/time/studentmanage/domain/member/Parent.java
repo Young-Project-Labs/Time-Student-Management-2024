@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -46,5 +47,11 @@ public class Parent extends BaseMemberEntity {
         this.phone_number = phone_number;
         this.memberType = memberType;
         this.gender = gender;
+    }
+
+    //===연관관계 편의 메서드===//
+    public void addStudent(Student student) {
+        this.student = student;
+        student.getParentList().add(this);
     }
 }

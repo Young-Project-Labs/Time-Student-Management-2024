@@ -37,7 +37,7 @@ public class Teacher extends BaseMemberEntity {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.REMOVE)
     private List<Records> recordsList = new ArrayList<>();
 
     @OneToMany(mappedBy = "teacher")
@@ -45,6 +45,11 @@ public class Teacher extends BaseMemberEntity {
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> studentList = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        student.setTeacher(this);
+        studentList.add(student);
+    }
 
     protected Teacher() {
     }

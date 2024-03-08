@@ -117,6 +117,5 @@ class RecordsRepositoryTest {
         assertThat(findAllRecordList.size()).isEqualTo(10);
         assertThat(findAllFilteredList.size()).isEqualTo(5);
         assertThat(findAllFilteredList.get(0).getContent()).isEqualTo("철수 피드백0");
-
     }
 }
