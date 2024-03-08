@@ -9,7 +9,7 @@ import com.time.studentmanage.domain.member.Teacher;
 
 public class TestUtil {
     public static Records createRecord(Teacher teacher, Student student) {
-        return new Records(teacher, student, "철수의 문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
+        return new Records(teacher, student, "문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
     }
 
     public static Student createStudent() {
@@ -27,7 +27,7 @@ public class TestUtil {
         Teacher teacher = createTeacher();
         Records record = createRecord(teacher, student);
 
-        Answer answer = new Answer(record, "첫 댓글입니다.", AnswerStatus.GENERAL);
+        Answer answer = new Answer(record, teacher, "첫 댓글입니다.", AnswerStatus.GENERAL);
         answer.addRecords(record);
         answer.addTeacher(teacher);
 
