@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -117,18 +118,5 @@ class RecordsRepositoryTest {
         assertThat(findAllFilteredList.size()).isEqualTo(5);
         assertThat(findAllFilteredList.get(0).getContent()).isEqualTo("철수 피드백0");
 
-    }
-    private Records createRecord(Teacher teacher, Student student) {
-        return new Records(teacher, student, "철수의 문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
-    }
-
-    private Student createStudent() {
-        Student student = new Student("철수", "cs@time.com", "1234", "010-1111-2222", "용호초등학교", ClassType.ELEMENTARY, 1, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "현대 아파트", "102-1201"), AttendanceStatus.Y);
-        return student;
-    }
-
-    private Teacher createTeacher() {
-        Teacher teacher = new Teacher("줄리아", "julia@time.com", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
-        return teacher;
     }
 }
