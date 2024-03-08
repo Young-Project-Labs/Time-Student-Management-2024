@@ -25,7 +25,7 @@ public class Teacher extends BaseMemberEntity {
     private String userId;
     private String password;
     private String name;
-    private String phone_number;
+    private String phoneNumber;
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -54,14 +54,19 @@ public class Teacher extends BaseMemberEntity {
     protected Teacher() {
     }
 
-    public Teacher(String name, String userId, String password, String phone_number, MemberType memberType, Position position, String email, GenderType gender) {
+    public Teacher(String name, String userId, String password, String phoneNumber, MemberType memberType, Position position, String email, GenderType gender) {
         this.name = name;
         this.userId = userId;
         this.password = password;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.position = position;
         this.memberType = memberType;
         this.gender = gender;
+    }
+
+    public void addStudent(Student student) {
+        student.setTeacher(this);
+        studentList.add(student);
     }
 }

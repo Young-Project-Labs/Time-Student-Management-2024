@@ -27,7 +27,7 @@ public class Answer extends BaseTimeEntity {
     @OneToOne(fetch = LAZY)
     private Answer parentAnswer; // 부모 댓글
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "record_id")
     private Records records;
 

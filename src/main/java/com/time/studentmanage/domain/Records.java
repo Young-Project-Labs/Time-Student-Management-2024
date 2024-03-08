@@ -5,6 +5,7 @@ import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Setter
+@DynamicUpdate // 변경 감지된 필드만 update 쿼리가 날아갈 수 있도록
 public class Records extends BaseTimeEntity {
 
     @Id
@@ -23,15 +25,15 @@ public class Records extends BaseTimeEntity {
 
     private String content;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @OneToMany(mappedBy = "records")
+    @OneToMany(mappedBy = "records", orphanRemoval = true)
     private List<Answer> answerList = new ArrayList<>();
 
     /**
