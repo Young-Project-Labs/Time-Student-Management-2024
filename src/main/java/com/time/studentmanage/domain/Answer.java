@@ -6,12 +6,17 @@ import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Setter
+@DynamicUpdate
 public class Answer extends BaseTimeEntity {
 
     @Id
@@ -22,10 +27,14 @@ public class Answer extends BaseTimeEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private AnswerStatus status; // 비밀 댓글 유무: GENERAL, SECRET
+    private AnswerStatus status; // GENERAL, SECRET, DELETED : 일반 댓글, 비밀 댓글, 삭제된 댓글
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "parent_answer_id")
     private Answer parentAnswer; // 부모 댓글
+
+    @OneToMany(mappedBy = "parentAnswer")
+    private List<Answer> childAnswerList = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "record_id")
@@ -57,15 +66,25 @@ public class Answer extends BaseTimeEntity {
         parent.getAnswerList().add(this);
     }
 
+    public void addParentAnswer(Answer answer) {
+        this.parentAnswer = answer;
+        parentAnswer.getChildAnswerList().add(this);
+    }
+
     /**
      * 생성자 메서드
      */
     protected Answer() {
     }
 
-    public Answer(Records records, String content, AnswerStatus status) {
+    public Answer(Records records, Teacher teacher, String content, AnswerStatus status) {
+        this.records = records;
+        this.teacher = teacher;
         this.content = content;
         this.status = status;
-        this.records = records;
+    }
+
+    public void deleteAnswer() {
+        this.status = AnswerStatus.DELETED;
     }
 }

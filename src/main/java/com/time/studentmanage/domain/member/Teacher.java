@@ -64,9 +64,4 @@ public class Teacher extends BaseMemberEntity {
         this.memberType = memberType;
         this.gender = gender;
     }
-
-    public void addStudent(Student student) {
-        student.setTeacher(this);
-        studentList.add(student);
-    }
 }
