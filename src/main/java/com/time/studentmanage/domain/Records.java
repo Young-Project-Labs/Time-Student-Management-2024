@@ -42,12 +42,11 @@ public class Records extends BaseTimeEntity {
      * 생성자 메서드
      */
     @Builder(toBuilder = true) // toBuilder로 수정이 가능하도록
-    public Records(Long id, String content, Teacher teacher, Student student, List<Answer> answerList) {
+    public Records(Long id, String content, Teacher teacher, Student student) {
         this.id = id;
         this.content = content;
         this.teacher = teacher;
         this.student = student;
-        this.answerList = answerList;
     }
 
     /**
