@@ -3,8 +3,10 @@ package com.time.studentmanage.domain;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate // 변경 감지된 필드만 update 쿼리가 날아갈 수 있도록
 public class Records extends BaseTimeEntity {
 
@@ -37,6 +39,18 @@ public class Records extends BaseTimeEntity {
     private List<Answer> answerList = new ArrayList<>();
 
     /**
+     * 생성자 메서드
+     */
+    @Builder(toBuilder = true) // toBuilder로 수정이 가능하도록
+    public Records(Long id, String content, Teacher teacher, Student student, List<Answer> answerList) {
+        this.id = id;
+        this.content = content;
+        this.teacher = teacher;
+        this.student = student;
+        this.answerList = answerList;
+    }
+
+    /**
      * ===연관관계 편의 메서드===
      */
     public void addTeacher(Teacher teacher) {
@@ -47,17 +61,5 @@ public class Records extends BaseTimeEntity {
     public void addStudent(Student student) {
         this.student = student;
         student.getRecordsList().add(this);
-    }
-
-    /**
-     * 생성자 메서드
-     */
-    protected Records() {
-    }
-
-    public Records(Teacher teacher, Student student, String content) {
-        this.content = content;
-        this.teacher = teacher;
-        this.student = student;
     }
 }

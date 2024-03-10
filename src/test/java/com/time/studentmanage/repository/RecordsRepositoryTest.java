@@ -62,7 +62,10 @@ class RecordsRepositoryTest {
         // when
         Records savedRecord = recordsRepository.save(records);
         Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
-        findRecord.setContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
+        findRecord.toBuilder()
+                .content("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.")
+                .build();
+//        findRecord.setContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
         recordsRepository.save(findRecord);
 
         //then
@@ -96,8 +99,15 @@ class RecordsRepositoryTest {
         Student student2 = new Student("노진구", "njk@time.com", "1234", "010-4444-5555", "용호중학교", ClassType.MIDDLE, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-456"), AttendanceStatus.Y);
 
         for (int i = 0; i < 5; i++) {
-            Records record = new Records(teacher, student, "철수 피드백" + i);
-            Records record2 = new Records(teacher, student2, "노진구 피드백" + i);
+//            Records record = new Records(teacher, student, "철수 피드백" + i);
+//            Records record2 = new Records(teacher, student2, "노진구 피드백" + i);
+            Records record = Records.builder()
+                    .teacher(teacher).student(student).content("철수 피드백" + i)
+                    .build();
+
+            Records record2 = Records.builder()
+                    .teacher(teacher).student(student2).content("노진구 피드백" + i)
+                    .build();
 
             record.addStudent(student);
             record.addTeacher(teacher);

@@ -9,7 +9,12 @@ import com.time.studentmanage.domain.member.Teacher;
 
 public class TestUtil {
     public static Records createRecord(Teacher teacher, Student student) {
-        return new Records(teacher, student, "문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
+//        return new Records(teacher, student, "문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
+        return Records.builder()
+                .teacher(teacher)
+                .student(student)
+                .content("문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.")
+                .build();
     }
 
     public static Student createStudent() {
