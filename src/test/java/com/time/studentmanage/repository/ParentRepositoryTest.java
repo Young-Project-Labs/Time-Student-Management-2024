@@ -65,19 +65,15 @@ class ParentRepositoryTest {
 
 
         //when
-        Optional<Parent> findParent = parentRepository.findById(saveParent.getId());
-        if (findParent.isPresent()) {
-            findParent.get().setName("이름을 수정합니다.");
-            parentRepository.flush();
-        } else {
-            log.error("회원을 찾을 수 없습니다.");
-        }
+        Parent findParent = parentRepository.findById(saveParent.getId()).get();
+        findParent.changeName("부모이름수정");
+        parentRepository.flush();
 
         //then
-        Optional<Parent> validationParent = parentRepository.findById(findParent.get().getId());
+        Parent validationParent = parentRepository.findById(findParent.getId()).get();
         //flush 후에 변경된 엔티티를 조회하여 이름이 맞는 지 검증.
-        assertThat(validationParent.get().getName()).isEqualTo(findParent.get().getName());
-        log.info("flush 후 수정 후 이름 ={}",validationParent.get().getName());
+        log.info("flush 후 수정 후 이름 ={}",validationParent.getName());
+        assertThat(validationParent.getName()).isEqualTo(findParent.getName());
 
     }
     @Order(3)
@@ -94,17 +90,29 @@ class ParentRepositoryTest {
         parentRepository.delete(saveParent);
 
         //then
-        assertThat(parentRepository.findAll().size()).isEqualTo(3);
+        assertThat(parentRepository.findAll().size()).isEqualTo(2);
 
 
     }
     // 부모 생성 메서드
     private Parent createParent() {
         //given
-        Student student1 = new Student("철수", "cs@time.com", "1234", "010-1111-2222", "용호초등학교", ClassType.ELEMENTARY, 1, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "현대 아파트", "102-1201"), AttendanceStatus.Y);
-        Parent parent = new Parent("철수엄마", "010-1234-4567", MemberType.PARENT, GenderType.FEMALE);
+        Student student = Student.builder()
+                .name("철수")
+                .userId("cs@time.com").password("1234")
+                .phoneNumber("010-1111-2222").schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY).grade(1)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+
+        Parent parent = Parent.builder()
+                .name("철수엄마").phoneNumber("010-1234-4567")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
         // 연관관계 메서드 사용
-        parent.addStudent(student1);
+        parent.addStudent(student);
         return parent;
     }
 
