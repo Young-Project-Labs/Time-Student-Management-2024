@@ -34,10 +34,26 @@ public class TestDataInit {
 
     @PostConstruct
     public void initTeacher() {
-        Teacher teacher1 = new Teacher("대박샘", "pjj@time.com", "1234", "010-3434-5678", MemberType.TEACHER, Position.CHIEF, "pjj@time.com", GenderType.MALE);
-        Teacher teacher2 = new Teacher("줄리아", "julia@time.com", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
-        Teacher teacher3 = new Teacher("안샘", "ahn@time.com", "1234", "010-4545-2342", MemberType.TEACHER, Position.TEACHER, "ahn@time.com", GenderType.MALE);
-        Teacher teacher4 = new Teacher("소피아", "sp@time.com", "1234", "010-1414-5515", MemberType.TEACHER, Position.TEACHER, "sp@time.com", GenderType.FEMALE);
+        Teacher teacher1 = Teacher.builder()
+                .name("대박샘").userId("pjj@time.com").password("1234")
+                .email("pjj@time.com").phoneNumber("010-3434-5678")
+                .memberType(MemberType.TEACHER).position(Position.CHIEF).gender(GenderType.MALE)
+                .build();
+        Teacher teacher2 = Teacher.builder()
+                .name("줄리아").userId("julia@time.com").password("1234")
+                .email("julia@time.com").phoneNumber("010-1212-3456")
+                .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.FEMALE)
+                .build();
+        Teacher teacher3 = Teacher.builder()
+                .name("안샘").userId("ahn@time.com").password("1234")
+                .email("ahn@time.com").phoneNumber("010-4545-2342")
+                .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.MALE)
+                .build();
+        Teacher teacher4 = Teacher.builder()
+                .name("소피아").userId("sp@time.com").password("1234")
+                .email("sp@time.com").phoneNumber("010-1414-5515")
+                .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.FEMALE)
+                .build();
         teacherRepository.save(teacher1);
         teacherRepository.save(teacher2);
         teacherRepository.save(teacher3);

@@ -4,8 +4,10 @@ import com.time.studentmanage.domain.enums.AnswerStatus;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class Answer extends BaseTimeEntity {
 
@@ -49,6 +51,17 @@ public class Answer extends BaseTimeEntity {
     private Parent parent;
 
     /**
+     * 생성자 메서드
+     */
+    @Builder
+    public Answer(Records records, Teacher teacher, String content, AnswerStatus status) {
+        this.records = records;
+        this.teacher = teacher;
+        this.content = content;
+        this.status = status;
+    }
+
+    /**
      * ===연관관계 편의 메서드===
      */
     public void addRecords(Records records) {
@@ -69,19 +82,6 @@ public class Answer extends BaseTimeEntity {
     public void addParentAnswer(Answer answer) {
         this.parentAnswer = answer;
         parentAnswer.getChildAnswerList().add(this);
-    }
-
-    /**
-     * 생성자 메서드
-     */
-    protected Answer() {
-    }
-
-    public Answer(Records records, Teacher teacher, String content, AnswerStatus status) {
-        this.records = records;
-        this.teacher = teacher;
-        this.content = content;
-        this.status = status;
     }
 
     public void deleteAnswer() {
