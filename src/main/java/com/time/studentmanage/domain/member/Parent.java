@@ -4,8 +4,7 @@ import com.time.studentmanage.domain.Answer;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class Parent extends BaseMemberEntity {
     @Id
@@ -26,7 +25,7 @@ public class Parent extends BaseMemberEntity {
     private Long id;
 
     private String name;
-    private String phone_number;
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
@@ -41,19 +40,32 @@ public class Parent extends BaseMemberEntity {
     @OneToMany(mappedBy = "parent")
     private List<Answer> answerList = new ArrayList<>();
 
-    protected Parent() {
-    }
 
-    public Parent(String name, String phone_number, MemberType memberType, GenderType gender) {
+    @Builder
+    public Parent(String name, String phoneNumber, MemberType memberType, GenderType gender, Student student) {
         this.name = name;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.memberType = memberType;
         this.gender = gender;
+        this.student = student;
     }
 
     //===연관관계 편의 메서드===//
     public void addStudent(Student student) {
         this.student = student;
         student.getParentList().add(this);
+    }
+
+    //=== 수정 메서드===//
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeGender(GenderType gender) {
+        this.gender = gender;
     }
 }
