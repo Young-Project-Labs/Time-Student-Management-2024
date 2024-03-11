@@ -47,10 +47,6 @@ public class Teacher extends BaseMemberEntity {
     @OneToMany(mappedBy = "teacher")
     private List<Student> studentList = new ArrayList<>();
 
-    public void addStudent(Student student) {
-        student.setTeacher(this);
-        studentList.add(student);
-    }
 
     @Builder
     public Teacher(String name, String userId, String password, String phoneNumber, MemberType memberType, Position position, String email, GenderType gender) {

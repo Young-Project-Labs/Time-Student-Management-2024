@@ -220,7 +220,15 @@ class AnswerRepositoryTest {
         answerRepository.save(answer);
 
         Thread.sleep(1000); // 2초 늦게 저장
-        Student student2 = new Student("노진구", "njk@time.com", "1234", "010-4444-5555", "용호중학교", ClassType.MIDDLE, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-456"), AttendanceStatus.Y);
+        Student student2 = Student.builder()
+                .name("노진구")
+                .userId("njk@time.com").password("1234")
+                .phoneNumber("010-4444-5555").schoolName("용호중학교")
+                .classType(ClassType.MIDDLE).grade(3)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-342"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
         Records record2 = createRecord(teacher, student2);
         Answer answer2 = new Answer(record2, teacher, "2번째 피드백 댓글 입니다.", AnswerStatus.GENERAL);
         Answer secondReply = answerRepository.save(answer2);

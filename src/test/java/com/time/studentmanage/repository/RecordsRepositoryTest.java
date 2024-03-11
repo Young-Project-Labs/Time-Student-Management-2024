@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository;
 
+import com.time.studentmanage.TestUtil;
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.enums.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -104,7 +106,15 @@ class RecordsRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Student student2 = new Student("노진구", "njk@time.com", "1234", "010-4444-5555", "용호중학교", ClassType.MIDDLE, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-456"), AttendanceStatus.Y);
+        Student student2 = Student.builder()
+                .name("노진구")
+                .userId("njk@time.com").password("1234")
+                .phoneNumber("010-4444-5555").schoolName("용호중학교")
+                .classType(ClassType.MIDDLE).grade(3)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-342"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
 
         for (int i = 0; i < 5; i++) {
             Records record = Records.builder()
