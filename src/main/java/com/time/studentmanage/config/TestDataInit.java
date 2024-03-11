@@ -20,11 +20,59 @@ public class TestDataInit {
 
     @PostConstruct
     public void initStudent() {
-        Student student1 = new Student("철수", "cs@time.com", "1234", "010-1111-2222", "용호초등학교", ClassType.ELEMENTARY, 1, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "현대 아파트", "102-1201"), AttendanceStatus.Y);
-        Student student2 = new Student("진진진", "jjj@time.com", "1234", "010-2222-3333", "용호초등학교", ClassType.ELEMENTARY, 6, MemberType.STUDENT, GenderType.FEMALE, new Address("반림동", "반림 아파트", "111-123"), AttendanceStatus.Y);
-        Student student3 = new Student("노진구", "njk@time.com", "1234", "010-4444-5555", "용호중학교", ClassType.MIDDLE, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-456"), AttendanceStatus.Y);
-        Student student4 = new Student("짱구", "jg@time.com", "1234", "010-6666-7777", "반림중학교", ClassType.MIDDLE, 2, MemberType.STUDENT, GenderType.FEMALE, new Address("반림동", "반림 아파트", "111-345"), AttendanceStatus.Y);
-        Student student5 = new Student("뚱이", "star@time.com", "1234", "010-8888-9999", "용호고등학교", ClassType.HIGH, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-789"), AttendanceStatus.Y);
+        Student student1 = Student.builder()
+                .name("철수")
+                .userId("cs@time.com").password("1234")
+                .phoneNumber("010-1111-2222").schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY).grade(1)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+
+        Student student2 = Student.builder()
+                .name("진진진")
+                .userId("jjj@time.com")
+                .password("1234")
+                .phoneNumber("010-2222-3333")
+                .schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY)
+                .grade(6)
+                .memberType(MemberType.STUDENT)
+                .gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "111-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+
+        Student student3 = Student.builder()
+                .name("노진구")
+                .userId("njk@time.com").password("1234")
+                .phoneNumber("010-4444-5555").schoolName("용호중학교")
+                .classType(ClassType.MIDDLE).grade(3)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-342"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+
+        Student student4 = Student.builder()
+                .name("짱구")
+                .userId("jg@time.com").password("1234")
+                .phoneNumber("010-1111-2222").schoolName("반림중학교")
+                .classType(ClassType.MIDDLE).grade(2)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+
+        Student student5 = Student.builder()
+                .name("뚱이")
+                .userId("star@time.com").password("1234")
+                .phoneNumber("010-1111-2222").schoolName("용호고등학교")
+                .classType(ClassType.HIGH).grade(3)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1111"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
         studentRepository.save(student1);
         studentRepository.save(student2);
         studentRepository.save(student3);
@@ -63,14 +111,42 @@ public class TestDataInit {
 
     @PostConstruct
     public void initParent() {
-        Parent parent = new Parent("철수엄마", "010-1234-4567", MemberType.PARENT, GenderType.FEMALE);
-        Parent parent2 = new Parent("진진진엄마", "010-1234-1224", MemberType.PARENT, GenderType.FEMALE);
-        Parent parent3 = new Parent("진진진아빠", "010-1234-1234", MemberType.PARENT, GenderType.MALE);
-        Parent parent4 = new Parent("노진구엄마", "010-4567-1234", MemberType.PARENT, GenderType.FEMALE);
-        Parent parent5 = new Parent("짱구엄마", "010-1234-4234", MemberType.PARENT, GenderType.FEMALE);
-        Parent parent6 = new Parent("뚱이엄마", "010-1234-4525", MemberType.PARENT, GenderType.FEMALE);
-        Parent parent7 = new Parent("뚱이아빠", "010-1234-4125", MemberType.PARENT, GenderType.MALE);
-        parentRepository.save(parent);
+        Parent parent1 = Parent.builder()
+                .name("철수엄마").phoneNumber("010-1234-4567")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
+
+        Parent parent2 = Parent.builder()
+                .name("진진진엄마").phoneNumber("010-1234-1224")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
+
+        Parent parent3 = Parent.builder()
+                .name("진진진아빠").phoneNumber("010-1234-1234")
+                .memberType(MemberType.PARENT).gender(GenderType.MALE)
+                .build();
+
+        Parent parent4 = Parent.builder()
+                .name("노진구엄마").phoneNumber("010-4567-1234")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
+
+        Parent parent5 = Parent.builder()
+                .name("짱구엄마").phoneNumber("010-1234-4234")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
+
+        Parent parent6 = Parent.builder()
+                .name("뚱이엄마").phoneNumber("010-1234-4525")
+                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
+                .build();
+
+        Parent parent7 = Parent.builder()
+                .name("뚱이아빠").phoneNumber("010-1234-4125")
+                .memberType(MemberType.PARENT).gender(GenderType.MALE)
+                .build();
+
+        parentRepository.save(parent1);
         parentRepository.save(parent2);
         parentRepository.save(parent3);
         parentRepository.save(parent4);
