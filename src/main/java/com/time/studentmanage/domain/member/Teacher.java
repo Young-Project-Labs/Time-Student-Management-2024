@@ -6,15 +6,16 @@ import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static lombok.AccessLevel.*;
+
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = PROTECTED)
 public class Teacher extends BaseMemberEntity {
 
     @Id
@@ -51,9 +52,7 @@ public class Teacher extends BaseMemberEntity {
         studentList.add(student);
     }
 
-    protected Teacher() {
-    }
-
+    @Builder
     public Teacher(String name, String userId, String password, String phoneNumber, MemberType memberType, Position position, String email, GenderType gender) {
         this.name = name;
         this.userId = userId;

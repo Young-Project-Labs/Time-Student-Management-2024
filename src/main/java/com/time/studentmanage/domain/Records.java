@@ -3,18 +3,18 @@ package com.time.studentmanage.domain;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = PROTECTED)
 @DynamicUpdate // 변경 감지된 필드만 update 쿼리가 날아갈 수 있도록
 public class Records extends BaseTimeEntity {
 
@@ -37,6 +37,16 @@ public class Records extends BaseTimeEntity {
     private List<Answer> answerList = new ArrayList<>();
 
     /**
+     * 생성자 메서드
+     */
+    @Builder
+    public Records(String content, Teacher teacher, Student student) {
+        this.content = content;
+        this.teacher = teacher;
+        this.student = student;
+    }
+
+    /**
      * ===연관관계 편의 메서드===
      */
     public void addTeacher(Teacher teacher) {
@@ -49,15 +59,7 @@ public class Records extends BaseTimeEntity {
         student.getRecordsList().add(this);
     }
 
-    /**
-     * 생성자 메서드
-     */
-    protected Records() {
-    }
-
-    public Records(Teacher teacher, Student student, String content) {
+    public void changeContent(String content) {
         this.content = content;
-        this.teacher = teacher;
-        this.student = student;
     }
 }

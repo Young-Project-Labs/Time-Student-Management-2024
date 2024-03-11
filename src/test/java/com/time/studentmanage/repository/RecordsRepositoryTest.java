@@ -67,12 +67,16 @@ class RecordsRepositoryTest {
 
         // when
         Records savedRecord = recordsRepository.save(records);
+        log.info("savedRecord={}", savedRecord);
         Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
-        findRecord.setContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
-        recordsRepository.save(findRecord);
+        log.info("findRecord={}", findRecord);
+
+        findRecord.changeContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
+        recordsRepository.flush();
 
         //then
         Records updatedRecord = recordsRepository.findById(findRecord.getId()).get();
+        log.info("updatedRecord={}", updatedRecord);
         assertThat(updatedRecord.getContent()).isEqualTo(findRecord.getContent());
     }
 
@@ -93,9 +97,35 @@ class RecordsRepositoryTest {
         assertThat(recordsRepository.findAll().size()).isEqualTo(0);
     }
 
-    private Records createRecord(Teacher teacher, Student student) {
-        return new Records(teacher, student, "철수의 문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.");
+
+    @Test
+    @Order(4)
+    void 특정_학생_이름과_관련된_모든_피드백_조회() {
+        //given
+        Student student = createStudent();
+        Teacher teacher = createTeacher();
+        Student student2 = new Student("노진구", "njk@time.com", "1234", "010-4444-5555", "용호중학교", ClassType.MIDDLE, 3, MemberType.STUDENT, GenderType.MALE, new Address("반림동", "반림 아파트", "111-456"), AttendanceStatus.Y);
+
+        for (int i = 0; i < 5; i++) {
+            Records record = Records.builder()
+                    .teacher(teacher).student(student).content("철수 피드백" + i)
+                    .build();
+
+            Records record2 = Records.builder()
+                    .teacher(teacher).student(student2).content("노진구 피드백" + i)
+                    .build();
+
+            record.addStudent(student);
+            record.addTeacher(teacher);
+            record2.addStudent(student2);
+            record2.addTeacher(teacher);
+
+            recordsRepository.save(record);
+            recordsRepository.save(record2);
+        }
+
     }
+
 
     private Student createStudent() {
         Student student = Student.builder()
