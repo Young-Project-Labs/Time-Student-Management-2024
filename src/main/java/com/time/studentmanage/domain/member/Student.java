@@ -74,10 +74,12 @@ public class Student extends BaseMemberEntity {
     }
 
     //===연관관계 편의 메서드===//
-    public void addParent(Parent parent) {
-        parent.toBuilder().student(this);
-        parentList.add(parent);
+    public void addTeacher(Teacher teacher) {
+        this.teacher = teacher;
+        teacher.getStudentList().add(this);
     }
+
+
 
     //수정 메서드
     public void changeName(String name) {
