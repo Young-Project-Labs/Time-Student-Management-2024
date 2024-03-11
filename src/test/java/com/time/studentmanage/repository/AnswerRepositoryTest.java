@@ -54,10 +54,11 @@ class AnswerRepositoryTest {
         Answer findAnswer = answerRepository.findById(savedAnswer.getId()).get();
 
         //when
-        findAnswer.setContent("수정된 댓글 입니다.");
-        Answer updatedAnswer = answerRepository.save(findAnswer);
+        findAnswer.changeAnswer("수정된 댓글 입니다.");
+        answerRepository.flush();
 
         //then
+        Answer updatedAnswer = answerRepository.findById(findAnswer.getId()).get();
         assertThat(updatedAnswer.getContent()).isEqualTo(findAnswer.getContent());
     }
 
@@ -72,6 +73,7 @@ class AnswerRepositoryTest {
         //when
         findAnswer.deleteAnswer();
 //        answerRepository.delete(findAnswer); // 진짜 삭제 x -> 삭제 처리만 하기
+        answerRepository.flush();
 
         //then
         Answer deletedAnswer = answerRepository.findById(findAnswer.getId()).get();
@@ -124,8 +126,10 @@ class AnswerRepositoryTest {
 
         //when
         Answer findReply = answerRepository.findById(savedReply.getId()).get();
-        findReply.setContent("수정된 대댓글입니다.");
-        Answer updatedReply = answerRepository.save(findReply);
+        findReply.changeAnswer("수정된 대댓글입니다.");
+        answerRepository.flush();
+
+        Answer updatedReply = answerRepository.findById(findReply.getId()).get();
 
         //then
         assertThat(answerRepository.findById(updatedReply.getId()).get().getContent()).isEqualTo(findReply.getContent());
@@ -172,10 +176,13 @@ class AnswerRepositoryTest {
         Answer secondReplyAnswer = saveSecondChildReply(record, teacher, firstChildReply);
 
         //when
-        firstChildReply.setContent("수정된 부모 대댓글");
+        firstChildReply.changeAnswer("수정된 부모 대댓글");
+        answerRepository.flush();
 
+        // then
         Answer findParentAnswer = answerRepository.findById(savedParentAnswer.getId()).get();
         assertThat(findParentAnswer.getChildAnswerList().get(0).getContent()).isEqualTo(firstChildReply.getContent());
+
         Answer findReply = answerRepository.findById(secondReplyAnswer.getId()).get();
         assertThat(findReply.getParentAnswer().getContent()).isEqualTo(firstChildReply.getContent());
     }

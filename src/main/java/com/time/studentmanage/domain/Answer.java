@@ -87,4 +87,8 @@ public class Answer extends BaseTimeEntity {
     public void deleteAnswer() {
         this.status = AnswerStatus.DELETED;
     }
+
+    public void changeAnswer(String content) {
+        this.content = content;
+    }
 }
