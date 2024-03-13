@@ -4,6 +4,7 @@ import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.dto.RecordSaveReqDTO;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.RecordsRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -76,6 +78,77 @@ class RecordServiceTest {
         assertThat(recordId).isEqualTo(fakeId);
         assertThat(records.getStudent().getName()).isEqualTo("철수");
         assertThat(records.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    void 학생_정보가_없을_때_피드백_저장_실패_테스트() {
+        //given
+        Long fakeId = 1L;
+        String content = "피드백 내용입니다.";
+
+        Teacher teacher = createTeacher();
+        ReflectionTestUtils.setField(teacher, "id", fakeId);
+
+        // stub 1
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        // stub 2
+        Records records = Records.builder()
+                .teacher(teacher)
+                .student(null)
+                .content(content)
+                .build();
+        ReflectionTestUtils.setField(records, "id", fakeId);
+
+//        when(recordsRepository.save(any())).thenReturn(records); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
+
+        // 1. 저장 요청
+        RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
+                .studentId(fakeId)
+                .teacherId(fakeId)
+                .content(content)
+                .build();
+
+        //when
+        //then
+        assertThatThrownBy(() -> recordService.saveFeedback(recordSaveReqDTO))
+                .isInstanceOf(DataNotFoundException.class);
+
+    }
+
+    @Test
+    void 선생님_정보가_없을_때_피드백_저장_실패_테스트() {
+        //given
+        Long fakeId = 1L;
+        String content = "피드백 내용입니다.";
+
+        Student student = createStudent();
+        ReflectionTestUtils.setField(student, "id", fakeId);
+
+        // stub 1
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // stub 2
+        Records records = Records.builder()
+                .teacher(null)
+                .student(student)
+                .content(content)
+                .build();
+        ReflectionTestUtils.setField(records, "id", fakeId);
+
+        // 1. 저장 요청
+        RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
+                .studentId(fakeId)
+                .teacherId(fakeId)
+                .content(content)
+                .build();
+
+        //when
+        //then
+        assertThatThrownBy(() -> recordService.saveFeedback(recordSaveReqDTO))
+                .isInstanceOf(DataNotFoundException.class);
 
     }
 

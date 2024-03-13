@@ -4,6 +4,7 @@ import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.dto.RecordSaveReqDTO;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.RecordsRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
@@ -36,11 +37,11 @@ public class RecordService {
         }
 
         if (studentPS == null) {
-            // 학생이 없어요
+            throw new DataNotFoundException("존재하지 않는 학생 정보입니다.");
         }
 
         if (teacherPS == null) {
-            // 선생이 없어요
+            throw new DataNotFoundException("존재하지 않는 선생님 정보입니다.");
         }
 
         Records record = recordSaveReqDTO.toEntity(teacherPS, studentPS, recordSaveReqDTO.getContent());

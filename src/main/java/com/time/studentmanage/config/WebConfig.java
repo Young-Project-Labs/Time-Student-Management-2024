@@ -1,9 +1,11 @@
 package com.time.studentmanage.config;
 
 import com.time.studentmanage.interceptor.LogInterceptor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@Component
 public class WebConfig implements WebMvcConfigurer {
 
     /**
