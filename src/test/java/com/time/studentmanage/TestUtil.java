@@ -7,6 +7,8 @@ import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.dto.EnrollReqDto;
+gitimport com.time.studentmanage.dto.EnrollReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,5 +140,22 @@ public class TestUtil {
         answer.addTeacher(teacher);
 
         return answer;
+    }
+
+    public static EnrollReqDto createEnrollReqDto() {
+        EnrollReqDto enrollReqDto = EnrollReqDto.builder()
+                .name("철수")
+                .userId("cs@time.com")
+                .password("1234")
+                .phoneNumber("010-1111-2222")
+                .schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY)
+                .grade(1)
+                .memberType(MemberType.STUDENT)
+                .gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+        return enrollReqDto;
     }
 }
