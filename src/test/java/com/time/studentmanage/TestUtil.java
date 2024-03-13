@@ -8,7 +8,6 @@ import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.dto.EnrollReqDto;
-gitimport com.time.studentmanage.dto.EnrollReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
