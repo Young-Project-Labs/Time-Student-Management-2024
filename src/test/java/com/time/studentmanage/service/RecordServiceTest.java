@@ -92,13 +92,13 @@ class RecordServiceTest {
 
         // stub
         Records record = createRecord(teacher, student);
-        log.info("before={}", record.getContent());
+        log.info("before save record={}", record.getContent());
         ReflectionTestUtils.setField(record, "id", fakeId);
 
         when(recordsRepository.findById(anyLong())).thenReturn(Optional.of(record));
 
         recordService.modifyContent(record.getId(), content);
-        log.info("after={}", record.getContent());
+        log.info("after save record={}", record.getContent());
 
         assertThat(record.getContent()).isEqualTo(content);
     }
