@@ -1,9 +1,12 @@
 package com.time.studentmanage.domain;
 
+import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -36,14 +39,18 @@ public class Records extends BaseTimeEntity {
     @OneToMany(mappedBy = "records", orphanRemoval = true)
     private List<Answer> answerList = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private RecordStatus status;
+
     /**
      * 생성자 메서드
      */
     @Builder
-    public Records(String content, Teacher teacher, Student student) {
+    public Records(String content, Teacher teacher, Student student, RecordStatus status) {
         this.content = content;
         this.teacher = teacher;
         this.student = student;
+        this.status = status;
     }
 
     /**
@@ -61,5 +68,9 @@ public class Records extends BaseTimeEntity {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeRecordStatus(RecordStatus status) {
+        this.status = status;
     }
 }
