@@ -7,7 +7,8 @@ import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import com.time.studentmanage.dto.EnrollReqDto;
+import com.time.studentmanage.dto.StudentSaveReqDto;
+import com.time.studentmanage.dto.StudentUpdateReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,8 +142,8 @@ public class TestUtil {
         return answer;
     }
 
-    public static EnrollReqDto createEnrollReqDto() {
-        EnrollReqDto enrollReqDto = EnrollReqDto.builder()
+    public static StudentSaveReqDto createStudentDto() {
+        StudentSaveReqDto saveReqDto = StudentSaveReqDto.builder()
                 .name("철수")
                 .userId("cs@time.com")
                 .password("1234")
@@ -155,6 +156,24 @@ public class TestUtil {
                 .address(new Address("반림동", "현대 아파트", "102-1201"))
                 .attendanceStatus(AttendanceStatus.Y)
                 .build();
-        return enrollReqDto;
+        return saveReqDto;
+    }
+
+    public static StudentUpdateReqDto updateStudentDto() {
+        StudentUpdateReqDto updateReqDto = StudentUpdateReqDto.builder()
+                .id(1L)
+                .name("수정 엔티티")
+                .userId("update@time.com")
+                .password("1234")
+                .phoneNumber("010-1111-2222")
+                .schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY)
+                .grade(1)
+                .memberType(MemberType.STUDENT)
+                .gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+        return updateReqDto;
     }
 }
