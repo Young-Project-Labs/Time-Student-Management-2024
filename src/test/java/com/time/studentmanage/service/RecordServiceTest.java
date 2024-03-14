@@ -2,6 +2,7 @@ package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.dto.RecordSaveReqDTO;
+import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
@@ -13,9 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.time.studentmanage.TestUtil.*;
@@ -72,7 +75,7 @@ class RecordServiceTest {
                 .build();
 
         //when
-        Long recordId = recordService.saveFeedback(recordSaveReqDTO);
+        Long recordId = recordService.saveRecord(recordSaveReqDTO);
 
         //then
         assertThat(recordId).isEqualTo(fakeId);
@@ -112,7 +115,7 @@ class RecordServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> recordService.saveFeedback(recordSaveReqDTO))
+        assertThatThrownBy(() -> recordService.saveRecord(recordSaveReqDTO))
                 .isInstanceOf(DataNotFoundException.class);
 
     }
@@ -147,7 +150,7 @@ class RecordServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> recordService.saveFeedback(recordSaveReqDTO))
+        assertThatThrownBy(() -> recordService.saveRecord(recordSaveReqDTO))
                 .isInstanceOf(DataNotFoundException.class);
 
     }
@@ -176,4 +179,113 @@ class RecordServiceTest {
         assertThat(record.getContent()).isEqualTo(content);
     }
 
+    @Test
+    void 피드백_수정_실패_로직() {
+        //given
+        Long fakeId = 1L;
+        String content = "수정된 피드백 입니다.";
+
+        // stub
+        Records record = Records.builder()
+                .content(content)
+                .build();
+        ReflectionTestUtils.setField(record, "id", fakeId);
+
+        when(recordsRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> recordService.modifyContent(record.getId(), content))
+                .isInstanceOf(DataNotFoundException.class);
+    }
+
+    @Test
+    void 피드백_삭제_테스트() {
+        //given
+        Long fakeId = 1L;
+        String content = "수정된 피드백 입니다.";
+
+        // stub
+        Records record = Records.builder()
+                .content(content)
+                .status(RecordStatus.PUBLISHED)
+                .build();
+
+        ReflectionTestUtils.setField(record, "id", fakeId);
+
+        when(recordsRepository.findById(anyLong())).thenReturn(Optional.of(record));
+
+        //when
+        recordService.deleteRecord(record.getId());
+
+        //then
+        assertThat(record.getStatus()).isEqualTo(RecordStatus.DELETED);
+    }
+
+    @Test
+    void 특정_학생_아이디와_관련된_모든_피드백_조회() {
+        // given
+        Long fakeId = 1L;
+
+        Student student = Student.builder()
+                .name("철수")
+                .build();
+        ReflectionTestUtils.setField(student, "id", fakeId);
+
+        // when
+        Records record1 = Records.builder()
+                .student(student)
+                .content("피드백")
+                .status(RecordStatus.PUBLISHED)
+                .build();
+
+        Records record2 = Records.builder()
+                .student(student)
+                .content("삭제된 피드백")
+                .status(RecordStatus.DELETED)
+                .build();
+
+        ReflectionTestUtils.setField(record1, "id", fakeId);
+        ReflectionTestUtils.setField(record2, "id", fakeId + 1L);
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(recordsRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student)).thenReturn(List.of(record1));
+
+        // then
+        assertThat(recordService.getStudentList(student.getId()).size()).isEqualTo(1);
+    }
+
+    @Test
+    void 선생님이_작성한_모든_피드백_최신순으로_조회() throws InterruptedException {
+        //given
+        Long fakeId = 1L;
+
+        Teacher teacher = Teacher.builder()
+                .name("선생님")
+                .build();
+        ReflectionTestUtils.setField(teacher, "id", fakeId);
+
+        Records oldRecord = Records.builder()
+                .teacher(teacher)
+                .content("Old 피드백")
+                .build();
+
+        Thread.sleep(2000); // 2초 뒤 저장
+
+        Records newRecord = Records.builder()
+                .teacher(teacher)
+                .content("New 피드백")
+                .build();
+
+        ReflectionTestUtils.setField(oldRecord, "id", fakeId);
+        ReflectionTestUtils.setField(newRecord, "id", fakeId + 1L);
+
+        //when
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        when(recordsRepository.findAllByTeacher(any())).thenReturn(List.of(newRecord, oldRecord));
+
+        //then
+        List<Records> result = recordService.getAllWrittenList(teacher.getId());
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getContent()).isEqualTo(newRecord.getContent());
+        assertThat(result.get(1).getContent()).isEqualTo(oldRecord.getContent());
+    }
 }

@@ -92,66 +92,14 @@ class RecordsRepositoryTest {
 
         //when
         Records savedRecord = recordsRepository.save(record);
-        recordsRepository.delete(savedRecord);
+        Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
+        findRecord.changeRecordStatus(RecordStatus.DELETED);
+
+        recordsRepository.flush();
 
         //then
-        assertThat(recordsRepository.findById(savedRecord.getId())).isEqualTo(Optional.empty());
-        assertThat(recordsRepository.findAll().size()).isEqualTo(0);
-    }
-
-
-    @Test
-    @Order(4)
-    void 특정_학생_이름과_관련된_모든_피드백_조회() {
-        //given
-        Student student = createStudent();
-        Teacher teacher = createTeacher();
-        Student student2 = Student.builder()
-                .name("노진구")
-                .userId("njk@time.com").password("1234")
-                .phoneNumber("010-4444-5555").schoolName("용호중학교")
-                .classType(ClassType.MIDDLE).grade(3)
-                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
-                .address(new Address("반림동", "현대 아파트", "102-342"))
-                .attendanceStatus(AttendanceStatus.Y)
-                .build();
-
-        for (int i = 0; i < 5; i++) {
-            Records record = Records.builder()
-                    .teacher(teacher).student(student).content("철수 피드백" + i)
-                    .build();
-
-            Records record2 = Records.builder()
-                    .teacher(teacher).student(student2).content("노진구 피드백" + i)
-                    .build();
-
-            record.addStudent(student);
-            record.addTeacher(teacher);
-            record2.addStudent(student2);
-            record2.addTeacher(teacher);
-
-            recordsRepository.save(record);
-            recordsRepository.save(record2);
-        }
-
-    }
-
-
-    private Student createStudent() {
-        Student student = Student.builder()
-                .name("철수")
-                .userId("cs@time.com").password("1234")
-                .phoneNumber("010-1111-2222").schoolName("용호초등학교")
-                .classType(ClassType.ELEMENTARY).grade(1)
-                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
-                .address(new Address("반림동", "현대 아파트", "102-1201"))
-                .attendanceStatus(AttendanceStatus.Y)
-                .build();
-        return student;
-    }
-
-    private Teacher createTeacher() {
-        Teacher teacher = new Teacher("줄리아", "julia@time.com", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
-        return teacher;
+        Records updatedRecord = recordsRepository.findById(findRecord.getId()).get();
+        assertThat(updatedRecord.getStatus()).isEqualTo(RecordStatus.DELETED);
+        assertThat(recordsRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student).size()).isEqualTo(0);
     }
 }
