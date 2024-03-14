@@ -2,7 +2,7 @@ package com.time.studentmanage;
 
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Answer;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestUtil {
-    public static Records createRecord(Teacher teacher, Student student) {
-        return Records.builder()
+    public static Record createRecord(Teacher teacher, Student student) {
+        return Record.builder()
                 .teacher(teacher)
                 .student(student)
                 .content("문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.")
@@ -132,10 +132,10 @@ public class TestUtil {
     public static Answer createOneAnswer() {
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         Answer answer = new Answer(record, teacher, "첫 댓글입니다.", AnswerStatus.GENERAL);
-        answer.addRecords(record);
+        answer.addRecord(record);
         answer.addTeacher(teacher);
 
         return answer;

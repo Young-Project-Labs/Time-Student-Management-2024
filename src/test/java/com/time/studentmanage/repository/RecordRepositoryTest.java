@@ -1,8 +1,7 @@
 package com.time.studentmanage.repository;
 
-import com.time.studentmanage.TestUtil;
 import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class RecordsRepositoryTest {
+class RecordRepositoryTest {
 
     @Autowired
-    RecordsRepository recordsRepository;
+    RecordRepository recordRepository;
 
     @Test
     @Transactional(readOnly = true)
@@ -47,10 +44,10 @@ class RecordsRepositoryTest {
         Teacher t = new Teacher("줄리아", "julia@time.com", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
 
         // when
-        Records record = createRecord(t, s);
+        Record record = createRecord(t, s);
 
-        Records savedRecord = recordsRepository.save(record);
-        Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
+        Record savedRecord = recordRepository.save(record);
+        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
 
         // then
         assertThat(findRecord.getContent()).isEqualTo(savedRecord.getContent());
@@ -63,21 +60,21 @@ class RecordsRepositoryTest {
         Student student = createStudent();
         Teacher teacher = createTeacher();
 
-        Records records = createRecord(teacher, student);
-        records.addStudent(student);
-        records.addTeacher(teacher);
+        Record record = createRecord(teacher, student);
+        record.addStudent(student);
+        record.addTeacher(teacher);
 
         // when
-        Records savedRecord = recordsRepository.save(records);
+        Record savedRecord = recordRepository.save(record);
         log.info("savedRecord={}", savedRecord);
-        Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
+        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
         log.info("findRecord={}", findRecord);
 
         findRecord.changeContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
-        recordsRepository.flush();
+        recordRepository.flush();
 
         //then
-        Records updatedRecord = recordsRepository.findById(findRecord.getId()).get();
+        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
         log.info("updatedRecord={}", updatedRecord);
         assertThat(updatedRecord.getContent()).isEqualTo(findRecord.getContent());
     }
@@ -88,18 +85,18 @@ class RecordsRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         //when
-        Records savedRecord = recordsRepository.save(record);
-        Records findRecord = recordsRepository.findById(savedRecord.getId()).get();
+        Record savedRecord = recordRepository.save(record);
+        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
         findRecord.changeRecordStatus(RecordStatus.DELETED);
 
-        recordsRepository.flush();
+        recordRepository.flush();
 
         //then
-        Records updatedRecord = recordsRepository.findById(findRecord.getId()).get();
+        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
         assertThat(updatedRecord.getStatus()).isEqualTo(RecordStatus.DELETED);
-        assertThat(recordsRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student).size()).isEqualTo(0);
+        assertThat(recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student).size()).isEqualTo(0);
     }
 }

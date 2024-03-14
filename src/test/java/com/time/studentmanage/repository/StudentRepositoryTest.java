@@ -1,7 +1,7 @@
 package com.time.studentmanage.repository;
 
 import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.member.Student;
@@ -107,10 +107,10 @@ class StudentRepositoryTest {
 
         Teacher teacher = createTeacher();
 
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
         record.addStudent(student);
 
-        Records record2 = createRecord(teacher, student);
+        Record record2 = createRecord(teacher, student);
         record2.addStudent(student);
 
         Student savedStudent = studentRepository.save(student);

@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @DynamicUpdate // 변경 감지된 필드만 update 쿼리가 날아갈 수 있도록
-public class Records extends BaseTimeEntity {
+public class Record extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Records extends BaseTimeEntity {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @OneToMany(mappedBy = "records", orphanRemoval = true)
+    @OneToMany(mappedBy = "record", orphanRemoval = true)
     private List<Answer> answerList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -46,7 +46,7 @@ public class Records extends BaseTimeEntity {
      * 생성자 메서드
      */
     @Builder
-    public Records(String content, Teacher teacher, Student student, RecordStatus status) {
+    public Record(String content, Teacher teacher, Student student, RecordStatus status) {
         this.content = content;
         this.teacher = teacher;
         this.student = student;
@@ -58,12 +58,12 @@ public class Records extends BaseTimeEntity {
      */
     public void addTeacher(Teacher teacher) {
         this.teacher = teacher;
-        teacher.getRecordsList().add(this);
+        teacher.getRecordList().add(this);
     }
 
     public void addStudent(Student student) {
         this.student = student;
-        student.getRecordsList().add(this);
+        student.getRecordList().add(this);
     }
 
     public void changeContent(String content) {

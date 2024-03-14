@@ -1,6 +1,6 @@
-package com.time.studentmanage.domain.dto;
+package com.time.studentmanage.domain.dto.record;
 
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import lombok.Builder;
@@ -19,8 +19,8 @@ public class RecordSaveReqDTO {
         this.content = content;
     }
 
-    public Records toEntity(Teacher teacher, Student student, String content) {
-        return Records.builder()
+    public Record toEntity(Teacher teacher, Student student, String content) {
+        return Record.builder()
                 .teacher(teacher)
                 .student(student)
                 .content(content)

@@ -1,12 +1,12 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.Records;
-import com.time.studentmanage.domain.dto.RecordSaveReqDTO;
+import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.RecordsRepository;
+import com.time.studentmanage.repository.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.when;
 class RecordServiceTest {
 
     @Mock
-    RecordsRepository recordsRepository;
+    RecordRepository recordRepository;
     @Mock
     StudentRepository studentRepository;
     @Mock
@@ -58,14 +57,14 @@ class RecordServiceTest {
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
         // stub 2
-        Records records = Records.builder()
+        Record record = Record.builder()
                 .teacher(teacher)
                 .student(student)
                 .content(content)
                 .build();
-        ReflectionTestUtils.setField(records, "id", fakeId);
+        ReflectionTestUtils.setField(record, "id", fakeId);
 
-        when(recordsRepository.save(any())).thenReturn(records);
+        when(recordRepository.save(any())).thenReturn(record);
 
         // 1. 저장 요청
         RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
@@ -79,8 +78,8 @@ class RecordServiceTest {
 
         //then
         assertThat(recordId).isEqualTo(fakeId);
-        assertThat(records.getStudent().getName()).isEqualTo("철수");
-        assertThat(records.getContent()).isEqualTo(content);
+        assertThat(record.getStudent().getName()).isEqualTo("철수");
+        assertThat(record.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -97,14 +96,14 @@ class RecordServiceTest {
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
         // stub 2
-        Records records = Records.builder()
+        Record record = Record.builder()
                 .teacher(teacher)
                 .student(null)
                 .content(content)
                 .build();
-        ReflectionTestUtils.setField(records, "id", fakeId);
+        ReflectionTestUtils.setField(record, "id", fakeId);
 
-//        when(recordsRepository.save(any())).thenReturn(records); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
+//        when(recordsRepository.save(any())).thenReturn(record); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
 
         // 1. 저장 요청
         RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
@@ -134,12 +133,12 @@ class RecordServiceTest {
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // stub 2
-        Records records = Records.builder()
+        Record record = Record.builder()
                 .teacher(null)
                 .student(student)
                 .content(content)
                 .build();
-        ReflectionTestUtils.setField(records, "id", fakeId);
+        ReflectionTestUtils.setField(record, "id", fakeId);
 
         // 1. 저장 요청
         RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
@@ -167,11 +166,11 @@ class RecordServiceTest {
         ReflectionTestUtils.setField(teacher, "id", fakeId);
 
         // stub
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
         log.info("before save record={}", record.getContent());
         ReflectionTestUtils.setField(record, "id", fakeId);
 
-        when(recordsRepository.findById(anyLong())).thenReturn(Optional.of(record));
+        when(recordRepository.findById(anyLong())).thenReturn(Optional.of(record));
 
         recordService.modifyContent(record.getId(), content);
         log.info("after save record={}", record.getContent());
@@ -186,12 +185,12 @@ class RecordServiceTest {
         String content = "수정된 피드백 입니다.";
 
         // stub
-        Records record = Records.builder()
+        Record record = Record.builder()
                 .content(content)
                 .build();
         ReflectionTestUtils.setField(record, "id", fakeId);
 
-        when(recordsRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(recordRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> recordService.modifyContent(record.getId(), content))
                 .isInstanceOf(DataNotFoundException.class);
@@ -204,14 +203,14 @@ class RecordServiceTest {
         String content = "수정된 피드백 입니다.";
 
         // stub
-        Records record = Records.builder()
+        Record record = Record.builder()
                 .content(content)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
         ReflectionTestUtils.setField(record, "id", fakeId);
 
-        when(recordsRepository.findById(anyLong())).thenReturn(Optional.of(record));
+        when(recordRepository.findById(anyLong())).thenReturn(Optional.of(record));
 
         //when
         recordService.deleteRecord(record.getId());
@@ -230,15 +229,20 @@ class RecordServiceTest {
                 .build();
         ReflectionTestUtils.setField(student, "id", fakeId);
 
+        Teacher teacher = createTeacher();
+        ReflectionTestUtils.setField(teacher, "id", fakeId);
+
         // when
-        Records record1 = Records.builder()
+        Record record1 = Record.builder()
                 .student(student)
+                .teacher(teacher)
                 .content("피드백")
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
-        Records record2 = Records.builder()
+        Record record2 = Record.builder()
                 .student(student)
+                .teacher(teacher)
                 .content("삭제된 피드백")
                 .status(RecordStatus.DELETED)
                 .build();
@@ -247,7 +251,7 @@ class RecordServiceTest {
         ReflectionTestUtils.setField(record2, "id", fakeId + 1L);
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
-        when(recordsRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student)).thenReturn(List.of(record1));
+        when(recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student)).thenReturn(List.of(record1));
 
         // then
         assertThat(recordService.getStudentList(student.getId()).size()).isEqualTo(1);
@@ -263,14 +267,14 @@ class RecordServiceTest {
                 .build();
         ReflectionTestUtils.setField(teacher, "id", fakeId);
 
-        Records oldRecord = Records.builder()
+        Record oldRecord = Record.builder()
                 .teacher(teacher)
                 .content("Old 피드백")
                 .build();
 
         Thread.sleep(2000); // 2초 뒤 저장
 
-        Records newRecord = Records.builder()
+        Record newRecord = Record.builder()
                 .teacher(teacher)
                 .content("New 피드백")
                 .build();
@@ -280,10 +284,10 @@ class RecordServiceTest {
 
         //when
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
-        when(recordsRepository.findAllByTeacher(any())).thenReturn(List.of(newRecord, oldRecord));
+        when(recordRepository.findAllByTeacher(any())).thenReturn(List.of(newRecord, oldRecord));
 
         //then
-        List<Records> result = recordService.getAllWrittenList(teacher.getId());
+        List<Record> result = recordService.getAllWrittenList(teacher.getId());
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getContent()).isEqualTo(newRecord.getContent());
         assertThat(result.get(1).getContent()).isEqualTo(oldRecord.getContent());
