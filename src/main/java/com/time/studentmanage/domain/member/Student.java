@@ -114,6 +114,22 @@ public class Student extends BaseMemberEntity {
         this.address = address;
     }
 
+    public void changeEntity(Long id, Student updateStudent) {
+        this.id = id;
+        this.name = updateStudent.name;
+        this.userId = updateStudent.userId;
+        this.password = updateStudent.password;
+        this.phoneNumber = updateStudent.phoneNumber;
+        this.schoolName = updateStudent.schoolName;
+        this.grade = updateStudent.grade;
+        this.attendanceStatus = updateStudent.attendanceStatus;
+        this.memberType = updateStudent.memberType;
+        this.gender = updateStudent.gender;
+        this.classType = updateStudent.classType;
+        this.address = updateStudent.address;
+        this.teacher = updateStudent.teacher;
+    }
+
 
 
     @Override
