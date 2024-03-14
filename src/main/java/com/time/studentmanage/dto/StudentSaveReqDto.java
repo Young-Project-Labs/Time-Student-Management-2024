@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EnrollReqDto {
+public class StudentSaveReqDto {
     private String name;
     private String userId;
     private String password;
@@ -26,7 +26,7 @@ public class EnrollReqDto {
     private Address address;
 
     @Builder
-    public EnrollReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
+    public StudentSaveReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
         this.name = name;
         this.userId = userId;
         this.password = password;
