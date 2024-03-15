@@ -70,7 +70,7 @@ class StudentServiceTest {
 
         //수정 후 예상 엔티티
         StudentUpdateReqDto updateReqDto = updateStudentDto();
-        Student updateStudent = updateReqDto.toEntity(bCryptPasswordEncoder);
+        Student updateStudent = updateReqDto.toEntity();
         ReflectionTestUtils.setField(updateStudent, "id", fakeId);
 
         //stub

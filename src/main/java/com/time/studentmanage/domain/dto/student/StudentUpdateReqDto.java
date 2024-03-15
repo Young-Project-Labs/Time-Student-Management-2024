@@ -15,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class StudentUpdateReqDto {
     private Long id;
     private String name;
-    private String userId;
-    private String password;
     private String phoneNumber;
     private String schoolName;
     private int grade;
@@ -27,11 +25,9 @@ public class StudentUpdateReqDto {
     private Address address;
 
     @Builder
-    public StudentUpdateReqDto(Long id, String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
+    public StudentUpdateReqDto(Long id, String name, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
         this.id = id;
         this.name = name;
-        this.userId = userId;
-        this.password = password;
         this.phoneNumber = phoneNumber;
         this.schoolName = schoolName;
         this.grade = grade;
@@ -43,11 +39,9 @@ public class StudentUpdateReqDto {
     }
 
     //Dto -> Student 엔티티 변환
-    public Student toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public Student toEntity() {
         Student student = Student.builder()
                 .name(name)
-                .userId(userId)
-                .password(bCryptPasswordEncoder.encode(password))
                 .phoneNumber(phoneNumber)
                 .schoolName(schoolName)
                 .grade(grade)

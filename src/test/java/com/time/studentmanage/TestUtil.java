@@ -151,8 +151,6 @@ public class TestUtil {
         StudentUpdateReqDto updateReqDto = StudentUpdateReqDto.builder()
                 .id(1L)
                 .name("수정 엔티티")
-                .userId("update@time.com")
-                .password("1234")
                 .phoneNumber("010-1111-2222")
                 .schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY)
