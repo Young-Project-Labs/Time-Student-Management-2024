@@ -1,8 +1,11 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.member.Student;
+import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.dto.StudentSaveReqDto;
 import com.time.studentmanage.dto.StudentUpdateReqDto;
+import com.time.studentmanage.dto.StudentRespDto;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,7 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.*;
@@ -75,14 +80,33 @@ class StudentServiceTest {
         when(studentRepository.save(any())).thenReturn(updateStudent);
 
         //when
-        Student resultStudent = studentService.updateStudent(fakeId, updateReqDto);
-        log.info("resultStudent={}",resultStudent);
+        StudentRespDto respDto = studentService.updateStudentInfo(fakeId, updateReqDto);
+        log.info("respDto={}",respDto);
 
         //then
-        assertThat(resultStudent.getName()).isEqualTo(updateStudent.getName());
+        assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
 
 
     }
+    @Test
+    void 학생_학교별_조회_테스트(){
+        //given
+        Long fakeId = 1L;
 
+        List<Student> studentList = createManyStudent();
+        String schoolName = "용호초등학교";
+        List<Student> resultStudent = studentList.stream()
+                .filter(student -> student.getSchoolName().equals(schoolName))
+                .collect(Collectors.toList());
+
+        //stub
+        when(studentRepository.findBySchoolNameOrderByGrade(any())).thenReturn(resultStudent);
+
+        //when
+        List<StudentRespDto> studentRespDtoList = studentService.getSchoolStudentList(schoolName);
+        //then
+        assertThat(studentRespDtoList.size()).isEqualTo(resultStudent.size());
+
+    }
 
 }
