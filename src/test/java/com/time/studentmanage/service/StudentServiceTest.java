@@ -1,11 +1,9 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.Records;
 import com.time.studentmanage.domain.member.Student;
-import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.dto.StudentRespDto;
 import com.time.studentmanage.dto.StudentSaveReqDto;
 import com.time.studentmanage.dto.StudentUpdateReqDto;
-import com.time.studentmanage.dto.StudentRespDto;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -22,8 +20,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
@@ -61,7 +60,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void 학생_수정_테스트(){
+    void 학생_수정_테스트() {
         //given
         Long fakeId = 1L;
         //수정 전 findById로 찾은 엔티티
@@ -81,15 +80,16 @@ class StudentServiceTest {
 
         //when
         StudentRespDto respDto = studentService.updateStudentInfo(fakeId, updateReqDto);
-        log.info("respDto={}",respDto);
+        log.info("respDto={}", respDto);
 
         //then
         assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
 
 
     }
+
     @Test
-    void 학생_학교별_조회_테스트(){
+    void 학생_학교별_조회_테스트() {
         //given
         Long fakeId = 1L;
 
