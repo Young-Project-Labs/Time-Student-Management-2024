@@ -1,6 +1,7 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.dto.record.RecordRespDTO;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
@@ -287,7 +288,7 @@ class RecordServiceTest {
         when(recordRepository.findAllByTeacher(any())).thenReturn(List.of(newRecord, oldRecord));
 
         //then
-        List<Record> result = recordService.getAllWrittenList(teacher.getId());
+        List<RecordRespDTO> result = recordService.getAllWrittenList(teacher.getId());
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getContent()).isEqualTo(newRecord.getContent());
         assertThat(result.get(1).getContent()).isEqualTo(oldRecord.getContent());

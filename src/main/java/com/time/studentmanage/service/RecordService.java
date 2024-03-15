@@ -91,6 +91,7 @@ public class RecordService {
         recordPS.changeRecordStatus(RecordStatus.DELETED);
     }
 
+    @Transactional(readOnly = true)
     public List<RecordRespDTO> getStudentList(Long studentId) {
         Optional<Student> studentOP = studentRepository.findById(studentId);
 
@@ -100,10 +101,10 @@ public class RecordService {
 
         Student studentPS = studentOP.get();
 
-        List<Record> result = recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, studentPS);
+        List<Record> recordList = recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, studentPS);
 
         List<RecordRespDTO> respList = new ArrayList<>();
-        for (Record r : result) {
+        for (Record r : recordList) {
             RecordRespDTO recordRespDTO = createRecordRespDTO(r);
             respList.add(recordRespDTO);
         }
@@ -111,7 +112,8 @@ public class RecordService {
         return respList;
     }
 
-    public List<Record> getAllWrittenList(Long teacherId) {
+    @Transactional(readOnly = true)
+    public List<RecordRespDTO> getAllWrittenList(Long teacherId) {
         Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
         if (!teacherOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 선생님 정보입니다.");
@@ -119,6 +121,14 @@ public class RecordService {
 
         Teacher teacher = teacherOP.get();
 
-        return recordRepository.findAllByTeacher(teacher);
+        List<Record> recordList = recordRepository.findAllByTeacher(teacher);
+
+        List<RecordRespDTO> respList = new ArrayList<>();
+        for (Record r : recordList) {
+            RecordRespDTO recordRespDTO = createRecordRespDTO(r);
+            respList.add(recordRespDTO);
+        }
+
+        return respList;
     }
 }
