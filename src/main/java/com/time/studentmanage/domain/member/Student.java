@@ -1,7 +1,7 @@
 package com.time.studentmanage.domain.member;
 
 import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
@@ -51,7 +51,7 @@ public class Student extends BaseMemberEntity {
     private List<Parent> parentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "student")
-    private List<Records> recordsList = new ArrayList<>();
+    private List<Record> recordList = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "teacher_id")

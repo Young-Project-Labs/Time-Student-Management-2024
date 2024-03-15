@@ -1,7 +1,7 @@
 package com.time.studentmanage.domain.member;
 
 import com.time.studentmanage.domain.Answer;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
@@ -39,7 +39,7 @@ public class Teacher extends BaseMemberEntity {
     private GenderType gender;
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.REMOVE)
-    private List<Records> recordsList = new ArrayList<>();
+    private List<Record> recordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "teacher")
     private List<Answer> answerList = new ArrayList<>();

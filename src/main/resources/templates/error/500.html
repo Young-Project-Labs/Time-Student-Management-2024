@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1>500 오류 페이지 입니다.</h1>
+
+<ul>
+    <li>오류 정보(임의로 넣음)</li>
+    <ul>
+        <li th:text="|timestamp: ${timestamp}|"></li>
+        <li th:text="|path: ${path}|"></li>
+        <li th:text="|status: ${status}|"></li>
+        <li th:text="|message: ${message}|"></li>
+        <li th:text="|error: ${error}|"></li>
+        <li th:text="|exception: ${exception}|"></li>
+        <li th:text="|errors: ${errors}|"></li>
+        <li th:text="|trace: ${trace}|"></li>
+    </ul>
+</ul>
+
+
+</body>
+</html>

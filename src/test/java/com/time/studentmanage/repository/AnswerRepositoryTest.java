@@ -2,7 +2,7 @@ package com.time.studentmanage.repository;
 
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Answer;
-import com.time.studentmanage.domain.Records;
+import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
@@ -41,7 +41,7 @@ class AnswerRepositoryTest {
 
         //then
         assertThat(findAnswer.getContent()).isEqualTo(savedAnswer.getContent());
-        assertThat(findAnswer.getRecords().getAnswerList().size()).isEqualTo(1);
+        assertThat(findAnswer.getRecord().getAnswerList().size()).isEqualTo(1);
         assertThat(findAnswer.getTeacher().getName()).isEqualTo(savedAnswer.getTeacher().getName());
     }
 
@@ -86,7 +86,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         // 부모 댓글 저장
         Answer savedParentAnswer = saveParentAnswer(record, teacher);
@@ -117,7 +117,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         // 부모 댓글 저장
         Answer savedParentAnswer = saveParentAnswer(record, teacher);
@@ -142,7 +142,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         //when
         // 부모 댓글 저장
@@ -169,7 +169,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         Answer savedParentAnswer = saveParentAnswer(record, teacher);
         Answer firstChildReply = saveFirstChildReply(record, teacher, savedParentAnswer);
@@ -193,7 +193,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         Answer savedParentAnswer = saveParentAnswer(record, teacher);
         Answer firstChildReply = saveFirstChildReply(record, teacher, savedParentAnswer);
@@ -214,7 +214,7 @@ class AnswerRepositoryTest {
         //given
         Student student = createStudent();
         Teacher teacher = createTeacher();
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
 
         Answer answer = new Answer(record, teacher, "1 번째 피드백 댓글입니다.", AnswerStatus.GENERAL);
         answerRepository.save(answer);
@@ -229,7 +229,7 @@ class AnswerRepositoryTest {
                 .address(new Address("반림동", "현대 아파트", "102-342"))
                 .attendanceStatus(AttendanceStatus.Y)
                 .build();
-        Records record2 = createRecord(teacher, student2);
+        Record record2 = createRecord(teacher, student2);
         Answer answer2 = new Answer(record2, teacher, "2번째 피드백 댓글 입니다.", AnswerStatus.GENERAL);
         Answer secondReply = answerRepository.save(answer2);
 
@@ -241,18 +241,18 @@ class AnswerRepositoryTest {
         assertThat(findAnswerList.get(0).getContent()).isEqualTo(secondReply.getContent());
     }
 
-    private Answer saveParentAnswer(Records record, Teacher teacher) {
+    private Answer saveParentAnswer(Record record, Teacher teacher) {
         Answer parentAnswer = new Answer(record, teacher, "부모댓글입니다.", AnswerStatus.GENERAL);
         return answerRepository.save(parentAnswer);
     }
 
-    private Answer saveFirstChildReply(Records record, Teacher teacher, Answer savedParentAnswer) {
+    private Answer saveFirstChildReply(Record record, Teacher teacher, Answer savedParentAnswer) {
         Answer replyAnswer = new Answer(record, teacher, "대댓글입니다.", AnswerStatus.GENERAL);
         replyAnswer.addParentAnswer(savedParentAnswer);
         return answerRepository.save(replyAnswer);
     }
 
-    private Answer saveSecondChildReply(Records record, Teacher teacher, Answer firstReplyAnswer) {
+    private Answer saveSecondChildReply(Record record, Teacher teacher, Answer firstReplyAnswer) {
         Answer replyAnswer = new Answer(record, teacher, "대댓글의 대댓글 입니다.", AnswerStatus.GENERAL);
         replyAnswer.addParentAnswer(firstReplyAnswer);
         return answerRepository.save(replyAnswer);

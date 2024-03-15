@@ -40,7 +40,7 @@ public class Answer extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "record_id")
-    private Records records;
+    private Record record;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "teacher_id")
@@ -54,8 +54,8 @@ public class Answer extends BaseTimeEntity {
      * 생성자 메서드
      */
     @Builder
-    public Answer(Records records, Teacher teacher, String content, AnswerStatus status) {
-        this.records = records;
+    public Answer(Record record, Teacher teacher, String content, AnswerStatus status) {
+        this.record = record;
         this.teacher = teacher;
         this.content = content;
         this.status = status;
@@ -64,9 +64,9 @@ public class Answer extends BaseTimeEntity {
     /**
      * ===연관관계 편의 메서드===
      */
-    public void addRecords(Records records) {
-        this.records = records;
-        records.getAnswerList().add(this);
+    public void addRecord(Record record) {
+        this.record = record;
+        record.getAnswerList().add(this);
     }
 
     public void addTeacher(Teacher teacher) {

@@ -1,14 +1,12 @@
 package com.time.studentmanage.repository;
 
-import com.time.studentmanage.TestUtil;
 import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Records;
-import com.time.studentmanage.domain.enums.*;
-import com.time.studentmanage.domain.member.Parent;
+import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.enums.AttendanceStatus;
+import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,24 +14,19 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.JstlUtils;
 
-import javax.swing.text.Style;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.time.studentmanage.TestUtil.*;
-import static com.time.studentmanage.TestUtil.createRecord;
-import static com.time.studentmanage.TestUtil.createTeacher;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Transactional
 @DataJpaTest
 @Slf4j
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class StudentRepositoryTest {
+
     @Autowired
     StudentRepository studentRepository;
 
@@ -49,7 +42,7 @@ class StudentRepositoryTest {
         //then
         Optional<Student> findStudent = studentRepository.findById(saveStudent.getId());
         if (findStudent.isPresent()) {
-            log.info("findStudent={}",findStudent.get().getId());
+            log.info("findStudent={}", findStudent.get().getId());
             assertThat(saveStudent.getId()).isEqualTo(findStudent.get().getId());
         }
 
@@ -70,7 +63,7 @@ class StudentRepositoryTest {
         List<Student> studentList = studentRepository.findAll();
 
         //then
-        for (Student student: studentList) {
+        for (Student student : studentList) {
             log.info("student={}", student.getId());
         }
         assertThat(studentList.size()).isEqualTo(3);
@@ -90,6 +83,7 @@ class StudentRepositoryTest {
         //then
         assertThat(findStudentList.size()).isEqualTo(2);
     }
+
     @Test
     @Order(4)
     void 학년별_학생_조회_테스트() {
@@ -113,10 +107,10 @@ class StudentRepositoryTest {
 
         Teacher teacher = createTeacher();
 
-        Records record = createRecord(teacher, student);
+        Record record = createRecord(teacher, student);
         record.addStudent(student);
 
-        Records record2 = createRecord(teacher, student);
+        Record record2 = createRecord(teacher, student);
         record2.addStudent(student);
 
         Student savedStudent = studentRepository.save(student);
@@ -145,7 +139,7 @@ class StudentRepositoryTest {
 
         //then
         Student validationStudent = studentRepository.findById(findStudent.getId()).get();
-        log.info("수정 후 이름={}",validationStudent.getName());
+        log.info("수정 후 이름={}", validationStudent.getName());
         log.info("수정 후 엔티티 확인={}", validationStudent.toString());
         assertThat(validationStudent.getName()).isEqualTo(findStudent.getName());
         assertThat(validationStudent.getAddress()).isEqualTo(changeAd);
@@ -162,11 +156,11 @@ class StudentRepositoryTest {
 
         List<Student> findStudentList = studentRepository.findAll();
         Student student1 = findStudentList.get(0);
-        log.info("수정 전 getAttendanceStatus={}",student1.getAttendanceStatus());
+        log.info("수정 전 getAttendanceStatus={}", student1.getAttendanceStatus());
         //when
         student1.changeAttendanceStatus(AttendanceStatus.N);
         studentRepository.flush();
-        log.info("수정 후 getAttendanceStatus={}",student1.getAttendanceStatus());
+        log.info("수정 후 getAttendanceStatus={}", student1.getAttendanceStatus());
 
         //then
         Student validationStudent = studentRepository.findById(findStudentList.get(0).getId()).get();
@@ -189,9 +183,4 @@ class StudentRepositoryTest {
         }
         assertThat(studentRepository.findAll().size()).isEqualTo(4);
     }
-
-
-
-
-
 }
