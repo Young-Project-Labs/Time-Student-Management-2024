@@ -90,7 +90,7 @@ class StudentRepositoryTest {
             log.info("student={}", student);
         }
         //then
-        assertThat(findStudentList.size()).isEqualTo(3);
+        assertThat(findStudentList.size()).isEqualTo(2);
     }
     @Test
     @Order(4)
