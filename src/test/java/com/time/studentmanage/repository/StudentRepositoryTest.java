@@ -78,8 +78,10 @@ class StudentRepositoryTest {
         List<Student> saveStudentList = studentRepository.saveAll(studentList);
         String schoolName = "용호초등학교";
         //when
-        List<Student> findStudentList = studentRepository.findBySchoolName(schoolName);
-
+        List<Student> findStudentList = studentRepository.findBySchoolNameOrderByGrade(schoolName);
+        for (Student student : findStudentList) {
+            log.info("student={}", student);
+        }
         //then
         assertThat(findStudentList.size()).isEqualTo(2);
     }
