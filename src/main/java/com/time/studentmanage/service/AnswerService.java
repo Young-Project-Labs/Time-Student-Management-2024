@@ -2,7 +2,9 @@ package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.Answer;
 import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.dto.answer.AnswerRespDTO;
 import com.time.studentmanage.domain.dto.answer.AnswerSaveReqDTO;
+import com.time.studentmanage.domain.dto.answer.AnswerUpdateReqDTO;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.AnswerRepository;
@@ -59,5 +61,12 @@ public class AnswerService {
             throw new DataNotFoundException("존재하지 않는 댓글 정보입니다.");
         }
         return answerOP.get();
+    }
+
+    public void updateAnswer(AnswerUpdateReqDTO answerUpdateReqDTO) {
+        Answer answer = answerRepository.findById(answerUpdateReqDTO.getAnswerId())
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 댓글 정보 입니다."));
+
+        answer.changeAnswer(answerUpdateReqDTO.getContent());
     }
 }
