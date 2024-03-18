@@ -28,8 +28,12 @@ public class StudentService {
     //학생 회원가입
 
     public Long saveStudent(StudentSaveReqDto saveReqDto) {
-        //1. 학생 존재 여부 확인(학생 & 부모)
+        //1. 학생 존재 여부 확인(학생 & 전화번호)
+        Optional<Student> studentOP = studentRepository.findByNameAndPhoneNumber(saveReqDto.getName(), saveReqDto.getPhoneNumber());
 
+        if (studentOP.isPresent()) {
+            throw new IllegalArgumentException("이미 존재 하는 학생 입니다.");
+        }
         //2. 패스워드 인코딩
         saveReqDto.setPassword(bCryptPasswordEncoder.encode(saveReqDto.getPassword()));
 
