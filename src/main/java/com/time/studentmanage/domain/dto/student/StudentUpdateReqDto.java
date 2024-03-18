@@ -1,4 +1,4 @@
-package com.time.studentmanage.dto;
+package com.time.studentmanage.domain.dto.student;
 
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.enums.AttendanceStatus;

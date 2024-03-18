@@ -6,9 +6,8 @@ import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import com.time.studentmanage.dto.StudentSaveReqDto;
-import com.time.studentmanage.dto.StudentUpdateReqDto;
-import org.mockito.stubbing.Answer;
+import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
+import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
