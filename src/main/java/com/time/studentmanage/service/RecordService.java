@@ -32,7 +32,6 @@ public class RecordService {
         recordRespDTO.setId(r.getId());
         recordRespDTO.setContent(r.getContent());
         recordRespDTO.setTeacherName(r.getTeacher().getName());
-        recordRespDTO.setAnswerList(r.getAnswerList());
         recordRespDTO.setLastModifiedDate(r.getModifiedDate());
         return recordRespDTO;
     }

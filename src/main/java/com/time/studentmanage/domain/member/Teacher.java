@@ -1,17 +1,18 @@
 package com.time.studentmanage.domain.member;
 
-import com.time.studentmanage.domain.Answer;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
@@ -39,13 +40,10 @@ public class Teacher extends BaseMemberEntity {
     private GenderType gender;
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.REMOVE)
-    private List<Record> recordList = new ArrayList<>();
+    private final List<Record> recordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "teacher")
-    private List<Answer> answerList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "teacher")
-    private List<Student> studentList = new ArrayList<>();
+    private final List<Student> studentList = new ArrayList<>();
 
 
     @Builder

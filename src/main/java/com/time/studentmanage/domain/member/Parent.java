@@ -1,6 +1,5 @@
 package com.time.studentmanage.domain.member;
 
-import com.time.studentmanage.domain.Answer;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -36,9 +34,6 @@ public class Parent extends BaseMemberEntity {
     @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "student_id")
     private Student student;
-
-    @OneToMany(mappedBy = "parent")
-    private List<Answer> answerList = new ArrayList<>();
 
 
     @Builder
