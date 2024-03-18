@@ -7,7 +7,7 @@ import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
 import lombok.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,19 +19,21 @@ public class StudentUpdateReqDto {
     private String schoolName;
     private int grade;
     private AttendanceStatus attendanceStatus;
+    private LocalDateTime quitDate;
     private MemberType memberType;
     private GenderType gender;
     private ClassType classType;
     private Address address;
 
     @Builder
-    public StudentUpdateReqDto(Long id, String name, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
+    public StudentUpdateReqDto(Long id, String name, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, LocalDateTime quitDate, MemberType memberType, GenderType gender, ClassType classType, Address address) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.schoolName = schoolName;
         this.grade = grade;
         this.attendanceStatus = attendanceStatus;
+        this.quitDate = quitDate;
         this.memberType = memberType;
         this.gender = gender;
         this.classType = classType;
@@ -46,6 +48,7 @@ public class StudentUpdateReqDto {
                 .schoolName(schoolName)
                 .grade(grade)
                 .attendanceStatus(attendanceStatus)
+                .quitDate(quitDate)
                 .memberType(memberType)
                 .gender(gender)
                 .classType(classType)

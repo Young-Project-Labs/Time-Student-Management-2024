@@ -1,5 +1,6 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,12 +72,16 @@ class StudentServiceTest {
 
         //수정 후 예상 엔티티
         StudentUpdateReqDto updateReqDto = updateStudentDto();
+        // 재원여부 & 퇴원일 임의 값으로 Setter
+        updateReqDto.setAttendanceStatus(AttendanceStatus.N);
+        updateReqDto.setQuitDate(LocalDateTime.now());
+
         Student updateStudent = updateReqDto.toEntity();
         ReflectionTestUtils.setField(updateStudent, "id", fakeId);
 
         //stub
         when(studentRepository.findById(any())).thenReturn(Optional.of(student));
-        //stub2
+        //stub2(수정 후 save)
         when(studentRepository.save(any())).thenReturn(updateStudent);
 
         //when
@@ -84,6 +90,7 @@ class StudentServiceTest {
 
         //then
         assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
+        assertThat(respDto.getAttendanceStatus()).isEqualTo(AttendanceStatus.N);
 
 
     }
