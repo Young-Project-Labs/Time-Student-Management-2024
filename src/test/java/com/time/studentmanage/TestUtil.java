@@ -1,14 +1,13 @@
 package com.time.studentmanage;
 
 import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Answer;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import com.time.studentmanage.dto.StudentSaveReqDto;
-import com.time.studentmanage.dto.StudentUpdateReqDto;
+import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
+import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,18 +128,6 @@ public class TestUtil {
                 .email("julia@time.com")
                 .gender(GenderType.FEMALE)
                 .build();
-    }
-
-    public static Answer createOneAnswer() {
-        Student student = createStudent();
-        Teacher teacher = createTeacher();
-        Record record = createRecord(teacher, student);
-
-        Answer answer = new Answer(record, teacher, "첫 댓글입니다.", AnswerStatus.GENERAL);
-        answer.addRecord(record);
-        answer.addTeacher(teacher);
-
-        return answer;
     }
 
     public static StudentSaveReqDto createStudentDto() {

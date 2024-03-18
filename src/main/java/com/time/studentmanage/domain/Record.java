@@ -36,9 +36,6 @@ public class Record extends BaseTimeEntity {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @OneToMany(mappedBy = "record", orphanRemoval = true)
-    private List<Answer> answerList = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private RecordStatus status;
 

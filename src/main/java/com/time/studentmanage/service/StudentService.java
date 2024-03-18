@@ -2,13 +2,12 @@ package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.member.Student;
-import com.time.studentmanage.dto.StudentSaveReqDto;
-import com.time.studentmanage.dto.StudentUpdateReqDto;
-import com.time.studentmanage.dto.StudentRespDto;
+import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
+import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.sql.Update;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
