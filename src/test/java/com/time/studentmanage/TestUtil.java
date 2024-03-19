@@ -2,6 +2,7 @@ package com.time.studentmanage;
 
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
@@ -151,8 +152,6 @@ public class TestUtil {
         StudentUpdateReqDto updateReqDto = StudentUpdateReqDto.builder()
                 .id(1L)
                 .name("수정 엔티티")
-                .userId("update@time.com")
-                .password("1234")
                 .phoneNumber("010-1111-2222")
                 .schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY)
@@ -163,5 +162,16 @@ public class TestUtil {
                 .attendanceStatus(AttendanceStatus.Y)
                 .build();
         return updateReqDto;
+    }
+
+    public static TeacherUpdateReqDto updateTeacherDto() {
+        return TeacherUpdateReqDto.builder()
+                .name("이름수정")
+                .phoneNumber("010-9999-9999")
+                .position(Position.TEACHER)
+                .memberType(MemberType.TEACHER)
+                .email("julia@time.com")
+                .gender(GenderType.FEMALE)
+                .build();
     }
 }

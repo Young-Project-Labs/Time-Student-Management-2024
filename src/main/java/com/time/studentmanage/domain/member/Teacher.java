@@ -1,6 +1,7 @@
 package com.time.studentmanage.domain.member;
 
 import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
@@ -56,5 +57,16 @@ public class Teacher extends BaseMemberEntity {
         this.position = position;
         this.memberType = memberType;
         this.gender = gender;
+    }
+
+    public void changeEntity(Long id, Teacher updateTeacher) {
+        this.name = updateTeacher.getName();
+        this.userId = updateTeacher.getUserId();
+        this.password = updateTeacher.getPassword();
+        this.phoneNumber = updateTeacher.getPhoneNumber();
+        this.email = updateTeacher.getEmail();
+        this.position = updateTeacher.getPosition();
+        this.memberType = updateTeacher.getMemberType();
+        this.gender = updateTeacher.getGender();
     }
 }
