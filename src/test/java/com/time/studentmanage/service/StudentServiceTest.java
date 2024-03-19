@@ -5,6 +5,7 @@ import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +62,21 @@ class StudentServiceTest {
         assertThat(successId).isEqualTo(fakeId);
 
     }
+    @Test
+    void 중복_회원_가입_예외_처리_테스트(){
+        //given
+        StudentSaveReqDto studentDto = createStudentDto();
+        Student student = createStudent();
+
+        //when
+        //stub
+        when(studentRepository.findByNameAndPhoneNumber(any(), any())).thenReturn(Optional.of(student));
+
+        //then
+        assertThatThrownBy(()-> studentService.saveStudent(studentDto))
+                .isInstanceOf(IllegalArgumentException.class);
+
+    }
 
     @Test
     void 학생_수정_테스트() {
@@ -92,6 +109,23 @@ class StudentServiceTest {
         assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
         assertThat(respDto.getAttendanceStatus()).isEqualTo(AttendanceStatus.N);
 
+    }
+
+    @Test
+    void 학생_정보_수정시_조회_실패_테스트(){
+        //given
+        StudentUpdateReqDto updateReqDto = updateStudentDto();
+        Long id = 1L;
+        log.info("updateReqDto={}", updateReqDto);
+        Student emptyStudent = Student.builder().build();
+
+        //when
+        when(studentRepository.findById(any())).thenReturn(Optional.empty());
+
+        //then
+//        assertThrows(DataNotFoundException.class, () -> studentService.updateStudentInfo(id, updateReqDto));
+        assertThatThrownBy(() -> studentService.updateStudentInfo(id, updateReqDto))
+                .isInstanceOf(DataNotFoundException.class);
 
     }
 
