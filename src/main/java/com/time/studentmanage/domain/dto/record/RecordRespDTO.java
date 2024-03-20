@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class RecordRespDTO {
-    private Long id;
+    private Long recordId;
     private String content;
     private String teacherName;
     private String studentName;
@@ -20,8 +20,8 @@ public class RecordRespDTO {
     private LocalDateTime createDate;
     private LocalDateTime lastModifiedDate;
 
-    public RecordRespDTO(Long id, String content, String teacherName, String studentName, RecordStatus status, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
-        this.id = id;
+    public RecordRespDTO(Long recordId, String content, String teacherName, String studentName, RecordStatus status, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
+        this.recordId = recordId;
         this.content = content;
         this.teacherName = teacherName;
         this.studentName = studentName;
@@ -33,9 +33,11 @@ public class RecordRespDTO {
     @Override
     public String toString() {
         return "RecordRespDTO{" +
-                "id=" + id +
+                "recordId=" + recordId +
                 ", content='" + content + '\'' +
                 ", teacherName='" + teacherName + '\'' +
+                ", studentName='" + studentName + '\'' +
+                ", status=" + status +
                 ", createDate=" + createDate +
                 ", lastModifiedDate=" + lastModifiedDate +
                 '}';
