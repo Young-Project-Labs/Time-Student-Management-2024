@@ -7,6 +7,7 @@ import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,6 +22,7 @@ public class StudentRespDto {
     private String schoolName;
     private int grade;
     private AttendanceStatus attendanceStatus;
+    private LocalDateTime quitDate;
     private MemberType memberType;
     private GenderType gender;
     private ClassType classType;
@@ -37,6 +39,7 @@ public class StudentRespDto {
         this.schoolName = student.getSchoolName();
         this.grade = student.getGrade();
         this.attendanceStatus = student.getAttendanceStatus();
+        this.quitDate = student.getQuitDate();
         this.memberType = student.getMemberType();
         this.gender = student.getGender();
         this.classType = student.getClassType();

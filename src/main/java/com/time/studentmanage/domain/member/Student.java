@@ -9,7 +9,10 @@ import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +33,9 @@ public class Student extends BaseMemberEntity {
     private String name;
     private String phoneNumber;
     private String schoolName;
-    private int grade; // TODO: 굳이 Long으로 하지 않아도 될 것 같음
+    private int grade;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime quitDate;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
@@ -58,7 +63,7 @@ public class Student extends BaseMemberEntity {
     private Teacher teacher;
 
     @Builder(toBuilder = true)
-    public Student(String name, String userId, String password,String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, Teacher teacher) {
+    public Student(String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate, Teacher teacher) {
         this.name = name;
         this.userId = userId;
         this.password = password;
@@ -66,6 +71,7 @@ public class Student extends BaseMemberEntity {
         this.schoolName = schoolName;
         this.grade = grade;
         this.attendanceStatus = attendanceStatus;
+        this.quitDate = quitDate;
         this.memberType = memberType;
         this.gender = gender;
         this.classType = classType;
@@ -87,6 +93,9 @@ public class Student extends BaseMemberEntity {
     }
     public void changeAttendanceStatus(AttendanceStatus attendanceStatus) {
         this.attendanceStatus = attendanceStatus;
+    }
+    public void changeQuitDate(LocalDateTime quitDate) {
+        this.quitDate = quitDate;
     }
     public void changePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -116,20 +125,20 @@ public class Student extends BaseMemberEntity {
 
     public void changeEntity(Long id, Student updateStudent) {
         this.id = id;
-        this.name = updateStudent.name;
-        this.userId = updateStudent.userId;
-        this.password = updateStudent.password;
-        this.phoneNumber = updateStudent.phoneNumber;
-        this.schoolName = updateStudent.schoolName;
-        this.grade = updateStudent.grade;
-        this.attendanceStatus = updateStudent.attendanceStatus;
-        this.memberType = updateStudent.memberType;
-        this.gender = updateStudent.gender;
-        this.classType = updateStudent.classType;
-        this.address = updateStudent.address;
-        this.teacher = updateStudent.teacher;
+        this.name = updateStudent.getName();
+        this.userId = updateStudent.getUserId();
+        this.password = updateStudent.getPassword();
+        this.phoneNumber = updateStudent.getPhoneNumber();
+        this.schoolName = updateStudent.getSchoolName();
+        this.grade = updateStudent.getGrade();
+        this.attendanceStatus = updateStudent.getAttendanceStatus();
+        this.quitDate = updateStudent.getQuitDate();
+        this.memberType = updateStudent.getMemberType();
+        this.gender = updateStudent.getGender();
+        this.classType = updateStudent.getClassType();
+        this.address = updateStudent.getAddress();
+        this.teacher = updateStudent.getTeacher();
     }
-
 
 
     @Override
@@ -142,6 +151,7 @@ public class Student extends BaseMemberEntity {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", schoolName='" + schoolName + '\'' +
                 ", grade=" + grade +
+                ", quitDate=" + quitDate +
                 ", attendanceStatus=" + attendanceStatus +
                 ", memberType=" + memberType +
                 ", gender=" + gender +

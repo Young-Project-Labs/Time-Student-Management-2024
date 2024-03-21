@@ -1,9 +1,11 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,12 +17,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +62,21 @@ class StudentServiceTest {
         assertThat(successId).isEqualTo(fakeId);
 
     }
+    @Test
+    void 중복_회원_가입_예외_처리_테스트(){
+        //given
+        StudentSaveReqDto studentDto = createStudentDto();
+        Student student = createStudent();
+
+        //when
+        //stub
+        when(studentRepository.findByNameAndPhoneNumber(any(), any())).thenReturn(Optional.of(student));
+
+        //then
+        assertThatThrownBy(()-> studentService.saveStudent(studentDto))
+                .isInstanceOf(IllegalArgumentException.class);
+
+    }
 
     @Test
     void 학생_수정_테스트() {
@@ -70,12 +89,16 @@ class StudentServiceTest {
 
         //수정 후 예상 엔티티
         StudentUpdateReqDto updateReqDto = updateStudentDto();
-        Student updateStudent = updateReqDto.toEntity(bCryptPasswordEncoder);
+        // 재원여부 & 퇴원일 임의 값으로 Setter
+        updateReqDto.setAttendanceStatus(AttendanceStatus.N);
+        updateReqDto.setQuitDate(LocalDateTime.now());
+
+        Student updateStudent = updateReqDto.toEntity();
         ReflectionTestUtils.setField(updateStudent, "id", fakeId);
 
         //stub
         when(studentRepository.findById(any())).thenReturn(Optional.of(student));
-        //stub2
+        //stub2(수정 후 save)
         when(studentRepository.save(any())).thenReturn(updateStudent);
 
         //when
@@ -84,7 +107,25 @@ class StudentServiceTest {
 
         //then
         assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
+        assertThat(respDto.getAttendanceStatus()).isEqualTo(AttendanceStatus.N);
 
+    }
+
+    @Test
+    void 학생_정보_수정시_조회_실패_테스트(){
+        //given
+        StudentUpdateReqDto updateReqDto = updateStudentDto();
+        Long id = 1L;
+        log.info("updateReqDto={}", updateReqDto);
+        Student emptyStudent = Student.builder().build();
+
+        //when
+        when(studentRepository.findById(any())).thenReturn(Optional.empty());
+
+        //then
+//        assertThrows(DataNotFoundException.class, () -> studentService.updateStudentInfo(id, updateReqDto));
+        assertThatThrownBy(() -> studentService.updateStudentInfo(id, updateReqDto))
+                .isInstanceOf(DataNotFoundException.class);
 
     }
 
