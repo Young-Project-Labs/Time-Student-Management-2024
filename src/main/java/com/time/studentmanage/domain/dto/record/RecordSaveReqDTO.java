@@ -4,19 +4,24 @@ import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class RecordSaveReqDTO {
+
+    @NotNull
     private Long studentId;
+    @NotNull
     private Long teacherId;
+    @NotBlank
     private String content;
 
-    @Builder
     public RecordSaveReqDTO(Long studentId, Long teacherId, String content) {
         this.studentId = studentId;
         this.teacherId = teacherId;

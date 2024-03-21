@@ -12,30 +12,38 @@
     <!--  toast ui css link tag  -->
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
 
+    <style>
+        /* 필드 오류 css */
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
     <title>Document</title>
 </head>
 <body>
 
 <div class="p-2">
 
-    <form th:action="@{/record/create}" method="post">
+    <form th:action="@{/record/create}" th:object="${recordSaveReqDTO}" method="post">
 
         <div class="mb-3">
             <h3 class="my-3 border-bottom pb-2">피드백 등록</h3>
         </div>
 
-        <input type="hidden" name="studentId" th:value="${studentId}"/>
+        <div class="field-error" th:errors="*{studentId}">오류 입니다.</div>
+        <div class="field-error" th:errors="*{teacherId}">오류 입니다.</div>
 
 
-        <!--        <div class="mb-3">-->
-        <!--            <label for="content" class="form-label" th:text="|내용 작성|">내용</label>-->
-        <!--            <textarea name="content" id="content" class="form-control" rows="10"></textarea>-->
-        <!--        </div>-->
+        <!-- 학생 & 선생 id -->
+        <input type="hidden" name="studentId" th:field="*{studentId}" th:errorclass="field-error" class="form-control"/>
+        <input type="hidden" name="teacherId" th:field="*{teacherId}" th:errorclass="field-error" class="form-control"/>
 
         <div id="editor"></div>
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->
-        <textarea name="content" id="hiddenContent" style="display: none;"></textarea>
+        <textarea style="display: none;" th:errorclass="field-error" th:field="*{content}"></textarea>
 
+        <div class="field-error" th:errors="*{content}">내용 오류 입니다.</div>
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
 
     </form>
@@ -55,11 +63,11 @@
 
     const form = document.querySelector('form'); // 폼 선택
 
-    form.addEventListener('submit', function() {
+    form.addEventListener('submit', function () {
         // 토스트 UI 에디터의 현재 내용을 가져옵니다.
         const editorContent = editor.getMarkdown();
         // 숨겨진 textarea의 값으로 설정합니다.
-        document.getElementById('hiddenContent').value = editorContent;
+        document.getElementById('content').value = editorContent;
     });
 </script>
 
