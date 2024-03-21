@@ -268,6 +268,11 @@ class RecordServiceTest {
                 .build();
         ReflectionTestUtils.setField(teacher, "id", fakeId);
 
+        Student student = Student.builder()
+                .name("김학생")
+                .build();
+        ReflectionTestUtils.setField(student, "id", fakeId);
+
         Record oldRecord = Record.builder()
                 .teacher(teacher)
                 .content("Old 피드백")
@@ -282,6 +287,11 @@ class RecordServiceTest {
 
         ReflectionTestUtils.setField(oldRecord, "id", fakeId);
         ReflectionTestUtils.setField(newRecord, "id", fakeId + 1L);
+
+        oldRecord.addTeacher(teacher);
+        newRecord.addTeacher(teacher);
+        oldRecord.addStudent(student);
+        newRecord.addStudent(student);
 
         //when
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));

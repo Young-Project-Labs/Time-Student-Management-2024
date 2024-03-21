@@ -29,10 +29,13 @@ public class RecordService {
 
     private static RecordRespDTO createRecordRespDTO(Record r) {
         RecordRespDTO recordRespDTO = new RecordRespDTO();
-        recordRespDTO.setId(r.getId());
+        recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setContent(r.getContent());
         recordRespDTO.setTeacherName(r.getTeacher().getName());
+        recordRespDTO.setCreateDate(r.getCreateDate());
         recordRespDTO.setLastModifiedDate(r.getModifiedDate());
+        recordRespDTO.setStatus(r.getStatus());
+        recordRespDTO.setStudentName(r.getStudent().getName());
         return recordRespDTO;
     }
 
@@ -58,6 +61,10 @@ public class RecordService {
         }
 
         Record record = recordSaveReqDTO.toEntity(teacherPS, studentPS, recordSaveReqDTO.getContent());
+
+        record.addStudent(studentPS);
+        record.addTeacher(teacherPS);
+
         Record result = recordRepository.save(record);
 
         return result.getId();
@@ -89,6 +96,23 @@ public class RecordService {
 
         recordPS.changeRecordStatus(RecordStatus.DELETED);
     }
+
+    @Transactional(readOnly = true)
+    public RecordRespDTO getRecord(Long recordId) {
+        Optional<Record> recordOP = recordRepository.findById(recordId);
+
+        if (!recordOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 피드백 정보 입니다.");
+        }
+
+        Record r = recordOP.get();
+        RecordRespDTO recordRespDTO = new RecordRespDTO();
+        recordRespDTO.setRecordId(r.getId());
+        recordRespDTO.setStudentName(r.getStudent().getName());
+        recordRespDTO.setContent(r.getContent());
+        return recordRespDTO;
+    }
+
 
     @Transactional(readOnly = true)
     public List<RecordRespDTO> getStudentList(Long studentId) {

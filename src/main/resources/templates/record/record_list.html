@@ -1,0 +1,142 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Toast UI Editor 스타일시트 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
+    <!-- Toast UI Editor 자바스크립트 파일 -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+
+<div class="d-flex flex-column p-2">
+
+    <h1 class="d-flex justify-content-center" th:text="|${studentName} 피드백|">[학생 이름] 피드백 리스트</h1>
+
+    <!-- 아코디언 위에 버튼 추가 -->
+    <div class="d-flex justify-content-end mb-3">
+        <button id="toggleAccordion" class="btn btn-secondary btn-sm me-1">모두 펼치기/닫기</button>
+        <a href="#" th:href="@{/record/create(studentId=${studentId})} " class="btn btn-primary btn-sm" role="button" aria-disabled="false" th:text="|피드백 작성하기|">피드백 작성하기</a>
+    </div>
+
+
+    <div class="accordion" id="recordAccordionPanels" th:if="${!recordList.isEmpty()}" th:each="record, recordStat : ${recordList}">
+
+        <div class="accordion-item">
+
+            <h2 class="accordion-header" th:id="'recordPanel-header' + ${recordStat.count}">
+                <button th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')} 작성 피드백|"
+                        class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        th:data-bs-target="'#recordCollapse' + ${recordStat.count}" aria-expanded="false"
+                        th:aria-controls="'recordCollapse' + ${recordStat.count}">
+                    피드백 이름
+                </button>
+            </h2>
+
+            <div th:id="'recordCollapse' + ${recordStat.count}" class="accordion-collapse collapse"
+                 th:aria-labelledby="'recordPanel-header'+ ${recordStat.count}" data-bs-parent="recordAccordionPanels">
+                <div class="accordion-body">
+                    <h5 th:text="|작성자: ${record.teacherName}|">작성자</h5>
+<!--                    <p th:text="${record.content}">피드백 내용</p>-->
+                    <div class="markdown-content" th:text="${record.content}">
+                    </div>
+                    <a href="#" th:href="@{/record/update/{recordId}(recordId=${record.recordId}, studentId=${studentId})} " class="btn btn-primary btn-sm" role="button" aria-disabled="false" th:text="수정하기">수정하기</a>
+                    <a href="#" class="btn btn-danger btn-sm" role="button" aria-disabled="false" th:text="삭제하기">삭제하기</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="position-fixed top-50 start-50 translate-middle p-3" style="z-index: 11">
+            <div id="deleteToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">피드백 삭제</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <strong class="me-auto d-flex justify-content-center">삭제하시겠습니까?</strong>
+                </div>
+
+                <div class="d-flex flex-row justify-content-around">
+                    <a href="#" th:href="@{/record/delete/{recordId}(recordId=${record.recordId}, studentId=${studentId})} " class="btn btn-danger btn-sm" role="button" aria-disabled="false" th:text="삭제">삭제</a>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast" aria-label="Close" th:text="취소"></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+
+<script>
+    // 모든 아코디언 토글 상태를 추적하는 변수
+    let isAllAccordionExpanded = false;
+
+    // 모든 아코디언을 펼치거나 닫는 함수
+    function toggleAllAccordions() {
+        const accordions = document.querySelectorAll('.accordion-collapse');
+        accordions.forEach((accordion) => {
+            if (isAllAccordionExpanded) {
+                // Bootstrap 5에서는 new bootstrap.Collapse()를 사용하여 토글
+                new bootstrap.Collapse(accordion, {toggle: false}).hide();
+            } else {
+                new bootstrap.Collapse(accordion, {toggle: false}).show();
+            }
+        });
+        // 토글 상태 업데이트
+        isAllAccordionExpanded = !isAllAccordionExpanded;
+    }
+
+    // 버튼에 이벤트 리스너 추가
+    document.getElementById('toggleAccordion').addEventListener('click', toggleAllAccordions);
+
+
+    document.querySelectorAll('a[role="button"]').forEach(button => {
+        button.addEventListener('click', function(event) {
+            if (this.textContent === '삭제하기') {
+                // event.preventDefault(); // 기본 동작(링크 이동)을 방지
+                const toastElement = document.getElementById('deleteToast');
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show(); // 토스트 창 표시
+            }
+        });
+    });
+
+    // 토스트 ui 뷰어 렌더링 함수
+    // 페이지 로드 시 실행되는 함수
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // 마크다운 내용을 표시할 모든 요소를 선택
+        document.querySelectorAll('.markdown-content').forEach((element) => {
+            // 요소 내부의 텍스트(마크다운 형식)를 가져옴
+            const markdown = element.textContent.trim();
+
+            // Toast UI Editor Viewer 인스턴스 생성
+            const viewer = new toastui.Editor.factory({
+                el: element, // 마크다운을 표시할 요소
+                viewer: true, // Viewer 모드 활성화
+                initialValue: markdown // 초기 표시할 마크다운 내용
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

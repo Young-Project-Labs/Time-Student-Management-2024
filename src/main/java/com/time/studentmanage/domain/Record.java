@@ -26,13 +26,14 @@ public class Record extends BaseTimeEntity {
     @Column(name = "record_id")
     private Long id;
 
+    @Lob
     private String content;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = LAZY) //, cascade = CascadeType.PERSIST
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = LAZY) //, cascade = CascadeType.PERSIST
     @JoinColumn(name = "student_id")
     private Student student;
 

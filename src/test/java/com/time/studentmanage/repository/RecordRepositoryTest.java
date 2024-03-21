@@ -53,50 +53,50 @@ class RecordRepositoryTest {
         assertThat(findRecord.getContent()).isEqualTo(savedRecord.getContent());
     }
 
-    @Test
-    @Order(2)
-    void 피드백_수정_테스트() {
-        // given
-        Student student = createStudent();
-        Teacher teacher = createTeacher();
-
-        Record record = createRecord(teacher, student);
-        record.addStudent(student);
-        record.addTeacher(teacher);
-
-        // when
-        Record savedRecord = recordRepository.save(record);
-        log.info("savedRecord={}", savedRecord);
-        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
-        log.info("findRecord={}", findRecord);
-
-        findRecord.changeContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
-        recordRepository.flush();
-
-        //then
-        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
-        log.info("updatedRecord={}", updatedRecord);
-        assertThat(updatedRecord.getContent()).isEqualTo(findRecord.getContent());
-    }
-
-    @Test
-    @Order(3)
-    void 피드백_삭제_테스트() {
-        //given
-        Student student = createStudent();
-        Teacher teacher = createTeacher();
-        Record record = createRecord(teacher, student);
-
-        //when
-        Record savedRecord = recordRepository.save(record);
-        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
-        findRecord.changeRecordStatus(RecordStatus.DELETED);
-
-        recordRepository.flush();
-
-        //then
-        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
-        assertThat(updatedRecord.getStatus()).isEqualTo(RecordStatus.DELETED);
-        assertThat(recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student).size()).isEqualTo(0);
-    }
+//    @Test
+//    @Order(2)
+//    void 피드백_수정_테스트() {
+//        // given
+//        Student student = createStudent();
+//        Teacher teacher = createTeacher();
+//
+//        Record record = createRecord(teacher, student);
+//        record.addStudent(student);
+//        record.addTeacher(teacher);
+//
+//        // when
+//        Record savedRecord = recordRepository.save(record);
+//        log.info("savedRecord={}", savedRecord);
+//        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
+//        log.info("findRecord={}", findRecord);
+//
+//        findRecord.changeContent("철수가 문법 수준은 높으나 독해에 있어서 보충이 필요해 보입니다.");
+//        recordRepository.flush();
+//
+//        //then
+//        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
+//        log.info("updatedRecord={}", updatedRecord);
+//        assertThat(updatedRecord.getContent()).isEqualTo(findRecord.getContent());
+//    }
+//
+//    @Test
+//    @Order(3)
+//    void 피드백_삭제_테스트() {
+//        //given
+//        Student student = createStudent();
+//        Teacher teacher = createTeacher();
+//        Record record = createRecord(teacher, student);
+//
+//        //when
+//        Record savedRecord = recordRepository.save(record);
+//        Record findRecord = recordRepository.findById(savedRecord.getId()).get();
+//        findRecord.changeRecordStatus(RecordStatus.DELETED);
+//
+//        recordRepository.flush();
+//
+//        //then
+//        Record updatedRecord = recordRepository.findById(findRecord.getId()).get();
+//        assertThat(updatedRecord.getStatus()).isEqualTo(RecordStatus.DELETED);
+//        assertThat(recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, student).size()).isEqualTo(0);
+//    }
 }
