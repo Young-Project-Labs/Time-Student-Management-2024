@@ -68,11 +68,7 @@ class RecordServiceTest {
         when(recordRepository.save(any())).thenReturn(record);
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
-                .studentId(fakeId)
-                .teacherId(fakeId)
-                .content(content)
-                .build();
+        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
 
         //when
         Long recordId = recordService.saveRecord(recordSaveReqDTO);
@@ -107,11 +103,8 @@ class RecordServiceTest {
 //        when(recordsRepository.save(any())).thenReturn(record); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
-                .studentId(fakeId)
-                .teacherId(fakeId)
-                .content(content)
-                .build();
+        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
+
 
         //when
         //then
@@ -142,11 +135,7 @@ class RecordServiceTest {
         ReflectionTestUtils.setField(record, "id", fakeId);
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = RecordSaveReqDTO.builder()
-                .studentId(fakeId)
-                .teacherId(fakeId)
-                .content(content)
-                .build();
+        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
 
         //when
         //then
