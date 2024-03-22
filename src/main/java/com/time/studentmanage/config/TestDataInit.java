@@ -3,10 +3,8 @@ package com.time.studentmanage.config;
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
-import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import com.time.studentmanage.repository.ParentRepository;
 import com.time.studentmanage.repository.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
@@ -19,7 +17,6 @@ public class TestDataInit {
 
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
-    private final ParentRepository parentRepository;
     private final RecordRepository recordRepository;
 
     @PostConstruct
@@ -194,50 +191,5 @@ public class TestDataInit {
 
     }
 
-    @PostConstruct
-    public void initParent() {
-        Parent parent1 = Parent.builder()
-                .name("철수엄마").phoneNumber("010-1234-4567")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        Parent parent2 = Parent.builder()
-                .name("진진진엄마").phoneNumber("010-1234-1224")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        Parent parent3 = Parent.builder()
-                .name("진진진아빠").phoneNumber("010-1234-1234")
-                .memberType(MemberType.PARENT).gender(GenderType.MALE)
-                .build();
-
-        Parent parent4 = Parent.builder()
-                .name("노진구엄마").phoneNumber("010-4567-1234")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        Parent parent5 = Parent.builder()
-                .name("짱구엄마").phoneNumber("010-1234-4234")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        Parent parent6 = Parent.builder()
-                .name("뚱이엄마").phoneNumber("010-1234-4525")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        Parent parent7 = Parent.builder()
-                .name("뚱이아빠").phoneNumber("010-1234-4125")
-                .memberType(MemberType.PARENT).gender(GenderType.MALE)
-                .build();
-
-        parentRepository.save(parent1);
-        parentRepository.save(parent2);
-        parentRepository.save(parent3);
-        parentRepository.save(parent4);
-        parentRepository.save(parent5);
-        parentRepository.save(parent6);
-        parentRepository.save(parent7);
-    }
 
 }
