@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class StudentRespDto {
     private Long id;
@@ -29,7 +28,6 @@ public class StudentRespDto {
     private Address address;
 
 
-    @Builder
     public StudentRespDto(Student student) {
         this.id = student.getId();
         this.name = student.getName();

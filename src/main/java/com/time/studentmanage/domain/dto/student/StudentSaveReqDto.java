@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StudentSaveReqDto {
     private String name;
     private String userId;
@@ -27,7 +26,6 @@ public class StudentSaveReqDto {
     private ClassType classType;
     private Address address;
 
-    @Builder
     public StudentSaveReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, LocalDateTime quitDate, MemberType memberType, GenderType gender, ClassType classType, Address address) {
         this.name = name;
         this.userId = userId;
