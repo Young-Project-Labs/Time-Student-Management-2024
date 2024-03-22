@@ -53,7 +53,7 @@ public class StudentService {
 
         Student resultStudent = studentRepository.save(studentOP.get());
         //dto 변환
-        StudentRespDto resultDto = StudentRespDto.builder().student(resultStudent).build();
+        StudentRespDto resultDto = new StudentRespDto(resultStudent);
         return resultDto;
 
     }
@@ -86,7 +86,7 @@ public class StudentService {
             throw new DataNotFoundException("해당하는 학생이 없습니다.");
         }
 
-        StudentRespDto respDto = StudentRespDto.builder().student(studentOP.get()).build();
+        StudentRespDto respDto = new StudentRespDto(studentOP.get());
         return respDto;
 
     }

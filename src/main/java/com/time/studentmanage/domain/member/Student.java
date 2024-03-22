@@ -34,8 +34,9 @@ public class Student extends BaseMemberEntity {
     private String phoneNumber;
     private String schoolName;
     private int grade;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime quitDate;
+    private String parentName;
+    private String parentPhoneNumber;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
@@ -52,9 +53,6 @@ public class Student extends BaseMemberEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "student", orphanRemoval = true)
-    private List<Parent> parentList = new ArrayList<>();
-
     @OneToMany(mappedBy = "student")
     private List<Record> recordList = new ArrayList<>();
 
@@ -63,7 +61,7 @@ public class Student extends BaseMemberEntity {
     private Teacher teacher;
 
     @Builder(toBuilder = true)
-    public Student(String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate, Teacher teacher) {
+    public Student(String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
         this.name = name;
         this.userId = userId;
         this.password = password;
@@ -72,6 +70,8 @@ public class Student extends BaseMemberEntity {
         this.grade = grade;
         this.attendanceStatus = attendanceStatus;
         this.quitDate = quitDate;
+        this.parentName = parentName;
+        this.parentPhoneNumber = parentPhoneNumber;
         this.memberType = memberType;
         this.gender = gender;
         this.classType = classType;

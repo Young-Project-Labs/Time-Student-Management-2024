@@ -2,6 +2,7 @@ package com.time.studentmanage.web;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDTO;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
+import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
@@ -28,13 +29,13 @@ public class RecordController {
 
     @GetMapping("/record/{studentId}")
     public String records(Model model, @PathVariable("studentId") Long id) {
-        Student student = studentService.getStudentInfo(id);
+        StudentRespDto studentRespDto = studentService.getStudentInfo(id);
         List<RecordRespDTO> recordList = recordService.getStudentList(id);
 
         if (!recordList.isEmpty()) {
             model.addAttribute("recordList", recordList);
         }
-        model.addAttribute("studentName", student.getName());
+        model.addAttribute("studentName", studentRespDto.getName());
 
         return "record/record_list";
     }

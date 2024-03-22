@@ -4,12 +4,12 @@ import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.*;
-import com.time.studentmanage.domain.member.Parent;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,27 +97,7 @@ public class TestUtil {
         return studentList;
     }
 
-    public static Parent createParent() {
-        //given
-        Student student = Student.builder()
-                .name("철수")
-                .userId("cs@time.com").password("1234")
-                .phoneNumber("010-1111-2222").schoolName("용호초등학교")
-                .classType(ClassType.ELEMENTARY).grade(1)
-                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
-                .address(new Address("반림동", "현대 아파트", "102-1201"))
-                .attendanceStatus(AttendanceStatus.Y)
-                .build();
 
-        Parent parent = Parent.builder()
-                .name("철수엄마").phoneNumber("010-1234-4567")
-                .memberType(MemberType.PARENT).gender(GenderType.FEMALE)
-                .build();
-
-        // 연관관계 메서드 사용
-        parent.addStudent(student);
-        return parent;
-    }
 
     public static Teacher createTeacher() {
         return Teacher.builder()
@@ -132,35 +112,13 @@ public class TestUtil {
     }
 
     public static StudentSaveReqDto createStudentDto() {
-        StudentSaveReqDto saveReqDto = StudentSaveReqDto.builder()
-                .name("철수")
-                .userId("cs@time.com")
-                .password("1234")
-                .phoneNumber("010-1111-2222")
-                .schoolName("용호초등학교")
-                .classType(ClassType.ELEMENTARY)
-                .grade(1)
-                .memberType(MemberType.STUDENT)
-                .gender(GenderType.MALE)
-                .address(new Address("반림동", "현대 아파트", "102-1201"))
-                .attendanceStatus(AttendanceStatus.Y)
-                .build();
+        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","용호초등학교",1,AttendanceStatus.Y, LocalDateTime.now(),MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
+
         return saveReqDto;
     }
 
     public static StudentUpdateReqDto updateStudentDto() {
-        StudentUpdateReqDto updateReqDto = StudentUpdateReqDto.builder()
-                .id(1L)
-                .name("수정 엔티티")
-                .phoneNumber("010-1111-2222")
-                .schoolName("용호초등학교")
-                .classType(ClassType.ELEMENTARY)
-                .grade(1)
-                .memberType(MemberType.STUDENT)
-                .gender(GenderType.MALE)
-                .address(new Address("반림동", "현대 아파트", "102-1201"))
-                .attendanceStatus(AttendanceStatus.Y)
-                .build();
+        StudentUpdateReqDto updateReqDto = new StudentUpdateReqDto(1L, "수정 엔티티","010-1111-3333", "용호초등학교", 1, AttendanceStatus.Y,LocalDateTime.now(), MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
         return updateReqDto;
     }
 

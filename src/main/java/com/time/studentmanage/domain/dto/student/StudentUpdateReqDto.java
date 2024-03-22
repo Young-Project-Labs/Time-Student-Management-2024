@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StudentUpdateReqDto {
     private Long id;
     private String name;
@@ -25,7 +24,6 @@ public class StudentUpdateReqDto {
     private ClassType classType;
     private Address address;
 
-    @Builder
     public StudentUpdateReqDto(Long id, String name, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, LocalDateTime quitDate, MemberType memberType, GenderType gender, ClassType classType, Address address) {
         this.id = id;
         this.name = name;

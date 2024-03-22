@@ -1,7 +1,6 @@
 package com.time.studentmanage;
 
 import com.time.studentmanage.config.TestDataInit;
-import com.time.studentmanage.repository.ParentRepository;
 import com.time.studentmanage.repository.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
@@ -22,7 +21,7 @@ public class StudentmanageApplication {
 
     @Bean
     @Profile("local")
-    public TestDataInit testDataInit(StudentRepository studentRepository, ParentRepository parentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository) {
-        return new TestDataInit(studentRepository, teacherRepository, parentRepository, recordRepository);
+    public TestDataInit testDataInit(StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository) {
+        return new TestDataInit(studentRepository, teacherRepository, recordRepository);
     }
 }
