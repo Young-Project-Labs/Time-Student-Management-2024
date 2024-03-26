@@ -6,40 +6,63 @@ import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
+import jakarta.persistence.Embedded;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class StudentSaveReqDto {
+    @NotBlank
     private String name;
+    @NotBlank
     private String userId;
+    @NotBlank
     private String password;
+    @NotBlank
+    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
+    @NotBlank
     private String schoolName;
-    private int grade;
+    @NotBlank
+    private String parentName;
+    @NotBlank
+    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    private String parentPhoneNumber;
+    @NotNull
+    @Min(1) @Max(6)
+    private Integer grade;
+
     private AttendanceStatus attendanceStatus;
-    private LocalDateTime quitDate;
+
     private MemberType memberType;
+
+    @NotNull
     private GenderType gender;
+    @NotNull
     private ClassType classType;
+    @Valid
     private Address address;
 
-    public StudentSaveReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, LocalDateTime quitDate, MemberType memberType, GenderType gender, ClassType classType, Address address) {
-        this.name = name;
-        this.userId = userId;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.schoolName = schoolName;
-        this.grade = grade;
-        this.attendanceStatus = attendanceStatus;
-        this.quitDate = quitDate;
-        this.memberType = memberType;
-        this.gender = gender;
-        this.classType = classType;
-        this.address = address;
-    }
+
+//    public StudentSaveReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
+//        this.name = name;
+//        this.userId = userId;
+//        this.password = password;
+//        this.phoneNumber = phoneNumber;
+//        this.schoolName = schoolName;
+//        this.grade = grade;
+//        this.attendanceStatus = attendanceStatus;
+//        this.memberType = memberType;
+//        this.gender = gender;
+//        this.classType = classType;
+//        this.address = address;
+//    }
 
     //Dto -> Student 엔티티 변환
     public Student toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -51,10 +74,11 @@ public class StudentSaveReqDto {
                 .schoolName(schoolName)
                 .grade(grade)
                 .attendanceStatus(attendanceStatus)
-                .quitDate(quitDate)
                 .memberType(memberType)
                 .gender(gender)
                 .classType(classType)
+                .parentName(parentName)
+                .parentPhoneNumber(parentPhoneNumber)
                 .address(address)
                 .build();
         return student;
