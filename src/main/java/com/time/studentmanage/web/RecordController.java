@@ -2,7 +2,9 @@ package com.time.studentmanage.web;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDTO;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
+import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
+import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
@@ -27,6 +29,11 @@ public class RecordController {
     private final RecordService recordService;
     private final StudentService studentService;
 
+    @ModelAttribute("searchTypes")
+    public SearchType[] searchType() {
+        return SearchType.values();
+    }
+
     @GetMapping("/record/{studentId}")
     public String records(Model model, @PathVariable("studentId") Long id) {
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
@@ -35,8 +42,25 @@ public class RecordController {
         if (!recordList.isEmpty()) {
             model.addAttribute("recordList", recordList);
         }
-        model.addAttribute("studentName", studentRespDto.getName());
 
+        RecordSearchDTO recordSearchDTO = new RecordSearchDTO();
+
+        model.addAttribute("studentName", studentRespDto.getName());
+        model.addAttribute("recordSearchDTO", recordSearchDTO);
+
+        return "record/record_list";
+    }
+
+    // TODO: redirect 시켜야 할 것 같음
+    @PostMapping("/record/{studentId}")
+    public String filterRecords(@ModelAttribute RecordSearchDTO recordSearchDTO,
+                                @PathVariable("studentId") Long studentId,
+                                Model model) {
+        log.info("recordSearchDTO={}", recordSearchDTO);
+
+        model.addAttribute("recordSearchDTO", recordSearchDTO);
+
+//        return "redirect:/record/" + studentId;
         return "record/record_list";
     }
 
@@ -62,8 +86,6 @@ public class RecordController {
         recordSaveReqDTO.setTeacherId(3L);
 
         model.addAttribute("recordSaveReqDTO", recordSaveReqDTO);
-//        model.addAttribute("teacherId", 3L);
-//        model.addAttribute("studentId", studentId);
 
         return "record/record_create_form";
     }
