@@ -41,6 +41,12 @@ public class StudentService {
         return result.getId();
     }
 
+    //아이디 중복 체크
+    @Transactional(readOnly = true)
+    public Boolean checkIdDuplication(String checkId) {
+       return studentRepository.existsByUserId(checkId);
+    }
+
     //학생_정보_수정
     public StudentRespDto updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
         Optional<Student> studentOP = studentRepository.findById(id);
