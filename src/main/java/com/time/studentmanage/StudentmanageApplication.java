@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableJpaAuditing
@@ -21,7 +22,7 @@ public class StudentmanageApplication {
 
     @Bean
     @Profile("local")
-    public TestDataInit testDataInit(StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository) {
-        return new TestDataInit(studentRepository, teacherRepository, recordRepository);
+    public TestDataInit testDataInit(StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        return new TestDataInit(studentRepository, teacherRepository, recordRepository, bCryptPasswordEncoder);
     }
 }

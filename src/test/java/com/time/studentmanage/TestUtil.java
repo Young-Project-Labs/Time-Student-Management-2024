@@ -112,7 +112,7 @@ public class TestUtil {
     }
 
     public static StudentSaveReqDto createStudentDto() {
-        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","용호초등학교",1,AttendanceStatus.Y, LocalDateTime.now(),MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
+        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","철수어머님","010-9999-9999","용호초등학교",1,AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
 
         return saveReqDto;
     }

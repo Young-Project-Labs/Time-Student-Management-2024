@@ -10,6 +10,7 @@ import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -18,13 +19,18 @@ public class TestDataInit {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final RecordRepository recordRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+
 
     @PostConstruct
     @Transactional
     public void initRecord() {
+        String password = "1234";
+        String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
                 .name("도라미")
-                .userId("drm@time.com").password("1234")
+                .userId("drm@time.com").password(encodePassword)
                 .phoneNumber("010-1111-3311").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(2)
                 .memberType(MemberType.STUDENT).gender(GenderType.FEMALE)
@@ -33,7 +39,7 @@ public class TestDataInit {
                 .build();
 
         Teacher teacher1 = Teacher.builder()
-                .name("고길동").userId("kkd@time.com").password("1234")
+                .name("고길동").userId("kkd@time.com").password(encodePassword)
                 .email("pjj@time.com").phoneNumber("010-1212-3332")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.MALE)
                 .build();
@@ -102,9 +108,11 @@ public class TestDataInit {
 
     @PostConstruct
     public void initStudent() {
+        String password = "1234";
+        String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
                 .name("철수")
-                .userId("cs@time.com").password("1234")
+                .userId("cs@time.com").password(encodePassword)
                 .phoneNumber("010-1111-2222").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(1)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -115,7 +123,7 @@ public class TestDataInit {
         Student student2 = Student.builder()
                 .name("진진진")
                 .userId("jjj@time.com")
-                .password("1234")
+                .password(encodePassword)
                 .phoneNumber("010-2222-3333")
                 .schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY)
@@ -128,7 +136,7 @@ public class TestDataInit {
 
         Student student3 = Student.builder()
                 .name("노진구")
-                .userId("njk@time.com").password("1234")
+                .userId("njk@time.com").password(encodePassword)
                 .phoneNumber("010-4444-5555").schoolName("용호중학교")
                 .classType(ClassType.MIDDLE).grade(3)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -138,7 +146,7 @@ public class TestDataInit {
 
         Student student4 = Student.builder()
                 .name("짱구")
-                .userId("jg@time.com").password("1234")
+                .userId("jg@time.com").password(encodePassword)
                 .phoneNumber("010-1111-2222").schoolName("반림중학교")
                 .classType(ClassType.MIDDLE).grade(2)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -148,7 +156,7 @@ public class TestDataInit {
 
         Student student5 = Student.builder()
                 .name("뚱이")
-                .userId("star@time.com").password("1234")
+                .userId("star@time.com").password(encodePassword)
                 .phoneNumber("010-1111-2222").schoolName("용호고등학교")
                 .classType(ClassType.HIGH).grade(3)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -164,23 +172,25 @@ public class TestDataInit {
 
     @PostConstruct
     public void initTeacher() {
+        String password = "1234";
+        String encodePassword = passwordEncoder.encode(password);
         Teacher teacher1 = Teacher.builder()
-                .name("대박샘").userId("pjj@time.com").password("1234")
+                .name("대박샘").userId("pjj@time.com").password(encodePassword)
                 .email("pjj@time.com").phoneNumber("010-3434-5678")
                 .memberType(MemberType.TEACHER).position(Position.CHIEF).gender(GenderType.MALE)
                 .build();
         Teacher teacher2 = Teacher.builder()
-                .name("줄리아").userId("julia@time.com").password("1234")
+                .name("줄리아").userId("julia@time.com").password(encodePassword)
                 .email("julia@time.com").phoneNumber("010-1212-3456")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.FEMALE)
                 .build();
         Teacher teacher3 = Teacher.builder()
-                .name("안샘").userId("ahn@time.com").password("1234")
+                .name("안샘").userId("ahn@time.com").password(encodePassword)
                 .email("ahn@time.com").phoneNumber("010-4545-2342")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.MALE)
                 .build();
         Teacher teacher4 = Teacher.builder()
-                .name("소피아").userId("sp@time.com").password("1234")
+                .name("소피아").userId("sp@time.com").password(encodePassword)
                 .email("sp@time.com").phoneNumber("010-1414-5515")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.FEMALE)
                 .build();
