@@ -39,7 +39,7 @@ public class LoginController {
         }
 
         //로그인, 패스워드 일치 여부 확인
-        Optional<?> loginMemberOP = loginService.login(form.getLoginId(), form.getPassword(), form.getMemberType());
+        Optional<?> loginMemberOP = loginService.login(form.getLoginId(), passwordEncoder.encode(form.getPassword()), form.getMemberType());
 
         //조회 실패(로그인 실패)
         if (!loginMemberOP.isPresent()) {
