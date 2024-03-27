@@ -5,7 +5,7 @@ import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
-import com.time.studentmanage.repository.RecordRepository;
+import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
 import jakarta.annotation.PostConstruct;
