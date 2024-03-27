@@ -10,7 +10,7 @@ spring:
     active: local
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+#    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
     hibernate:
       ddl-auto: create-drop
     properties:
