@@ -3,21 +3,27 @@ package com.time.studentmanage.service;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.dto.record.RecordRespDTO;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
+import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
+import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,7 +33,7 @@ public class RecordService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
 
-    private static RecordRespDTO createRecordRespDTO(Record r) {
+    private RecordRespDTO createRecordRespDTO(Record r) {
         RecordRespDTO recordRespDTO = new RecordRespDTO();
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setContent(r.getContent());
@@ -153,5 +159,69 @@ public class RecordService {
         }
 
         return respList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecordRespDTO> getFilteredResults(RecordSearchDTO recordSearchDTO) {
+        List<RecordRespDTO> respList = new ArrayList<>();
+        LocalDateTime fromDate;
+        LocalDateTime toDate;
+
+        if (recordSearchDTO.getSearchType() == null) {
+            throw new IllegalArgumentException("검색 조건을 선택하지 않았습니다.");
+        }
+
+        Student studentPS = validateStudentInfo(recordSearchDTO.getStudentId());
+
+        // "-"로 문자열을 나누고 양 옆 공백을 제거한 후 문자 배열로 변환
+        String[] dates = Arrays.stream(recordSearchDTO.getDates().split("-"))
+                .map(String::trim)
+                .toArray(String[]::new);
+
+        if (dates[0].equals(dates[1])) {
+            fromDate = toDate = null;
+        } else {
+            fromDate = convertLocalDateTime(dates[0]);
+            toDate = convertLocalDateTime(dates[1]);
+        }
+
+        switch (recordSearchDTO.getSearchType()) {
+
+            case CONTENT -> {
+                List<Record> resultOfContentSearch = recordRepository.findAllByContentSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate);
+
+                respList = resultOfContentSearch.stream()
+                        .map(this::createRecordRespDTO)
+                        .collect(Collectors.toList());
+            }
+            case TEACHER_NAME -> {
+                List<Record> resultOfTeacherNameSearch = recordRepository.findAllByTeacherNameSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate);
+
+                respList = resultOfTeacherNameSearch.stream()
+                        .map(this::createRecordRespDTO)
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return respList;
+    }
+
+    private Student validateStudentInfo(Long targetId) {
+        Optional<Student> studentOP = studentRepository.findById(targetId);
+        if (!studentOP.isPresent()) {
+            throw new DataNotFoundException("학생 정보 없음");
+        }
+
+        return studentOP.get();
+    }
+
+    private LocalDateTime convertLocalDateTime(String date) {
+        // "/"로 문자열을 나누고 숫자로 변환한 후 LocalDateTime으로 변환
+        return Arrays.stream(date.split("/"))
+                .map(Integer::parseInt)
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        list -> LocalDateTime.of(list.get(0), list.get(1), list.get(2), 0, 0)
+                ));
     }
 }

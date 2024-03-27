@@ -3,13 +3,15 @@ package com.time.studentmanage.service;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.dto.record.RecordRespDTO;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
+import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
 import com.time.studentmanage.domain.enums.RecordStatus;
+import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.RecordRepository;
 import com.time.studentmanage.repository.StudentRepository;
 import com.time.studentmanage.repository.TeacherRepository;
+import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,14 +20,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -291,5 +293,56 @@ class RecordServiceTest {
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getContent()).isEqualTo(newRecord.getContent());
         assertThat(result.get(1).getContent()).isEqualTo(oldRecord.getContent());
+    }
+
+    @Test
+    void 내용_선택O_검색어_선택O_날짜_선택O_조건_필터링_테스트() {
+        //given
+        Student student = Student.builder()
+                .name("노진구").build();
+        ReflectionTestUtils.setField(student, "id", 1L);
+
+        Teacher teacher1 = Teacher.builder()
+                .name("줄리아").build();
+        ReflectionTestUtils.setField(teacher1, "id", 1L);
+
+        Teacher teacher2 = Teacher.builder()
+                .name("소피").build();
+        ReflectionTestUtils.setField(teacher2, "id", 2L);
+
+        Record record1 = Record.builder()
+                .content("줄리아3월21일피드백")
+                .status(RecordStatus.PUBLISHED)
+                .student(student)
+                .teacher(teacher1)
+                .build();
+        ReflectionTestUtils.setField(record1, "id", 1L);
+        ReflectionTestUtils.setField(record1, "createDate", LocalDateTime.of(2024, 3, 21, 0, 0));
+
+        Record record2 = Record.builder()
+                .content("줄리아3월23일피드백")
+                .status(RecordStatus.PUBLISHED)
+                .student(student)
+                .teacher(teacher1)
+                .build();
+        ReflectionTestUtils.setField(record2, "id", 2L);
+        ReflectionTestUtils.setField(record2, "createDate", LocalDateTime.of(2024, 3, 23, 0, 0));
+
+
+        RecordSearchDTO recordSearchDTO = new RecordSearchDTO();
+        recordSearchDTO.setSearchType(SearchType.CONTENT);
+        recordSearchDTO.setStudentId(1L);
+        recordSearchDTO.setDates("2024/03/21 - 2024/03/27");
+        recordSearchDTO.setContent("hello");
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(recordRepository.findAllByContentSearch(any(), anyString(), any(), any())).thenReturn(List.of(record2, record1));
+
+        //when
+        List<RecordRespDTO> result = recordService.getFilteredResults(recordSearchDTO);
+
+        //then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getCreateDate()).isEqualTo(record2.getCreateDate());
     }
 }
