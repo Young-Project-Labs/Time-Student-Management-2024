@@ -5,11 +5,13 @@ import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
 import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
-import com.time.studentmanage.domain.member.Student;
+import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
 import com.time.studentmanage.service.StudentService;
+import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -51,16 +53,32 @@ public class RecordController {
         return "record/record_list";
     }
 
-    // TODO: redirect 시켜야 할 것 같음
     @PostMapping("/record/{studentId}")
     public String filterRecords(@ModelAttribute RecordSearchDTO recordSearchDTO,
                                 @PathVariable("studentId") Long studentId,
+                                HttpServletRequest request,
                                 Model model) {
-        log.info("recordSearchDTO={}", recordSearchDTO);
 
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            return "home";
+        }
+
+        Teacher teacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        recordSearchDTO.setTeacherId(teacher.getId());
+
+        log.info("recordSearchDTO={}", recordSearchDTO);
+        StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
+        List<RecordRespDTO> recordList = recordService.getFilteredResults(recordSearchDTO);
+
+        if (!recordList.isEmpty()) {
+            model.addAttribute("recordList", recordList);
+        }
+
+        model.addAttribute("studentName", studentRespDto.getName());
         model.addAttribute("recordSearchDTO", recordSearchDTO);
 
-//        return "redirect:/record/" + studentId;
         return "record/record_list";
     }
 
