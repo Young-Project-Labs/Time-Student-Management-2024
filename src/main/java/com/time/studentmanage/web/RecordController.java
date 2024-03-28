@@ -10,6 +10,7 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
 import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -72,6 +74,7 @@ public class RecordController {
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
+            model.addAttribute("recordList", new ArrayList<>());
             model.addAttribute("recordSearchDTO", recordSearchDTO);
             return "record/record_list";
         }
