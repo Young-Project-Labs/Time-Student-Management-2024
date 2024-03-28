@@ -18,7 +18,7 @@ spring:
         format_sql: true
 
   messages:
-    basename: errors
+    basename: messages, errors
 
 
 

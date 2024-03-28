@@ -24,6 +24,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
 
     <title>Document</title>
 </head>
@@ -58,9 +64,12 @@
             <!--검색 타입 라디오 버튼 시작-->
             <div class="d-flex flex-row">
                 <div th:each="type : ${searchTypes}" class="form-check form-check-inline">
-                    <input type="radio" th:value="${type.name()}" th:field="*{searchType}" class="form-check-input">
+                    <input type="radio" th:value="${type.name()}" th:field="*{searchType}" th:errorclass="field-error" class="form-check-input">
                     <label th:for="${#ids.prev('searchType')}" th:text="${type.description}" class="form-check-label">조건</label>
                 </div>
+
+                <div th:class="field-error" th:errors="*{searchType}" >타입 선택 오류</div>
+
             </div>
             <!--검색 타입 라디오 버튼 끝-->
 
@@ -84,6 +93,8 @@
                     </div>
                 </div>
 
+                <input type="hidden" th:field="*{studentName}">
+
             </div>
         </div>
         <!--점보트론 끝-->
@@ -91,7 +102,7 @@
     </form>
     <!--  내용 & 작성자 날짜별 필터링 검색 폼 끝  -->
 
-    <h1 class="d-flex justify-content-center" th:text="|${studentName} 피드백|">[학생 이름] 피드백 리스트</h1>
+    <h1 class="d-flex justify-content-center" th:text="|${recordSearchDTO.studentName} 피드백|">[학생 이름] 피드백 리스트</h1>
 
     <!-- 아코디언 위에 버튼 추가 -->
     <div class="d-flex justify-content-end mb-3">
@@ -100,9 +111,17 @@
            aria-disabled="false" th:text="|피드백 작성하기|">피드백 작성하기</a>
     </div>
 
+    <!-- recordList가 비어있을 때 메시지 표시 -->
+    <div th:if="${recordList.isEmpty()}">
+        <div class="alert alert-warning text-center" role="alert" th:text="#{record.noResult}">
+            피드백이 없습니다.
+        </div>
+    </div>
 
     <div class="accordion" id="recordAccordionPanels" th:if="${!recordList.isEmpty()}"
          th:each="record, recordStat : ${recordList}">
+
+
 
         <div class="accordion-item">
 
