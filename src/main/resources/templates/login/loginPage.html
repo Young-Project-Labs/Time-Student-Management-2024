@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="template/layout/head :: headFragment(~{::style})">
-<style>
-    .field-error {
-        border-color: #dc3545;
-        color: #dc3545;
-    }
-</style>
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
 </head>
 <body class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
-
 
 <form action="/login" th:object="${loginFormDto}" method="post">
     <div id="typeHelp" class="form-text">로그인 유형을 반드시 선택하세요.</div>

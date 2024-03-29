@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="template/layout/head :: headFragment(~{::style})">
-    <style>
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-        }
-        .form-check-label {
-            font-weight: bold;
-        }
-    </style>
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
 </head>
 <body>
 
