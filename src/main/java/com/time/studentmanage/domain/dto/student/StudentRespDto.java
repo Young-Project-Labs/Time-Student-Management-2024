@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class StudentRespDto {
     private Long id;
     private String name;
@@ -19,9 +20,10 @@ public class StudentRespDto {
     private String password;
     private String phoneNumber;
     private String schoolName;
-    private int grade;
+    private String parentName;
+    private String parentPhoneNumber;
+    private Integer grade;
     private AttendanceStatus attendanceStatus;
-    private LocalDateTime quitDate;
     private MemberType memberType;
     private GenderType gender;
     private ClassType classType;
@@ -34,15 +36,15 @@ public class StudentRespDto {
         this.userId = student.getUserId();
         this.password = student.getPassword();
         this.phoneNumber = student.getPhoneNumber();
+        this.parentName = student.getParentName();
+        this.parentPhoneNumber = student.getParentPhoneNumber();
         this.schoolName = student.getSchoolName();
         this.grade = student.getGrade();
         this.attendanceStatus = student.getAttendanceStatus();
-        this.quitDate = student.getQuitDate();
         this.memberType = student.getMemberType();
         this.gender = student.getGender();
         this.classType = student.getClassType();
         this.address = student.getAddress();
     }
-
 
 }

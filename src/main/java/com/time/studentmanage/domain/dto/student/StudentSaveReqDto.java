@@ -50,20 +50,6 @@ public class StudentSaveReqDto {
     private Address address;
 
 
-//    public StudentSaveReqDto(String name, String userId, String password, String phoneNumber, String schoolName, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
-//        this.name = name;
-//        this.userId = userId;
-//        this.password = password;
-//        this.phoneNumber = phoneNumber;
-//        this.schoolName = schoolName;
-//        this.grade = grade;
-//        this.attendanceStatus = attendanceStatus;
-//        this.memberType = memberType;
-//        this.gender = gender;
-//        this.classType = classType;
-//        this.address = address;
-//    }
-
     //Dto -> Student 엔티티 변환
     public Student toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
         Student student = Student.builder()
