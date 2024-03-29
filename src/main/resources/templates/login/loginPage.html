@@ -32,13 +32,13 @@
         </div>
         <label for="loginId" class="form-label">아이디</label>
         <input type="text" class="form-control" id="loginId" placeholder="아이디를 입력하세요." th:field="*{loginId}" th:errorclass="field-error">
-        <div th:class="field-error" th:errors="*{loginId}" th:text="#{NotBlank.loginFormDto.loginId}">아이디 오류 메시지</div>
+        <div th:class="field-error" th:errors="*{loginId}">아이디 오류 메시지</div>
 
     </div>
     <div class="d-flex flex-column justify-content-center mb-3">
         <label for="password" class="form-label">비밀번호</label>
         <input type="password" class="form-control" id="password" placeholder="패스워드를 입력하세요." th:field="*{password}" th:errorclass="field-error">
-        <div th:class="field-error" th:errors="*{password}" th:text="#{NotBlank.loginFormDto.password}">비밀번호 오류 메시지</div>
+        <div th:class="field-error" th:errors="*{password}">비밀번호 오류 메시지</div>
 
     </div>
     <div th:if="${#fields.hasGlobalErrors()}">
@@ -48,7 +48,7 @@
 
 </form>
 <hr>
-<button type="button" class="btn btn-primary" aria-describedby="joinHelp">회원 가입</button>
+<button type="button" class="btn btn-primary" aria-describedby="joinHelp" onclick="location.href='/join'">회원 가입</button>
 <button type="button" class="btn btn-primary">아이디/비밀번호 찾기</button>
 <div id="joinHelp" class="form-text">처음 온 학생들은 회원 가입을 먼저 진행 해주세요.</div>
 

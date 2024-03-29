@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -18,5 +18,13 @@
         <li><a href="/join">회원가입 페이지</a></li>
         <li><a href="#" th:href="@{/}">링크 추가하기</a></li>
     </ol>
+    <div th:if="${session.loginMember != null}">
+        <span th:text="${session.loginMember.name}"></span>
+        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
+        <form method="post" action="/logout">
+                <button type="submit">로그아웃</button>
+        </form>
+    </div>
+
 </body>
 </html>
