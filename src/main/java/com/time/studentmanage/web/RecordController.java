@@ -10,7 +10,6 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
 import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,7 @@ public class RecordController {
 
         if (session == null) {
             // TODO: 로그인 페이지로 이동하도록 변경
-            return "home";
+            return "redirect:/";
         }
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
@@ -66,20 +65,22 @@ public class RecordController {
                                 Model model) {
 
         HttpSession session = request.getSession(false);
+        Object teacherSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null) {
+        if (session == null || teacherSession == null) {
             // TODO: 로그인 페이지로 이동하도록 변경
-            return "home";
+            return "redirect:/";
         }
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-            model.addAttribute("recordList", new ArrayList<>());
+            List<RecordRespDTO> recordList = recordService.getStudentList(studentId);
+            model.addAttribute("recordList", recordList);
             model.addAttribute("recordSearchDTO", recordSearchDTO);
             return "record/record_list";
         }
 
-        Teacher teacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        Teacher teacher = (Teacher) teacherSession;
         recordSearchDTO.setTeacherId(teacher.getId());
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
@@ -100,7 +101,7 @@ public class RecordController {
 
         if (session == null) {
             // TODO: 로그인 페이지로 이동하도록 변경
-            return "home";
+            return "redirect:/";
         }
 
         if (studentId == null) {
@@ -124,7 +125,7 @@ public class RecordController {
 
         if (session == null) {
             // TODO: 로그인 페이지로 이동하도록 변경
-            return "home";
+            return "redirect:/";
         }
 
         if (bindingResult.hasErrors()) {
@@ -146,7 +147,7 @@ public class RecordController {
 
         if (session == null) {
             // TODO: 로그인 페이지로 이동하도록 변경
-            return "home";
+            return "redirect:/";
         }
 
         RecordRespDTO recordRespDTO = recordService.getRecord(recordId);
