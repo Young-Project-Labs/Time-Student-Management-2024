@@ -91,7 +91,6 @@ class StudentServiceTest {
         StudentUpdateReqDto updateReqDto = updateStudentDto();
         // 재원여부 & 퇴원일 임의 값으로 Setter
         updateReqDto.setAttendanceStatus(AttendanceStatus.N);
-        updateReqDto.setQuitDate(LocalDateTime.now());
 
         Student updateStudent = updateReqDto.toEntity();
         ReflectionTestUtils.setField(updateStudent, "id", fakeId);

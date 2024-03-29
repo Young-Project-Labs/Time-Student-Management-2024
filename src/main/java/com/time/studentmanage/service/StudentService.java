@@ -33,12 +33,16 @@ public class StudentService {
         if (studentOP.isPresent()) {
             throw new IllegalArgumentException("이미 존재 하는 학생 입니다.");
         }
-        //2. 패스워드 인코딩
-        saveReqDto.setPassword(bCryptPasswordEncoder.encode(saveReqDto.getPassword()));
 
-        //3. save로 저장
+        //2. save로 저장(toEntity 시 패스워드 인코딩 진행)
         Student result = studentRepository.save(saveReqDto.toEntity(bCryptPasswordEncoder));
         return result.getId();
+    }
+
+    //아이디 중복 체크
+    @Transactional(readOnly = true)
+    public Boolean checkIdDuplication(String checkId) {
+       return studentRepository.existsByUserId(checkId);
     }
 
     //학생_정보_수정
@@ -49,9 +53,10 @@ public class StudentService {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
         //changeEntity
-        studentOP.get().changeEntity(updateReqDto.getId(),updateReqDto.toEntity());
-
-        Student resultStudent = studentRepository.save(studentOP.get());
+//        studentOP.get().changeEntity(updateReqDto.getId(),updateReqDto.toEntity());
+        Student updateStudent = updateReqDto.toEntity();
+        log.info("service check={}",updateStudent);
+        Student resultStudent = studentRepository.save(updateStudent);
         //dto 변환
         StudentRespDto resultDto = new StudentRespDto(resultStudent);
         return resultDto;

@@ -50,21 +50,24 @@
                 <div class="     border border-danger border-3">
                     this is main content
                     <p>Please select an option</p>
-                    <ol>
-                        <!-- TODO: 6을 메인 페이지 개발 이후 {id}로 변경하기 -->
-                        <li><a href="record/recordList.html" th:href="@{/record/6}">학생에 대한 레코드 리스트 화면 개발 페이지 바로가기</a>
-                        </li>
-                        <li><a href="/login">로그인 페이지</a></li>
-                        <li><a href="#" th:href="@{/}">링크 추가하기</a></li>
-                        <li><a href="#" th:href="@{/}">링크 추가하기</a></li>
-                    </ol>
+    <ol>
+        <li><a href="record/recordList.html" th:href="@{/record/{id}}">학생에 대한 레코드 리스트 화면 개발 페이지 바로가기</a></li>
+        <li><a href="/login">로그인 페이지</a></li>
+        <li><a href="/join">회원가입 페이지</a></li>
+        <li><a href="#" th:href="@{/}">링크 추가하기</a></li>
+    </ol>
+    <div th:if="${session.loginMember != null}">
+        <span th:text="${session.loginMember.name}"></span>
+        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
+        <form method="post" action="/logout">
+                <button type="submit">로그아웃</button>
+        </form>
+    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
-
 </body>
 </html>
