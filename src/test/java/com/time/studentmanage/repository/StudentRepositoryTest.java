@@ -185,4 +185,18 @@ class StudentRepositoryTest {
         }
         assertThat(studentRepository.findAll().size()).isEqualTo(4);
     }
+
+    @Test
+    void 학생_ID_조회_테스트(){
+        //given
+        Student student = createStudent();
+        String newId = "css@time.com";
+        studentRepository.save(student);
+        //when
+        Boolean exists = studentRepository.existsByUserId(newId);
+        log.info("exists={}",exists);
+        //then
+        assertThat(exists).isTrue();
+
+    }
 }

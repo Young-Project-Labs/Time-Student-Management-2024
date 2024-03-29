@@ -6,11 +6,11 @@ import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.member.Teacher;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TeacherRespDto {
     private String name;
     private String phoneNumber;
@@ -25,7 +25,6 @@ public class TeacherRespDto {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @Builder
     public TeacherRespDto(Teacher teacher) {
         this.name = teacher.getName();
         this.phoneNumber = teacher.getPhoneNumber();

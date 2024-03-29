@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.tuple.CreationTimestampGeneration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -23,10 +24,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String loginPage(@ModelAttribute("loginFormDto") LoginFormDto form) {
+    public String loginPage(@ModelAttribute("loginFormDto") LoginFormDto form, HttpSession session) {
+        //세션이 있는 경우 진입X
+        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) != null) {
+            log.info("sessionTest={}",session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).toString());
+            return "redirect:/";
+        }
+
         return "login/loginPage";
     }
 
@@ -37,8 +43,7 @@ public class LoginController {
             log.error("error={}", bindingResult.getFieldError());
             return "login/loginPage";
         }
-
-        //로그인, 패스워드 일치 여부 확인
+        //로그인 진행
         Optional<?> loginMemberOP = loginService.login(form.getLoginId(), form.getPassword(), form.getMemberType());
 
         //조회 실패(로그인 실패)
@@ -49,11 +54,17 @@ public class LoginController {
 
         //성공 시 세션 저장
         // true로 설정해야 세션이 없을 때 새로 생성함.
-        log.info("class={}",loginMemberOP.get().getClass());
         HttpSession session = request.getSession(true);
+        // 세션에 객체 저장
         session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION,loginMemberOP.get());
         log.info("세션 저장함={}", session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION));
 
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
     }
 }

@@ -61,7 +61,8 @@ public class Student extends BaseMemberEntity {
     private Teacher teacher;
 
     @Builder(toBuilder = true)
-    public Student(String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
+    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
+        this.id = id;
         this.name = name;
         this.userId = userId;
         this.password = password;
