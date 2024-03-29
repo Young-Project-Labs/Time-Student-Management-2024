@@ -7,16 +7,17 @@ import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -54,13 +55,14 @@ public class Student extends BaseMemberEntity {
     private Address address;
 
     @OneToMany(mappedBy = "student")
-    private List<Record> recordList = new ArrayList<>();
+    private final List<Record> recordList = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
     @Builder(toBuilder = true)
+
     public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
         this.id = id;
         this.name = name;
@@ -87,35 +89,43 @@ public class Student extends BaseMemberEntity {
     }
 
 
-
     //수정 메서드
     public void changeName(String name) {
         this.name = name;
     }
+
     public void changeAttendanceStatus(AttendanceStatus attendanceStatus) {
         this.attendanceStatus = attendanceStatus;
     }
+
     public void changeQuitDate(LocalDateTime quitDate) {
         this.quitDate = quitDate;
     }
+
     public void changePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public void changeSchoolName(String schoolName) {
         this.schoolName = schoolName;
     }
+
     public void changeUserId(String userId) {
         this.userId = userId;
     }
+
     public void changePassword(String password) {
         this.password = password;
     }
+
     public void changeGrade(int grade) {
         this.grade = grade;
     }
+
     public void changeGender(GenderType gender) {
         this.gender = gender;
     }
+
     public void changeClassType(ClassType classType) {
         this.classType = classType;
     }
@@ -144,20 +154,6 @@ public class Student extends BaseMemberEntity {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", schoolName='" + schoolName + '\'' +
-                ", grade=" + grade +
-                ", quitDate=" + quitDate +
-                ", attendanceStatus=" + attendanceStatus +
-                ", memberType=" + memberType +
-                ", gender=" + gender +
-                ", classType=" + classType +
-                ", address=" + address +
-                '}';
+        return "Student{" + "id=" + id + ", userId='" + userId + '\'' + ", password='" + password + '\'' + ", name='" + name + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", schoolName='" + schoolName + '\'' + ", grade=" + grade + ", quitDate=" + quitDate + ", attendanceStatus=" + attendanceStatus + ", memberType=" + memberType + ", gender=" + gender + ", classType=" + classType + ", address=" + address + '}';
     }
 }

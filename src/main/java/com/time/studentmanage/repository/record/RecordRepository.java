@@ -1,4 +1,4 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.record;
 
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.RecordStatus;
@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface RecordRepository extends JpaRepository<Record, Long> {
+public interface RecordRepository extends JpaRepository<Record, Long>, RecordRepositoryCustom {
 
     @Query("select r from Record r where r.status = :recordStatus and r.student = :student order by r.createDate desc")
     List<Record> findAllByStatusAndStudent(@Param("recordStatus") RecordStatus recordStatus,
