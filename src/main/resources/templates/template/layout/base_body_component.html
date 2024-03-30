@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<th:block th:fragment="common-body-header-home-logo">
+
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
+        <span class="fs-4">타임 영어 전문 학원</span>
+    </a>
+
+</th:block>
+
+<!--<div th:if="${session.loginMember != null}">-->
+<!--    <a th:if="${session.loginMember.memberType eq 'STUDENT'}" th:href="@{/edit/{id}(id=${session.loginMember.id})}"-->
+<!--       role="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom"-->
+<!--       th:data-bs-title="${recordSearchDTO.studentName}">-->
+<!--        <i class="fa-regular fa-user"></i>-->
+<!--    </a>-->
+<!--</div>-->
+
+
+</body>
+</html>
