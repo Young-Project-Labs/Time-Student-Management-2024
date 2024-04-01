@@ -33,7 +33,7 @@ public class StudentController {
 
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("studentSaveReqDto") StudentSaveReqDto studentSaveReqDto, Model model) {
-        return "/student/joinForm";
+        return "/student/join_form";
     }
 
     @PostMapping("/join")
@@ -42,7 +42,7 @@ public class StudentController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("studentSaveReqDto", studentSaveReqDto);
-            return "/student/joinForm";
+            return "/student/join_form";
         }
 
         studentService.saveStudent(studentSaveReqDto);
@@ -73,7 +73,7 @@ public class StudentController {
 //            model.addAttribute("teacherInfo", teacherInfo);
 //
 //        }
-        return "/student/editForm";
+        return "/student/edit_form";
     }
 
 
@@ -92,7 +92,7 @@ public class StudentController {
 
         // edit
         StudentRespDto updateRespDto = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
-        return "/";
+        return "redirect:/";
     }
 
 
