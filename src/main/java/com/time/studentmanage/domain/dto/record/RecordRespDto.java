@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RecordRespDTO {
+public class RecordRespDto {
     private Long recordId;
     private String content;
     private String teacherName;
@@ -20,7 +20,7 @@ public class RecordRespDTO {
     private LocalDateTime createDate;
     private LocalDateTime lastModifiedDate;
 
-    public RecordRespDTO(Long recordId, String content, String teacherName, String studentName, RecordStatus status, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
+    public RecordRespDto(Long recordId, String content, String teacherName, String studentName, RecordStatus status, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
         this.recordId = recordId;
         this.content = content;
         this.teacherName = teacherName;
@@ -32,7 +32,7 @@ public class RecordRespDTO {
 
     @Override
     public String toString() {
-        return "RecordRespDTO{" +
+        return "RecordRespDto{" +
                 "recordId=" + recordId +
                 ", content='" + content + '\'' +
                 ", teacherName='" + teacherName + '\'' +

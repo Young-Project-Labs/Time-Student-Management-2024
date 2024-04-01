@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class RecordSearchDTO {
+public class RecordSearchDto {
 
     @NotNull
     private SearchType searchType; // 검색 타입: [CONTENT, TEACHER_NAME]

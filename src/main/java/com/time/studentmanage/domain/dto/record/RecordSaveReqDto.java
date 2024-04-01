@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RecordSaveReqDTO {
+public class RecordSaveReqDto {
 
     @NotNull
     private Long studentId;
@@ -22,7 +22,7 @@ public class RecordSaveReqDTO {
     @NotBlank
     private String content;
 
-    public RecordSaveReqDTO(Long studentId, Long teacherId, String content) {
+    public RecordSaveReqDto(Long studentId, Long teacherId, String content) {
         this.studentId = studentId;
         this.teacherId = teacherId;
         this.content = content;
@@ -39,7 +39,7 @@ public class RecordSaveReqDTO {
 
     @Override
     public String toString() {
-        return "RecordSaveReqDTO{" +
+        return "RecordSaveReqDto{" +
                 "studentId=" + studentId +
                 ", teacherId=" + teacherId +
                 ", content='" + content + '\'' +

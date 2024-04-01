@@ -1,8 +1,8 @@
 package com.time.studentmanage.web;
 
-import com.time.studentmanage.domain.dto.record.RecordRespDTO;
-import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
-import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Teacher;
@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -47,9 +46,9 @@ public class RecordController {
         }
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
-        List<RecordRespDTO> recordList = recordService.getStudentList(id);
+        List<RecordRespDto> recordList = recordService.getStudentList(id);
 
-        RecordSearchDTO recordSearchDTO = new RecordSearchDTO();
+        RecordSearchDto recordSearchDTO = new RecordSearchDto();
         recordSearchDTO.setStudentName(studentRespDto.getName());
 
         model.addAttribute("recordSearchDTO", recordSearchDTO);
@@ -59,7 +58,7 @@ public class RecordController {
     }
 
     @PostMapping("/record/{studentId}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDTO recordSearchDTO, BindingResult result,
+    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDTO, BindingResult result,
                                 @PathVariable("studentId") Long studentId,
                                 HttpServletRequest request,
                                 Model model) {
@@ -74,7 +73,7 @@ public class RecordController {
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-            List<RecordRespDTO> recordList = recordService.getStudentList(studentId);
+            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
             model.addAttribute("recordList", recordList);
             model.addAttribute("recordSearchDTO", recordSearchDTO);
             return "record/record_list";
@@ -84,7 +83,7 @@ public class RecordController {
         recordSearchDTO.setTeacherId(teacher.getId());
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
-        List<RecordRespDTO> recordList = recordService.getFilteredResults(recordSearchDTO);
+        List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDTO);
 
         model.addAttribute("recordList", recordList);
         model.addAttribute("studentName", studentRespDto.getName());
@@ -108,7 +107,7 @@ public class RecordController {
             throw new DataNotFoundException("학생 정보가 입력되지 않았습니다.");
         }
 
-        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO();
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto();
         recordSaveReqDTO.setStudentId(studentId);
         recordSaveReqDTO.setTeacherId(3L);
 
@@ -118,7 +117,7 @@ public class RecordController {
     }
 
     @PostMapping("/record/create")
-    public String createRecord(@Validated @ModelAttribute RecordSaveReqDTO recordSaveReqDTO, BindingResult bindingResult,
+    public String createRecord(@Validated @ModelAttribute RecordSaveReqDto recordSaveReqDTO, BindingResult bindingResult,
                                HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
@@ -150,7 +149,7 @@ public class RecordController {
             return "redirect:/";
         }
 
-        RecordRespDTO recordRespDTO = recordService.getRecord(recordId);
+        RecordRespDto recordRespDTO = recordService.getRecord(recordId);
 
         model.addAttribute("studentId", studentId);
         model.addAttribute("record", recordRespDTO);
