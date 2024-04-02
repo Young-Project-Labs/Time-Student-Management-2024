@@ -7,15 +7,15 @@
 </head>
 <title>정보 수정</title>
 <body>
-<div class="">
-    <!-- 헤더 시작 -->
-    <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-        </header>
+    <div class="">
+        <!-- 헤더 시작 -->
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+                <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+            </header>
+        </div>
+        <!-- 헤더 끝 -->
     </div>
-    <!-- 헤더 끝 -->
-</div>
 
 <h1 class="d-flex justify-content-center m-5" th:text="*{studentRespDto.name+' 정보'}"></h1>
 
