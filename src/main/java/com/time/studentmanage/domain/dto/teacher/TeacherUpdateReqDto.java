@@ -16,14 +16,8 @@ public class TeacherUpdateReqDto {
     private String name;
     private String phoneNumber;
     private String email;
-
-    @Enumerated(EnumType.STRING)
     private Position position;
-
-    @Enumerated(EnumType.STRING)
     private MemberType memberType;
-
-    @Enumerated(EnumType.STRING)
     private GenderType gender;
 
     @Builder
