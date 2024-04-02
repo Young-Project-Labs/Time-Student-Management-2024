@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherRespDto {
+    private Long id;
     private String name;
     private String phoneNumber;
     private String email;
@@ -26,6 +27,7 @@ public class TeacherRespDto {
     private GenderType gender;
 
     public TeacherRespDto(Teacher teacher) {
+        this.id = teacher.getId();
         this.name = teacher.getName();
         this.phoneNumber = teacher.getPhoneNumber();
         this.email = teacher.getEmail();

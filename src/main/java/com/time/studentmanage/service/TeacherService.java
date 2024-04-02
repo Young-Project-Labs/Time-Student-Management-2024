@@ -10,7 +10,9 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,6 +44,20 @@ public class TeacherService {
 
         return new TeacherRespDto(resultTeacher);
     }
+
+    //선생_목록(관리자 페이지)
+    public List<TeacherRespDto> getTeacherAllList() {
+        List<Teacher> teacherList = teacherRepository.findAll();
+
+        //Teacher -> TeacherRespDto
+        List<TeacherRespDto> teacherRespDtoList = teacherList.stream()
+                .map(teacher -> new TeacherRespDto(teacher.getId(),teacher.getName(), teacher.getPhoneNumber(), teacher.getEmail(), teacher.getPosition(), teacher.getMemberType(), teacher.getGender()))
+                .collect(Collectors.toList());
+
+        return teacherRespDtoList;
+    }
+
+    //선생_등록(관리자 페이지)
 
 
 
