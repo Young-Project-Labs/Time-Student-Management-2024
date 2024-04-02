@@ -190,7 +190,7 @@ class StudentRepositoryTest {
     void 학생_ID_조회_테스트(){
         //given
         Student student = createStudent();
-        String newId = "css@time.com";
+        String newId = "cs@time.com";
         studentRepository.save(student);
         //when
         Boolean exists = studentRepository.existsByUserId(newId);
