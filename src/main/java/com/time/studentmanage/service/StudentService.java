@@ -141,7 +141,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public List<StudentRespDto> getSearchedStudent(String content) {
 
-        if (content.equals("") || content == null) {
+        if (content.trim().equals("") || content == null) {
             throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
         }
 
@@ -158,8 +158,7 @@ public class StudentService {
             return respDtoList;
         }
 
-        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content);
-
+        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
         List<StudentRespDto> respDtoList = createRespDtoList(searchedByStudentNameList);
 
         return respDtoList;
