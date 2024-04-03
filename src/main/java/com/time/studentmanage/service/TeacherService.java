@@ -1,12 +1,14 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
+import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TeacherService {
     private final TeacherRepository teacherRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     // 선생_정보_조회
     public TeacherRespDto getTeacherInfo(Long teacherId){
         Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
@@ -58,7 +62,31 @@ public class TeacherService {
     }
 
     //선생_등록(관리자 페이지)
+    public void createTeacher(TeacherSaveReqDto teacherSaveReqDto) {
+        //중복 등록 방지 (성함 & 이메일)
+        Optional<Teacher> teacherOP = teacherRepository.findByNameAndEmail(teacherSaveReqDto.getName(), teacherSaveReqDto.getEmail());
+        if (teacherOP.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 선생님입니다.");
+        }
 
+        teacherRepository.save(teacherSaveReqDto.toEntity(bCryptPasswordEncoder));
+    }
+
+    //선생_이메일_중복_체크
+    public void checkEmailDuplication(String email) {
+        Optional<Teacher> teacherOP = teacherRepository.findByEmail(email);
+        String regexp = "^[\\w.-]+@time\\.com$";
+        // 정규표현식 만족 X (@time.com)
+        if (!email.matches(regexp)) {
+            throw new IllegalArgumentException("아이디 형식을 확인해주세요.");
+        } else{
+            //존재 -> 중복
+            if (teacherOP.isPresent()) {
+                throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            }
+        }
+
+    }
 
 
 }
