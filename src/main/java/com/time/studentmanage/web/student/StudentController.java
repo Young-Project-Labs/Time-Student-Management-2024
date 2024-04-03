@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,6 +94,16 @@ public class StudentController {
     @GetMapping("/school")
     public String showStudentList(@RequestParam(value = "schoolName", required = false) String schoolName, Model model) {
         List<StudentRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
+        model.addAttribute("studentList", studentList);
+
+        return "student/student_list";
+    }
+
+    @PostMapping("/school")
+    public String searchStudent(@RequestParam(value = "content") String content, Model model) {
+        log.info("content={}", content);
+
+        List<StudentRespDto> studentList = studentService.getSearchedStudent("%" + content + "%");
         model.addAttribute("studentList", studentList);
 
         return "student/student_list";

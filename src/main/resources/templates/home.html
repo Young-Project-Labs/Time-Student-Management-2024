@@ -81,9 +81,10 @@
     </ol>
     <!--브레드 크럼 끝-->
 
-    <div class="container-fluid    border border-warning border-3">
+    <div class="container-fluid ">
         <div class="row">
 
+            <!--사이드 바 시작-->
             <div class="col-3 text-center border border-2 rounded-3 ">
 
                 <ul class="list-group list-group-flush">
@@ -141,27 +142,30 @@
                         <!--학교 목록 끝-->
                     </div>
                 </ul>
-                <!--                test end-->
 
             </div>
+            <!--사이드 바 끝-->
 
-            <div class="col-9     border border-success border-3">
+            <div class="col-9 ">
                 <div class="row">
 
-                    <div class="col-2 border border-success border-3">
-                        this is select bar
-                    </div>
-
-                    <div class="col  border border-primary border-3">
-                        this is search bar
-
-
+                    <div class="col ">
+                        <!--검색 바 시작-->
+                        <form id="searchForm" th:action="@{/school}" method="post">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                <input name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
+                                       aria-describedby="basic-addon1">
+                                <input type="submit" value="검색" class="btn btn-outline-primary student__search__bar">
+                            </div>
+                        </form>
+                        <!--검색 바 끝-->
                     </div>
                 </div>
 
                 <div class="main-content">
 
-                    <div th:text="|학교를 선택해주세요|" class="alert alert-warning text-center">
+                    <div th:text="|학교를 선택해주세요|" class="alert alert-warning text-center" id="searchResultMessage">
                         데이터가 선택되지 않았습니다.
                     </div>
 
@@ -189,12 +193,36 @@
                     $(".main-content").html(response);
                 },
                 error: function (xhr, status, error) {
-                    // 요청이 실패하면, 오류 메시지를 콘솔에 출력합니다.
-                    // $(".main-content").html(error);
-                    console.error(error);
+                    var errorMessage = "검색 결과를 불러오는 중 오류가 발생했습니다.";
+                    displayErrorMessage(errorMessage);
                 }
             });
         });
+
+        $("#searchForm").submit(function (event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
+
+            var formData = $(this).serialize(); // 폼 데이터를 가져옵니다.
+            var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    $(".main-content").html(response);
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = "검색 결과가 존재하지 않습니다.";
+                    displayErrorMessage(errorMessage);
+                }
+            });
+        });
+
+        function displayErrorMessage(message) {
+            var errorHtml = '<div class="alert alert-danger text-center">' + message + '</div>';
+            $(".main-content").html(errorHtml);
+        }
     });
 
     // 학급 버튼 클릭 시 꺽쇠 변경 이벤트

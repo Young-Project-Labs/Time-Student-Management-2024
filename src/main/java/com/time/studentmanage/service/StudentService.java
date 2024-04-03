@@ -137,6 +137,25 @@ public class StudentService {
         return studentRespDto;
     }
 
+    @Transactional(readOnly = true)
+    public List<StudentRespDto> getSearchedStudent(String name) {
+        List<Student> searchedResult = studentRepository.findAllByNameLikeOrderBySchoolName(name);
+
+        List<StudentRespDto> resultDto = searchedResult.stream()
+                .map(s -> createStudentRespDtoWithSearchedResult(s.getId(), s.getName(), s.getGrade(), s.getSchoolName()))
+                .collect(Collectors.toList());
+        return resultDto;
+    }
+
+    private StudentRespDto createStudentRespDtoWithSearchedResult(Long id, String name, Integer grade, String schoolName) {
+        StudentRespDto studentRespDto = new StudentRespDto();
+        studentRespDto.setId(id);
+        studentRespDto.setName(name);
+        studentRespDto.setGrade(grade);
+        studentRespDto.setSchoolName(schoolName);
+
+        return studentRespDto;
+    }
 
     //TODO: 학년 클릭 시 -> 학년별_학생_조회
 
