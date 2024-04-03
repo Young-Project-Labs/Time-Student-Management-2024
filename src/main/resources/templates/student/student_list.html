@@ -16,13 +16,13 @@
     <tbody>
     <tr th:each="student : ${studentList}">
         <th th:if="${studentList.get(0).schoolName} != null">
-            <a th:href="@{|/record/${student.id}|}" th:text="${student.schoolName}"></a>
+            <a th:href="@{/record/{studentId}(studentId=${student.id})}" th:text="${student.schoolName}"></a>
         </th>
         <th scope="row">
-            <a th:href="@{|/record/${student.id}|}" th:text="${student.grade}"></a>
+            <a th:href="@{/record/{studentId}(studentId=${student.id})}" th:text="${student.grade}"></a>
         </th>
         <td>
-            <a th:href="@{|/record/${student.id}|}" th:text="${student.name}"></a>
+            <a th:href="@{/record/{studentId}(studentId=${student.id})}" th:text="${student.name}"></a>
         </td>
     </tr>
 

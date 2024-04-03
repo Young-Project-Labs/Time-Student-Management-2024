@@ -9,6 +9,7 @@ import com.time.studentmanage.service.TeacherService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -101,9 +102,8 @@ public class StudentController {
 
     @PostMapping("/school")
     public String searchStudent(@RequestParam(value = "content") String content, Model model) {
-        log.info("content={}", content);
 
-        List<StudentRespDto> studentList = studentService.getSearchedStudent("%" + content + "%");
+        List<StudentRespDto> studentList = studentService.getSearchedStudent(content);
         model.addAttribute("studentList", studentList);
 
         return "student/student_list";

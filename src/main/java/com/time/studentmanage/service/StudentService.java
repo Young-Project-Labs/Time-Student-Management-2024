@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -109,7 +110,7 @@ public class StudentService {
                 schoolRespDto.getElementarySchools().add(name);
             } else if (name.contains("중학교")) {
                 schoolRespDto.getMiddleSchools().add(name);
-            }else if (name.contains("고등학교")) {
+            } else if (name.contains("고등학교")) {
                 schoolRespDto.getHighSchools().add(name);
             }
         }
@@ -138,12 +139,37 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentRespDto> getSearchedStudent(String name) {
-        List<Student> searchedResult = studentRepository.findAllByNameLikeOrderBySchoolName(name);
+    public List<StudentRespDto> getSearchedStudent(String content) {
 
-        List<StudentRespDto> resultDto = searchedResult.stream()
+        if (content.equals("") || content == null) {
+            throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
+        }
+
+        if (content.contains("+")) {
+            String[] contentBits = content.split("\\+");
+
+            String schoolName = contentBits[0].trim();
+            String studentName = contentBits[1].trim();
+
+            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName, studentName);
+
+            List<StudentRespDto> respDtoList = createRespDtoList(searchedBySchoolNameAndStudentNameList);
+
+            return respDtoList;
+        }
+
+        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content);
+
+        List<StudentRespDto> respDtoList = createRespDtoList(searchedByStudentNameList);
+
+        return respDtoList;
+    }
+
+    private List<StudentRespDto> createRespDtoList(List<Student> targetList) {
+        List<StudentRespDto> resultDto = targetList.stream()
                 .map(s -> createStudentRespDtoWithSearchedResult(s.getId(), s.getName(), s.getGrade(), s.getSchoolName()))
                 .collect(Collectors.toList());
+
         return resultDto;
     }
 
