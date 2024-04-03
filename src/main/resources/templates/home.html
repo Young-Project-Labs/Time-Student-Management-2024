@@ -6,6 +6,8 @@
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>Document</title>
 </head>
 <body>
@@ -25,8 +27,9 @@
         <!--로그인이 되었을 때 보여줄 버튼 시작-->
         <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <button type="button" class="btn btn-primary">button 1</button>
-                <button type="button" class="btn btn-primary">button 2</button>
+                <!--                <button type="button" class="btn btn-primary">button 1</button>-->
+                <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
+                <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
 
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
@@ -66,15 +69,80 @@
     </header>
     <!-- 헤더 끝 -->
 
+    <!--브레드 크럼 시작-->
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis text-dark" href="/">
+                <i class="fa-solid fa-house"></i>
+                <!--                <span class="visually-hidden">Home</span>-->
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">Home</li>
+    </ol>
+    <!--브레드 크럼 끝-->
+
     <div class="container-fluid    border border-warning border-3">
         <div class="row">
 
-            <div class="col-3 text-center    border border-danger border-3">
-                this is side bar
-                <div th:each="num : ${#numbers.sequence(1, 30)}" class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action" th:text="|school name ${num}|">The
-                        current link item</a>
-                </div>
+            <div class="col-3 text-center border border-2 rounded-3 ">
+
+                <ul class="list-group list-group-flush">
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__elementary__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__elementary__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="초등"></span>
+                    </li>
+
+                    <div th:if="${elementarySchools != null}" class="collapse" id="collapse__elementary__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${elementarySchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__middle__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__middle__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="중등"></span>
+                    </li>
+
+                    <div th:if="${middleSchools != null}" class="collapse" id="collapse__middle__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${middleSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__high__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__high__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="고등"></span>
+                    </li>
+
+                    <div th:if="${highSchools != null}" class="collapse" id="collapse__high__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${highSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+                </ul>
+                <!--                test end-->
+
             </div>
 
             <div class="col-9     border border-success border-3">
@@ -86,24 +154,66 @@
 
                     <div class="col  border border-primary border-3">
                         this is search bar
+
+
                     </div>
                 </div>
 
-                <div class="     border border-danger border-3">
-                    this is main content
-                    <p>Please select an option</p>
-                    <ol>
-                        <li><a href="record/recordList.html" th:href="@{/record/1}">학생에 대한 레코드 리스트 화면 개발 페이지 바로가기</a>
-                        </li>
-                        <li><a href="/login">로그인 페이지</a></li>
-                        <li><a href="/join">회원가입 페이지</a></li>
-                        <li><a href="#" th:href="@{/}">링크 추가하기</a></li>
-                    </ol>
+                <div class="main-content">
+
+                    <div th:text="|학교를 선택해주세요|" class="alert alert-warning text-center">
+                        데이터가 선택되지 않았습니다.
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".school-name-link").click(function (event) {
+            event.preventDefault(); // 기본 이벤트를 방지합니다.
+            var href = $(this).attr('href'); // 클릭된 링크의 href 값을 가져옵니다.
+            var schoolName = $(this).text().trim();
+
+            $("#breadcrumb-school").text(schoolName)
+
+            $.ajax({
+                url: href, // 서버로 요청을 보낼 URL
+                type: 'GET', // HTTP 요청 방식
+                success: function (response) {
+                    // 요청이 성공하면, 응답으로 받은 데이터를 main content 영역에 채웁니다.
+                    $(".main-content").html(response);
+                },
+                error: function (xhr, status, error) {
+                    // 요청이 실패하면, 오류 메시지를 콘솔에 출력합니다.
+                    // $(".main-content").html(error);
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+    // 학급 버튼 클릭 시 꺽쇠 변경 이벤트
+    $(document).ready(function () {
+        $(".school__name__type").click(function () {
+            // 현재 클릭된 항목의 아이콘을 찾습니다.
+            var icon = $(this).find(".fa-solid");
+
+            // 아이콘이 'fa-chevron-right' 클래스를 가지고 있다면 'fa-chevron-down'으로 변경합니다.
+            // 그렇지 않다면 'fa-chevron-right'으로 변경합니다.
+            if (icon.hasClass("fa-chevron-right")) {
+                icon.removeClass("fa-chevron-right").addClass("fa-chevron-down");
+            } else {
+                icon.removeClass("fa-chevron-down").addClass("fa-chevron-right");
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>

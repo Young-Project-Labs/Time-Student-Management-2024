@@ -1,0 +1,26 @@
+<div th:if="${studentList} == null">
+    <h4 th:text="|데이터가 존재하지 않습니다.|">
+        데이터가 존재하지 않습니다.
+    </h4>
+</div>
+
+<table th:if="${studentList} != null" class="table table-hover" xmlns:th="http://www.thymeleaf.org">
+    <thead>
+    <tr>
+        <th scope="col">학년</th>
+        <th scope="col">이름</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="student : ${studentList}">
+        <th scope="row">
+            <a th:href="@{|/record/${student.id}|}" th:text="${student.grade}"></a>
+        </th>
+        <td>
+            <a th:href="@{|/record/${student.id}|}" th:text="${student.name}"></a>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
