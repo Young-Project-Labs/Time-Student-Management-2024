@@ -102,7 +102,7 @@ public class TestUtil {
     public static Teacher createTeacher() {
         return Teacher.builder()
                 .name("줄리아")
-                .userId("julia@time.com").password("1234")
+                .password("1234")
                 .phoneNumber("010-1212-3456")
                 .memberType(MemberType.TEACHER)
                 .position(Position.TEACHER)

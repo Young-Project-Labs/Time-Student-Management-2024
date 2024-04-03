@@ -52,7 +52,7 @@ class RecordRepositoryTest {
                 .address(new Address("반림동", "현대 아파트", "102-1201"))
                 .attendanceStatus(AttendanceStatus.Y)
                 .build();
-        Teacher t = new Teacher("줄리아", "julia@time.com", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
+        Teacher t = new Teacher("줄리아", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
 
         // when
         Record record = createRecord(t, s);

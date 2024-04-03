@@ -58,7 +58,6 @@ class TeacherRepositoryTest {
     private static Teacher createTeacher() {
         Teacher teacher = Teacher.builder()
                 .name("대박샘")
-                .userId("pjj@time.com")
                 .password("1234")
                 .phoneNumber("010-3434-5678")
                 .memberType(MemberType.TEACHER)
