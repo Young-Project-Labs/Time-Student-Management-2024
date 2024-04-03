@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class StudentApiController {
     private final StudentService studentService;
+
     @GetMapping("/id/check")
-    public ResponseEntity<?> checkIdDuplication(@RequestParam(value = "userId") String userId) throws BadRequestException{
+    public ResponseEntity<?> checkIdDuplication(@RequestParam(value = "userId") String userId) throws BadRequestException {
         log.info("userId={}", userId);
 
         boolean regexResult = userId.matches("^[a-z0-9]{6,20}$");

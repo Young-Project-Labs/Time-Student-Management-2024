@@ -1,9 +1,10 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.member.Student;
-import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
-import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
+import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
+import com.time.studentmanage.domain.dto.student.StudentSchoolListRespDto;
+import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class StudentService {
     //아이디 중복 체크
     @Transactional(readOnly = true)
     public Boolean checkIdDuplication(String checkId) {
-       return studentRepository.existsByUserId(checkId);
+        return studentRepository.existsByUserId(checkId);
     }
 
     //학생_정보_수정
@@ -55,7 +56,7 @@ public class StudentService {
         //changeEntity
 //        studentOP.get().changeEntity(updateReqDto.getId(),updateReqDto.toEntity());
         Student updateStudent = updateReqDto.toEntity();
-        log.info("service check={}",updateStudent);
+        log.info("service check={}", updateStudent);
         Student resultStudent = studentRepository.save(updateStudent);
         //dto 변환
         StudentRespDto resultDto = new StudentRespDto(resultStudent);
@@ -83,6 +84,7 @@ public class StudentService {
         return studentRespDtoList;
 
     }
+
     @Transactional(readOnly = true)
     // 학생_상세_정보_조회
     public StudentRespDto getStudentInfo(Long id) {
@@ -96,13 +98,47 @@ public class StudentService {
 
     }
 
+    @Transactional(readOnly = true)
+    public StudentSchoolListRespDto getAllSchoolName() {
+        List<String> allSchoolName = studentRepository.findAllSchoolName();
+
+        StudentSchoolListRespDto schoolRespDto = new StudentSchoolListRespDto();
+
+        for (String name : allSchoolName) {
+            if (name.contains("초등학교")) {
+                schoolRespDto.getElementarySchools().add(name);
+            } else if (name.contains("중학교")) {
+                schoolRespDto.getMiddleSchools().add(name);
+            }else if (name.contains("고등학교")) {
+                schoolRespDto.getHighSchools().add(name);
+            }
+        }
+
+        return schoolRespDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudentRespDto> getAllStudentsBySchoolName(String schoolName) {
+        List<Student> studentList = studentRepository.findAllBySchoolNameOrderByGradeAsc(schoolName);
+
+        List<StudentRespDto> resultDto = studentList.stream()
+                .map(s -> createStudentRespDtoWithIdAndNameAndGrade(s.getId(), s.getName(), s.getGrade()))
+                .collect(Collectors.toList());
+
+        return resultDto;
+    }
+
+    private StudentRespDto createStudentRespDtoWithIdAndNameAndGrade(Long id, String name, Integer grade) {
+        StudentRespDto studentRespDto = new StudentRespDto();
+        studentRespDto.setId(id);
+        studentRespDto.setName(name);
+        studentRespDto.setGrade(grade);
+
+        return studentRespDto;
+    }
+
 
     //TODO: 학년 클릭 시 -> 학년별_학생_조회
-
-
-
-
-
 
 
 }
