@@ -1,7 +1,6 @@
 package com.time.studentmanage.web.student;
 
 import com.time.studentmanage.service.StudentService;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;

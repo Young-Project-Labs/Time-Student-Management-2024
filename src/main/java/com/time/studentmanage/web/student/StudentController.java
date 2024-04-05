@@ -93,14 +93,19 @@ public class StudentController {
     }
 
     @GetMapping("/school")
-    public String showStudentList(@RequestParam(value = "schoolName", required = false) String schoolName, Model model) {
+    public String showStudentList(@RequestParam(value = "schoolName") String schoolName, Model model) { // , required = false
+
+        if (schoolName == null || schoolName.equals("")) {
+            throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");
+        }
+
         List<StudentRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
         model.addAttribute("studentList", studentList);
 
         return "student/student_list";
     }
 
-    @PostMapping("/school")
+    @GetMapping("/search")
     public String searchStudent(@RequestParam(value = "content") String content, Model model) {
 
         List<StudentRespDto> studentList = studentService.getSearchedStudent(content);

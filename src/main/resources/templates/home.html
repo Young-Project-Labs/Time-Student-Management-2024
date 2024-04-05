@@ -151,7 +151,7 @@
 
                     <div class="col ">
                         <!--검색 바 시작-->
-                        <form id="searchForm" th:action="@{/school}" method="post">
+                        <form id="searchForm" th:action="@{/search}" method="get">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                                 <input name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
@@ -207,7 +207,7 @@
 
             $.ajax({
                 url: url,
-                type: 'POST',
+                type: 'GET',
                 data: formData,
                 success: function (response) {
                     $(".main-content").html(response);
