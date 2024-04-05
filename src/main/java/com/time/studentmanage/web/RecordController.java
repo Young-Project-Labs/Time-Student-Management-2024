@@ -54,10 +54,10 @@ public class RecordController {
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
         List<RecordRespDto> recordList = recordService.getStudentList(id);
 
-        RecordSearchDto recordSearchDTO = new RecordSearchDto();
-        recordSearchDTO.setStudentName(studentRespDto.getName());
+        RecordSearchDto recordSearchDto = new RecordSearchDto();
+        recordSearchDto.setStudentName(studentRespDto.getName());
 
-        model.addAttribute("recordSearchDTO", recordSearchDTO);
+        model.addAttribute("recordSearchDto", recordSearchDto);
         model.addAttribute("recordList", recordList);
 
         return "record/record_list";
@@ -85,7 +85,7 @@ public class RecordController {
             log.info("errors={}", result);
             List<RecordRespDto> recordList = recordService.getStudentList(studentId);
             model.addAttribute("recordList", recordList);
-            model.addAttribute("recordSearchDTO", recordSearchDto);
+            model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
         }
 
@@ -176,12 +176,12 @@ public class RecordController {
             return "redirect:/";
         }
 
-        RecordRespDto recordRespDTO = recordService.getRecord(recordId);
+        RecordRespDto recordRespDto = recordService.getRecord(recordId);
 
         RecordUpdateReqDto recordUpdateReqDto = new RecordUpdateReqDto();
         recordUpdateReqDto.setRecordId(recordId);
         recordUpdateReqDto.setStudentId(studentId);
-        recordUpdateReqDto.setContent(recordRespDTO.getContent());
+        recordUpdateReqDto.setContent(recordRespDto.getContent());
 
         model.addAttribute("recordUpdateReqDto", recordUpdateReqDto);
 

@@ -12,10 +12,8 @@ import lombok.Setter;
 public class RecordUpdateReqDto {
     @NotNull
     Long recordId;
-
     @NotNull
     Long studentId;
-
     @NotBlank
     String content;
 }

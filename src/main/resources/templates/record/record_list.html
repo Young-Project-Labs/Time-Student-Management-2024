@@ -29,7 +29,7 @@
         </ul>
 
         <!-- TODO: 사용자 마이 페이지로 이동-->
-        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}" role="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" th:data-bs-title="${recordSearchDTO.studentName}">
+        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}" role="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" th:data-bs-title="${studentName}">
             <i class="fa-regular fa-user"></i>
         </a>
     </header>
@@ -39,7 +39,7 @@
 <div class="container d-flex flex-column p-1">
 
     <!--  내용 & 작성자 날짜별 필터링 검색 폼 시작  -->
-    <form th:action="@{/record/{studentId}(studentId=${studentId})}" th:object="${recordSearchDTO}" method="post">
+    <form th:action="@{/record/{studentId}(studentId=${studentId})}" th:object="${recordSearchDto}" method="post">
 
         <!--점보트론 시작-->
         <div class="h-70 p-3 bg-body-tertiary border rounded-3">
