@@ -37,8 +37,7 @@ public class RecordController {
     }
 
     @GetMapping("/record/{studentId}")
-    public String records(@PathVariable("studentId") Long id,
-                          HttpServletRequest request, Model model) {
+    public String records(@PathVariable("studentId") Long id, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -64,10 +63,7 @@ public class RecordController {
     }
 
     @PostMapping("/record/{studentId}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result,
-                                @PathVariable("studentId") Long studentId,
-                                HttpServletRequest request,
-                                Model model) {
+    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result, @PathVariable("studentId") Long studentId, HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
@@ -77,7 +73,7 @@ public class RecordController {
         }
 
         // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
 
@@ -89,7 +85,6 @@ public class RecordController {
             return "record/record_list";
         }
 
-        Teacher teacher = (Teacher) loginSession;
         recordSearchDto.setTeacherId(teacher.getId());
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
@@ -103,9 +98,7 @@ public class RecordController {
     }
 
     @GetMapping("/record/create")
-    public String showCreateRecordForm(@RequestParam(value = "studentId", required = false) Long studentId,
-                                       Model model,
-                                       HttpServletRequest request) {
+    public String showCreateRecordForm(@RequestParam(value = "studentId", required = false) Long studentId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -114,11 +107,10 @@ public class RecordController {
         }
 
         // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
 
-        Teacher teacher = (Teacher) loginSession;
         Long teacherId = teacher.getId();
 
         if (studentId == null) {
@@ -135,8 +127,7 @@ public class RecordController {
     }
 
     @PostMapping("/record/create")
-    public String createRecord(@Validated @ModelAttribute RecordSaveReqDto recordSaveReqDto, BindingResult bindingResult,
-                               HttpServletRequest request, Model model) {
+    public String createRecord(@Validated @ModelAttribute RecordSaveReqDto recordSaveReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -160,10 +151,7 @@ public class RecordController {
     }
 
     @GetMapping("/record/update/{recordId}")
-    public String showUpdateRecordForm(@PathVariable("recordId") Long recordId,
-                                       @RequestParam("studentId") Long studentId,
-                                       HttpServletRequest request,
-                                       Model model) {
+    public String showUpdateRecordForm(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -189,8 +177,7 @@ public class RecordController {
     }
 
     @PostMapping("/record/update/{recordId}")
-    public String updateRecord(@Validated @ModelAttribute RecordUpdateReqDto recordUpdateReqDto, BindingResult bindingResult,
-                               HttpServletRequest request, Model model) {
+    public String updateRecord(@Validated @ModelAttribute RecordUpdateReqDto recordUpdateReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
@@ -215,8 +202,7 @@ public class RecordController {
     }
 
     @GetMapping("/record/delete/{recordId}")
-    public String deleteRecord(@PathVariable("recordId") Long recordId,
-                               @RequestParam("studentId") Long studentId) {
+    public String deleteRecord(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId) {
         recordService.deleteRecord(recordId);
 
         return "redirect:/record/" + studentId;
