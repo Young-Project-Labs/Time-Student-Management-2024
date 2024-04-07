@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<body>
+<div class="">
+    <!-- 헤더 시작 -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+                <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+            </header>
+    </div>
+    <!-- 헤더 끝 -->
+</div>
+
+<h1 class="d-flex justify-content-center m-5" th:text="*{teacherRespDto.name+' 정보'}">선생님</h1>
+
+<div class="container d-flex justify-content-center">
+    <form action="#" th:action="@{/teacher/edit/{id}(id=${teacherRespDto.id})}" method="post" th:object="${teacherRespDto}" class="border border-primary-subtle border-3 rounded p-3" id="teacherUpdateForm" onsubmit="return confirmSubmit()">
+        <input type="hidden" name="memberType" value="TEACHER">
+        <input type="hidden" id="teacherId" th:value="${teacherRespDto.id}">
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="name">선생님 성함</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="선생님 성함" th:errorclass="field-error">
+                <div th:class="field-error" th:errors="*{name}">선생님 성함 오류 메시지</div>
+            </div>
+
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="phoneNumber">선생님 연락처</label>
+                <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber" th:field="*{phoneNumber}" placeholder="선생님 연락처" th:errorclass="field-error"/>
+                <div th:class="field-error" th:errors="*{phoneNumber}">선생님 연락처 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-3 form-check">
+                <label class="form-check-label mb-2" for="email-readonly">이메일</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="email-readonly" th:field="*{email}" th:errorclass="field-error" maxlength="20" readonly>
+                </div>
+                <div id="userEmailHelp" class="form-text">이메일은 관리자, 원장님만 수정 가능합니다.</div>
+                <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
+            </div>
+
+        </div>
+
+        <!-- 원장, 관리자 및 자신의 계정만 비밀번호 변경 가능 -->
+        <div class="row" th:if="${session.loginMember.id == id or !#strings.equals(session.loginMember.position, 'TEACHER')}">
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="pwdbtn">패스워드</label>
+                <button type="button" id="pwdbtn" class="btn btn-outline-primary">패스워드 변경</button>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="position">직급</label>
+                    <!-- 직급 변경 불가능(disabled) -->
+                    <select class="form-select" id="position" th:field="*{position}" th:errorclass="field-error" disabled>
+                        <option selected value="">직급을 선택하세요.</option>
+                        <option value="TEACHER">선생님</option>
+                        <option value="CHIEF">원장</option>
+                        <option value="ADMIN">관리자</option>
+                    </select>
+                    <input type="hidden" th:field="*{position}">
+                <div th:class="field-error" th:errors="*{position}">직급 오류 메시지</div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check" name="gender">
+                <label class="form-check-label mb-2" for="gender">성별</label>
+                <div class="input-group" id="gender">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="male" value="MALE" th:field="*{gender}">
+                        <label class="form-check-label" for="male">남</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="female" value="FEMALE" th:field="*{gender}">
+                        <label class="form-check-label" for="female">여</label>
+                    </div>
+                </div>
+                <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5 mb-5">
+            <button type="submit" class="btn btn-primary btn mb-3 me-3">수정</button>
+            <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">뒤로 가기</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- 패스워드 변경 모달 -->
+<div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePwdModalLabel">패스워드 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="password">패스워드</label>
+                        <input type="password" class="form-control" id="password" maxlength="20">
+                        <div id="passwordHelp" class="form-text">패스워드는 소문자,특수문자,숫자 조합으로 8~20자 내로 작성해주세요.</div>
+                        <div><span id="result_checkPassword"></span></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="password">패스워드 확인</label>
+                        <input type="password" class="form-control" id="checkPassword" maxlength="20">
+                        <div><span id="result_checkRePassword"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="changePwdBtn">변경하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 모달 요청 Listener -->
+<script>
+    document.getElementById('pwdbtn').addEventListener('click', function() {
+      var myModal = new bootstrap.Modal(document.getElementById('changePwdModal'), {
+        keyboard: false
+      });
+      myModal.show();
+    });
+</script>
+
+<!-- 하이픈 자동 추가 -->
+<script>
+    const autoHyphen = (target) => {
+        target.value = target.value
+         .replace(/[^0-9]/g, '')
+         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+    }
+
+</script>
+
+<!-- 폼 숫자 입력 함수 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+       var numericInputs = document.querySelectorAll('.numeric-only');
+
+       numericInputs.forEach(function(input) {
+           input.addEventListener('input', enforceNumericOnly);
+       });
+   });
+
+   function enforceNumericOnly(event) {
+       event.target.value = event.target.value.replace(/[^0-9]/g, '');
+   }
+</script>
+
+<!-- 비밀번호 변경 관련 JS-->
+<script>
+    let submitCheckPassword = false;
+    let submitCheckRePassword = false;
+    <!-- 패스워드 정규 표현식-->
+    document.getElementById("password").addEventListener("input", function() {
+
+        var passwordInput = this.value;
+        // 정규 표현식
+        var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+        // 길이 검증
+
+
+        // 패스워드 검증
+        if(reg.test(passwordInput)) {
+            $("#result_checkPassword").html("패스워드가 유효합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckPassword = true;
+        } else {
+             if (passwordInput.length < 8){
+                $("#result_checkPassword").html("패스워드 길이가 8자 미만입니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            }else{
+                $("#result_checkPassword").html("패스워드가 유효하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            }
+        }
+
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+        if(checkPasswordInput != ''){
+            // 패스워드 검증
+            if(passwordInput == checkPasswordInput) {
+                $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+                this.style.borderColor = "green";
+                submitCheckRePassword = true;
+            } else {
+                $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckRePassword = false;
+            }
+        }
+
+    });
+
+    <!-- 패스워드 재입력 확인 -->
+    document.getElementById("checkPassword").addEventListener("input", function() {
+        var passwordInput = document.getElementById("password").value;;
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+    ;
+        // 패스워드 검증
+        if(passwordInput == checkPasswordInput) {
+            $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckRePassword = true;
+        } else {
+            $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+            this.style.borderColor = "red";
+            submitCheckRePassword = false;
+        }
+    });
+
+    $(document).ready(function() {
+      $("#changePwdBtn").click(function() {
+          var isValid = true; // 유효성 검사 결과를 저장할 변수
+
+          if(submitCheckPassword == false){
+            alert('패스워드가 유효하지 않습니다.');
+            $("#password").focus();
+            isValid = false; // 유효하지 않으므로 false로 설정
+            return isValid;
+          }
+
+          if(submitCheckRePassword == false){
+            alert('패스워드 확인이 필요합니다.');
+            $("#checkPassword").focus();
+            isValid = false; // 유효하지 않으므로 false로 설정
+            return isValid;
+          }
+
+          // 유효성 검증 후 Ajax
+           $.ajax({
+            url: '/teacher/password',
+            type: 'PUT',
+            contentType: 'application/json',
+            data : JSON.stringify({
+                teacherId: $('#teacherId').val(),
+                password: $('#password').val()
+            }),
+            success: function(response){
+                alert(response);
+                // 메인 페이지로 리다이렉트
+                window.location.href = '/';
+
+            },error: function(error){
+                //비밀번호 변경에 실패
+                alert("비밀번호 변경에 실패했습니다.")
+                location.reload();
+            }
+        });
+      });
+    });
+</script>
+<!-- 폼 전송 전 확인-->
+<script>
+    function confirmSubmit() {
+        var confirmAction = confirm("프로필 정보를 수정 하시겠습니까?");
+        if (confirmAction) {
+            // 사용자가 '확인'을 클릭한 경우 전송
+            document.getElementById("teacherUpdateForm").submit();
+        } else {
+            // 사용자가 '취소' 클릭 한 경우 전송 취소
+            return false;
+        }
+    }
+</script>
+</div>
+</body>
+</html>
