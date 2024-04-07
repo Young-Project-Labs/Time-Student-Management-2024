@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class Teacher extends BaseMemberEntity {
 
@@ -58,12 +60,16 @@ public class Teacher extends BaseMemberEntity {
     }
 
     public void changeEntity(Long id, Teacher updateTeacher) {
+        this.id = id;
         this.name = updateTeacher.getName();
-        this.password = updateTeacher.getPassword();
         this.phoneNumber = updateTeacher.getPhoneNumber();
         this.email = updateTeacher.getEmail();
         this.position = updateTeacher.getPosition();
         this.memberType = updateTeacher.getMemberType();
         this.gender = updateTeacher.getGender();
+    }
+    //패스워드만 변경
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

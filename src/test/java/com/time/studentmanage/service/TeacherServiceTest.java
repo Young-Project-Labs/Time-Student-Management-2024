@@ -36,19 +36,20 @@ class TeacherServiceTest {
         Long id = 1L;
         Teacher teacher = createTeacher();
         ReflectionTestUtils.setField(teacher,"id",id);
+        log.info("수정 전 teacherName={}", teacher.getName());
+        log.info("수정 전 teacher={}", teacher);
 
         TeacherUpdateReqDto updateReqDto = updateTeacherDto();
-        Teacher updateTeacher = updateReqDto.toEntity();
-        ReflectionTestUtils.setField(updateTeacher,"id",id);
 
         //when
         when(teacherRepository.findById(any())).thenReturn(Optional.of(teacher));
-        when(teacherRepository.save(any())).thenReturn(updateTeacher);
+        teacherService.updateTeacherInfo(id, updateReqDto);
 
         //then
-        TeacherRespDto teacherRespDto = teacherService.updateTeacherInfo(id, updateReqDto);
-        Assertions.assertThat(teacherRespDto.getName()).isEqualTo(updateReqDto.getName());
 
+        log.info("수정 후 teacherName={}", teacher.getName());
+        log.info("수정 후 teacher={}", teacher);
+        Assertions.assertThat(teacher.getName()).isEqualTo(updateReqDto.getName());
 
     }
 

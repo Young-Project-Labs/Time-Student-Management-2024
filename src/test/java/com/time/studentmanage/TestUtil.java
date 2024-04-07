@@ -123,13 +123,8 @@ public class TestUtil {
     }
 
     public static TeacherUpdateReqDto updateTeacherDto() {
-        return TeacherUpdateReqDto.builder()
-                .name("이름수정")
-                .phoneNumber("010-9999-9999")
-                .position(Position.TEACHER)
-                .memberType(MemberType.TEACHER)
-                .email("julia@time.com")
-                .gender(GenderType.FEMALE)
-                .build();
+        TeacherUpdateReqDto teacherUpdateReqDto = new TeacherUpdateReqDto(1L,"이름수정","010-1111-2222","cs@time.com",Position.TEACHER,MemberType.STUDENT, GenderType.MALE);
+
+        return teacherUpdateReqDto;
     }
 }

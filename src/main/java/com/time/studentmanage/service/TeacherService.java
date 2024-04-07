@@ -24,6 +24,7 @@ public class TeacherService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 선생_정보_조회
+    @Transactional(readOnly = true)
     public TeacherRespDto getTeacherInfo(Long teacherId){
         Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
 
@@ -36,20 +37,28 @@ public class TeacherService {
     }
     
     // 선생_정보_수정
-    public TeacherRespDto updateTeacherInfo(Long id, TeacherUpdateReqDto updateReqDto) {
+    public Teacher updateTeacherInfo(Long id, TeacherUpdateReqDto updateReqDto) {
         Optional<Teacher> teacherOP = teacherRepository.findById(id);
         if (!teacherOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
+        //정보 업데이트(updateReqDto에 담긴 정보로 더티 체킹)
+        Teacher teacher = teacherOP.get();
+        teacher.changeEntity(id, updateReqDto.toEntity());
 
-        teacherOP.get().changeEntity(updateReqDto.getId(), updateReqDto.toEntity());
+        return teacher;
+    }
 
-        Teacher resultTeacher = teacherRepository.save(teacherOP.get());
-
-        return new TeacherRespDto(resultTeacher);
+    //선생_비밀번호_수정
+    public void updatePwd(Long teacherId, String password) {
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다."));
+        //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
+        teacher.setPassword(bCryptPasswordEncoder.encode(password));
     }
 
     //선생_목록(관리자 페이지)
+    @Transactional(readOnly = true)
     public List<TeacherRespDto> getTeacherAllList() {
         List<Teacher> teacherList = teacherRepository.findAll();
 
@@ -73,6 +82,7 @@ public class TeacherService {
     }
 
     //선생_이메일_중복_체크
+    @Transactional(readOnly = true)
     public void checkEmailDuplication(String email) {
         Optional<Teacher> teacherOP = teacherRepository.findByEmail(email);
         String regexp = "^[\\w.-]+@time\\.com$";
@@ -87,6 +97,7 @@ public class TeacherService {
         }
 
     }
+
 
 
 }
