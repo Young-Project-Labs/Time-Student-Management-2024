@@ -8,6 +8,8 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +43,23 @@ public class StudentService {
 
     //아이디 중복 체크
     @Transactional(readOnly = true)
-    public Boolean checkIdDuplication(String checkId) {
-       return studentRepository.existsByUserId(checkId);
+    public void checkIdDuplication(String userId){
+        // 아이디 검증
+        boolean regexResult = userId.matches("^[a-z0-9]{6,20}$");
+
+        if (!regexResult) {
+            if (userId.length() < 6) {
+                throw new IllegalArgumentException("아이디 길이가 6자 미만입니다.");
+            }
+            throw new IllegalArgumentException("아이디 형식을 확인해주세요.");
+        }
+
+        // 중복 검증
+        // true (존재하는 경우)
+        if (studentRepository.existsByUserId(userId)) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
+
     }
 
     //학생_정보_수정
@@ -52,8 +69,7 @@ public class StudentService {
         if (!studentOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
-        //changeEntity
-//        studentOP.get().changeEntity(updateReqDto.getId(),updateReqDto.toEntity());
+
         Student updateStudent = updateReqDto.toEntity();
         log.info("service check={}",updateStudent);
         Student resultStudent = studentRepository.save(updateStudent);
@@ -83,8 +99,8 @@ public class StudentService {
         return studentRespDtoList;
 
     }
-    @Transactional(readOnly = true)
     // 학생_상세_정보_조회
+    @Transactional(readOnly = true)
     public StudentRespDto getStudentInfo(Long id) {
         Optional<Student> studentOP = studentRepository.findById(id);
         if (!studentOP.isPresent()) {
@@ -95,13 +111,6 @@ public class StudentService {
         return respDto;
 
     }
-
-
-    //TODO: 학년 클릭 시 -> 학년별_학생_조회
-
-
-
-
 
 
 

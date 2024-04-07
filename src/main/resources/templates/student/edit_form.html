@@ -20,7 +20,7 @@
 <h1 class="d-flex justify-content-center m-5" th:text="*{studentRespDto.name+' 정보'}"></h1>
 
 <div class="container d-flex justify-content-center">
-    <form th:action="@{/edit/{id}(id=${studentRespDto.id})}" method="post" th:object="${studentRespDto}" onsubmit="return valid()" class="border border-primary-subtle border-3 rounded p-3">
+    <form action="@{/edit/{id}(id=${studentRespDto.id})}" method="post" th:object="${studentRespDto}" onsubmit="return valid()" class="border border-primary-subtle border-3 rounded p-3">
         <input type="hidden" name="id" th:field="*{id}">
         <input type="hidden" name="password" th:field="*{password}">
         <input type="hidden" name="attendanceStatus" th:field="*{attendanceStatus}">
@@ -194,6 +194,68 @@
                 }
             }).open();
         }
+    </script>
+    <!-- 비밀번호 변경 관련 JS-->
+    <script>
+        <!-- 패스워드 정규 표현식-->
+        document.getElementById("password").addEventListener("input", function() {
+            var passwordInput = this.value;
+            // 정규 표현식
+            var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+            // 길이 검증
+
+
+            // 패스워드 검증
+            if(reg.test(passwordInput)) {
+                $("#result_checkPassword").html("패스워드가 유효합니다.").css("color", "green");
+                this.style.borderColor = "green";
+                submitCheckPassword = true;
+            } else {
+                 if (passwordInput.length < 8){
+                    $("#result_checkPassword").html("패스워드 길이가 8자 미만입니다.").css("color", "red");
+                    this.style.borderColor = "red";
+                    submitCheckPassword = false;
+                }else{
+                    $("#result_checkPassword").html("패스워드가 유효하지 않습니다.").css("color", "red");
+                    this.style.borderColor = "red";
+                    submitCheckPassword = false;
+                }
+            }
+
+            var checkPasswordInput = document.getElementById("checkPassword").value;
+            if(checkPasswordInput != ''){
+                // 패스워드 검증
+                if(passwordInput == checkPasswordInput) {
+                    $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+                    this.style.borderColor = "green";
+                    submitCheckRePassword = true;
+                } else {
+                    $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+                    this.style.borderColor = "red";
+                    submitCheckRePassword = false;
+                }
+            }
+
+
+        });
+
+        <!-- 패스워드 재입력 확인 -->
+        document.getElementById("checkPassword").addEventListener("input", function() {
+            var passwordInput = document.getElementById("password").value;;
+            var checkPasswordInput = document.getElementById("checkPassword").value;
+        ;
+            // 패스워드 검증
+            if(passwordInput == checkPasswordInput) {
+                $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+                this.style.borderColor = "green";
+                submitCheckRePassword = true;
+            } else {
+                $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckRePassword = false;
+            }
+        });
     </script>
 
 

@@ -53,9 +53,18 @@
                         <li><a href="/join">회원가입 페이지</a></li>
                         <li><a href="#" th:href="@{/teacher}">선생님 관리 페이지</a></li>
                     </ol>
-                    <div th:if="${session.loginMember != null}">
-                        <span th:text="${session.loginMember.name}"></span>
+
+                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'STUDENT')}">
+                        <span th:text="|${session.loginMember.name} 학생|"></span>
                         <a th:href="@{/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
+                        <form method="post" action="/logout">
+                            <button type="submit">로그아웃</button>
+                        </form>
+                    </div>
+
+                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                        <span th:text="|${session.loginMember.name} 선생님|"></span>
+                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
                         <form method="post" action="/logout">
                             <button type="submit">로그아웃</button>
                         </form>
