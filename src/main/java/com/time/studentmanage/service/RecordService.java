@@ -1,9 +1,9 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.Record;
-import com.time.studentmanage.domain.dto.record.RecordRespDTO;
-import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
-import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
@@ -33,8 +33,8 @@ public class RecordService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
 
-    private RecordRespDTO createRecordRespDTO(Record r) {
-        RecordRespDTO recordRespDTO = new RecordRespDTO();
+    private RecordRespDto createRecordRespDTO(Record r) {
+        RecordRespDto recordRespDTO = new RecordRespDto();
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setContent(r.getContent());
         recordRespDTO.setTeacherName(r.getTeacher().getName());
@@ -45,7 +45,7 @@ public class RecordService {
         return recordRespDTO;
     }
 
-    public Long saveRecord(RecordSaveReqDTO recordSaveReqDTO) {
+    public Long saveRecord(RecordSaveReqDto recordSaveReqDTO) {
 
         Student studentPS = null;
         Teacher teacherPS = null;
@@ -104,7 +104,7 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public RecordRespDTO getRecord(Long recordId) {
+    public RecordRespDto getRecord(Long recordId) {
         Optional<Record> recordOP = recordRepository.findById(recordId);
 
         if (!recordOP.isPresent()) {
@@ -112,7 +112,7 @@ public class RecordService {
         }
 
         Record r = recordOP.get();
-        RecordRespDTO recordRespDTO = new RecordRespDTO();
+        RecordRespDto recordRespDTO = new RecordRespDto();
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setStudentName(r.getStudent().getName());
         recordRespDTO.setContent(r.getContent());
@@ -121,7 +121,7 @@ public class RecordService {
 
 
     @Transactional(readOnly = true)
-    public List<RecordRespDTO> getStudentList(Long studentId) {
+    public List<RecordRespDto> getStudentList(Long studentId) {
         Optional<Student> studentOP = studentRepository.findById(studentId);
 
         if (!studentOP.isPresent()) {
@@ -132,9 +132,9 @@ public class RecordService {
 
         List<Record> recordList = recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, studentPS);
 
-        List<RecordRespDTO> respList = new ArrayList<>();
+        List<RecordRespDto> respList = new ArrayList<>();
         for (Record r : recordList) {
-            RecordRespDTO recordRespDTO = createRecordRespDTO(r);
+            RecordRespDto recordRespDTO = createRecordRespDTO(r);
             respList.add(recordRespDTO);
         }
 
@@ -142,7 +142,7 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecordRespDTO> getAllWrittenList(Long teacherId) {
+    public List<RecordRespDto> getAllWrittenList(Long teacherId) {
         Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
         if (!teacherOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 선생님 정보입니다.");
@@ -152,9 +152,9 @@ public class RecordService {
 
         List<Record> recordList = recordRepository.findAllByTeacher(teacher);
 
-        List<RecordRespDTO> respList = new ArrayList<>();
+        List<RecordRespDto> respList = new ArrayList<>();
         for (Record r : recordList) {
-            RecordRespDTO recordRespDTO = createRecordRespDTO(r);
+            RecordRespDto recordRespDTO = createRecordRespDTO(r);
             respList.add(recordRespDTO);
         }
 
@@ -162,8 +162,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecordRespDTO> getFilteredResults(RecordSearchDTO recordSearchDTO) {
-        List<RecordRespDTO> respList = new ArrayList<>();
+    public List<RecordRespDto> getFilteredResults(RecordSearchDto recordSearchDTO) {
+        List<RecordRespDto> respList = new ArrayList<>();
         LocalDateTime fromDate;
         LocalDateTime toDate;
 

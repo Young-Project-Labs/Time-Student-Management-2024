@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository;
 
+import com.querydsl.core.Tuple;
 import com.time.studentmanage.domain.Address;
 import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
@@ -187,16 +188,93 @@ class StudentRepositoryTest {
     }
 
     @Test
-    void 학생_ID_조회_테스트(){
+    void 학생_ID_조회_테스트() {
         //given
         Student student = createStudent();
         String newId = "cs@time.com";
         studentRepository.save(student);
         //when
         Boolean exists = studentRepository.existsByUserId(newId);
-        log.info("exists={}",exists);
+        log.info("exists={}", exists);
         //then
         assertThat(exists).isTrue();
 
+    }
+
+    @Test
+    void 학교별_학년_오름차순으로_학생_조회_JPA메서드_테스트() {
+        //given
+        for (int i = 1; i <= 6; i++) {
+            Student student = Student.builder()
+                    .name("용호초 학생" + i)
+                    .grade(i)
+                    .schoolName("용호초등학교")
+                    .build();
+
+            studentRepository.save(student);
+        }
+
+        for (int i = 1; i <= 6; i++) {
+            Student student = Student.builder()
+                    .name("반송초 학생" + i)
+                    .grade(i)
+                    .schoolName("반송초등학교")
+                    .build();
+
+            studentRepository.save(student);
+        }
+
+        //when
+        List<Student> result = studentRepository.findAllBySchoolNameOrderByGradeAsc("용호초등학교");
+
+        for (int i = 0; i < result.size(); i++) {
+            log.info("student={}", result.get(i).getName());
+        }
+
+        //then
+        assertThat(result.size()).isEqualTo(6);
+        assertThat(result.get(0).getGrade()).isEqualTo(1);
+        assertThat(result.get(2).getGrade()).isEqualTo(3);
+    }
+
+    @Test
+    void 저장된_모든_학교_이름을_리스트로_조회_테스트() {
+        //given
+        for (int i = 5; i >= 0; i--) {
+            char schoolNameIdx = 'A';
+            Student student = Student.builder()
+                    .name("학생" + i)
+                    .grade(i)
+                    .schoolName(String.format("학교" + (char) (schoolNameIdx + i)))
+                    .build();
+
+            studentRepository.save(student);
+        }
+
+        Student studentZ = Student.builder()
+                .name("학생Z")
+                .grade(6)
+                .schoolName("학교Z")
+                .build();
+
+        Student studentZZ = Student.builder()
+                .name("학생ZZ")
+                .grade(5)
+                .schoolName("학교Z")
+                .build();
+
+        studentRepository.save(studentZ);
+        studentRepository.save(studentZZ);
+
+        //when
+        List<String> result = studentRepository.findAllSchoolName();
+
+        for (int i = 0; i < result.size(); i++) {
+            log.info("result={}", result.get(i));
+        }
+
+        //then
+        assertThat(result.size()).isEqualTo(7);
+        assertThat(result.get(result.size() - 1)).isEqualTo(studentZ.getSchoolName());
     }
 }

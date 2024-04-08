@@ -1,9 +1,9 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.Record;
-import com.time.studentmanage.domain.dto.record.RecordRespDTO;
-import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
-import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
@@ -70,7 +70,7 @@ class RecordServiceTest {
         when(recordRepository.save(any())).thenReturn(record);
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
 
         //when
         Long recordId = recordService.saveRecord(recordSaveReqDTO);
@@ -105,7 +105,7 @@ class RecordServiceTest {
 //        when(recordsRepository.save(any())).thenReturn(record); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
 
 
         //when
@@ -137,7 +137,7 @@ class RecordServiceTest {
         ReflectionTestUtils.setField(record, "id", fakeId);
 
         // 1. 저장 요청
-        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
 
         //when
         //then
@@ -289,7 +289,7 @@ class RecordServiceTest {
         when(recordRepository.findAllByTeacher(any())).thenReturn(List.of(newRecord, oldRecord));
 
         //then
-        List<RecordRespDTO> result = recordService.getAllWrittenList(teacher.getId());
+        List<RecordRespDto> result = recordService.getAllWrittenList(teacher.getId());
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getContent()).isEqualTo(newRecord.getContent());
         assertThat(result.get(1).getContent()).isEqualTo(oldRecord.getContent());
@@ -329,7 +329,7 @@ class RecordServiceTest {
         ReflectionTestUtils.setField(record2, "createDate", LocalDateTime.of(2024, 3, 23, 0, 0));
 
 
-        RecordSearchDTO recordSearchDTO = new RecordSearchDTO();
+        RecordSearchDto recordSearchDTO = new RecordSearchDto();
         recordSearchDTO.setSearchType(SearchType.CONTENT);
         recordSearchDTO.setStudentId(1L);
         recordSearchDTO.setDates("2024/03/21 - 2024/03/27");
@@ -339,7 +339,7 @@ class RecordServiceTest {
         when(recordRepository.findAllByContentSearch(any(), anyString(), any(), any())).thenReturn(List.of(record2, record1));
 
         //when
-        List<RecordRespDTO> result = recordService.getFilteredResults(recordSearchDTO);
+        List<RecordRespDto> result = recordService.getFilteredResults(recordSearchDTO);
 
         //then
         assertThat(result.size()).isEqualTo(2);

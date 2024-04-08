@@ -12,33 +12,23 @@
 <!-- 헤더 시작 -->
 <div class="container">
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-            <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
-            <span class="fs-4">타임 영어 전문 학원</span>
-        </a>
-
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-        </ul>
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
     </header>
 </div>
 <!-- 헤더 끝 -->
 
 <!--컨테이너 시작-->
-<div class="container d-flex flex-column justify-content-center mt-5 p-3">
+<div class="container d-flex flex-column justify-content-center mt-5">
 
-    <form th:action="@{/record/create}" th:object="${recordSaveReqDTO}" method="post">
+    <form th:action="@{/record/create}" th:object="${recordSaveReqDto}" method="post">
+
+        <div class="alert alert-warning text-red text-center" th:errors="*{studentId}">학생 id 오류</div>
+        <div class="alert alert-warning text-center" th:errors="*{teacherId}">선생 id 오류</div>
+        <div class="alert alert-warning text-danger text-center" th:errors="*{content}">내용 오류 입니다.</div>
 
         <div class="mb-3">
             <h3 class="my-3 border-bottom pb-2">피드백 등록</h3>
         </div>
-
-        <div class="field-error" th:errors="*{studentId}">오류 입니다.</div>
-        <div class="field-error" th:errors="*{teacherId}">오류 입니다.</div>
 
 
         <!-- 학생 & 선생 id -->
@@ -49,7 +39,6 @@
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->
         <textarea style="display: none;" th:errorclass="field-error" th:field="*{content}"></textarea>
 
-        <div class="field-error" th:errors="*{content}">내용 오류 입니다.</div>
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
 
     </form>

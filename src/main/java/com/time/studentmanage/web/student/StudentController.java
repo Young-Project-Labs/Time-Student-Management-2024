@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -30,7 +30,8 @@ public class StudentController {
     }
 
     @PostMapping("/join")
-    public String joinStudent(@Valid @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult, Model model) {
+    public String joinStudent(@Valid @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult,
+            Model model) {
         log.info("studentSaveReqDto={}", studentSaveReqDto);
 
         if (bindingResult.hasErrors()) {
@@ -42,15 +43,15 @@ public class StudentController {
         return "redirect:/";
     }
 
-
     // 학생 개인 정보 수정 폼(마이페이지)
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable("id") int id, HttpSession session, Model model) {
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        //세션이 없는 경우 진입X
+        // 세션이 없는 경우 진입X
         if (sessionObject == null) {
             return "redirect:/";
         }
+
         //세션에 저장된 id
         Long studentId = ((Student) sessionObject).getId();
 
@@ -65,9 +66,10 @@ public class StudentController {
      * POST:학생 정보 수정
      */
     @PostMapping("/edit/{id}")
-    public String editInfo(@PathVariable("id") int id, @ModelAttribute StudentRespDto studentRespDto, BindingResult bindingResult, HttpSession session) {
+    public String editInfo(@PathVariable("id") int id, @ModelAttribute StudentRespDto studentRespDto,
+            BindingResult bindingResult, HttpSession session) {
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        //세션이 없는 경우 진입X
+        // 세션이 없는 경우 진입X
         if (sessionObject == null) {
             return "redirect:/";
         }
@@ -82,5 +84,26 @@ public class StudentController {
         return "redirect:/";
     }
 
+    @GetMapping("/school")
+    public String showStudentList(@RequestParam(value = "schoolName") String schoolName, Model model) { // , required =
+                                                                                                        // false
 
+        if (schoolName == null || schoolName.equals("")) {
+            throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");
+        }
+
+        List<StudentRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
+        model.addAttribute("studentList", studentList);
+
+        return "student/student_list";
+    }
+
+    @GetMapping("/search")
+    public String searchStudent(@RequestParam(value = "content") String content, Model model) {
+
+        List<StudentRespDto> studentList = studentService.getSearchedStudent(content);
+        model.addAttribute("studentList", studentList);
+
+        return "student/student_list";
+    }
 }

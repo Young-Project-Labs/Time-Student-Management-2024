@@ -1,8 +1,9 @@
 package com.time.studentmanage.web;
 
-import com.time.studentmanage.domain.dto.record.RecordRespDTO;
-import com.time.studentmanage.domain.dto.record.RecordSaveReqDTO;
-import com.time.studentmanage.domain.dto.record.RecordSearchDTO;
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchDto;
+import com.time.studentmanage.domain.dto.record.RecordUpdateReqDto;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Teacher;
@@ -20,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -37,137 +37,172 @@ public class RecordController {
     }
 
     @GetMapping("/record/{studentId}")
-    public String records(@PathVariable("studentId") Long id,
-                          HttpServletRequest request, Model model) {
+    public String records(@PathVariable("studentId") Long id, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null) {
-            // TODO: 로그인 페이지로 이동하도록 변경
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher)) {
             return "redirect:/";
         }
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
-        List<RecordRespDTO> recordList = recordService.getStudentList(id);
+        List<RecordRespDto> recordList = recordService.getStudentList(id);
 
-        RecordSearchDTO recordSearchDTO = new RecordSearchDTO();
-        recordSearchDTO.setStudentName(studentRespDto.getName());
+        RecordSearchDto recordSearchDto = new RecordSearchDto();
+        recordSearchDto.setStudentName(studentRespDto.getName());
 
-        model.addAttribute("recordSearchDTO", recordSearchDTO);
+        model.addAttribute("recordSearchDto", recordSearchDto);
         model.addAttribute("recordList", recordList);
 
         return "record/record_list";
     }
 
     @PostMapping("/record/{studentId}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDTO recordSearchDTO, BindingResult result,
-                                @PathVariable("studentId") Long studentId,
-                                HttpServletRequest request,
-                                Model model) {
+    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result, @PathVariable("studentId") Long studentId, HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
-        Object teacherSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null || teacherSession == null) {
-            // TODO: 로그인 페이지로 이동하도록 변경
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-            List<RecordRespDTO> recordList = recordService.getStudentList(studentId);
+            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
             model.addAttribute("recordList", recordList);
-            model.addAttribute("recordSearchDTO", recordSearchDTO);
+            model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
         }
 
-        Teacher teacher = (Teacher) teacherSession;
-        recordSearchDTO.setTeacherId(teacher.getId());
+        recordSearchDto.setTeacherId(teacher.getId());
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
-        List<RecordRespDTO> recordList = recordService.getFilteredResults(recordSearchDTO);
+        List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDto);
 
         model.addAttribute("recordList", recordList);
         model.addAttribute("studentName", studentRespDto.getName());
-        model.addAttribute("recordSearchDTO", recordSearchDTO);
+        model.addAttribute("recordSearchDto", recordSearchDto);
 
         return "record/record_list";
     }
 
     @GetMapping("/record/create")
-    public String showCreateRecordForm(@RequestParam(value = "studentId", required = false) Long studentId,
-                                       Model model,
-                                       HttpServletRequest request) {
+    public String showCreateRecordForm(@RequestParam(value = "studentId", required = false) Long studentId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null) {
-            // TODO: 로그인 페이지로 이동하도록 변경
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
+
+        Long teacherId = teacher.getId();
 
         if (studentId == null) {
             throw new DataNotFoundException("학생 정보가 입력되지 않았습니다.");
         }
 
-        RecordSaveReqDTO recordSaveReqDTO = new RecordSaveReqDTO();
-        recordSaveReqDTO.setStudentId(studentId);
-        recordSaveReqDTO.setTeacherId(3L);
+        RecordSaveReqDto recordSaveReqDto = new RecordSaveReqDto();
+        recordSaveReqDto.setStudentId(studentId);
+        recordSaveReqDto.setTeacherId(teacherId);
 
-        model.addAttribute("recordSaveReqDTO", recordSaveReqDTO);
+        model.addAttribute("recordSaveReqDto", recordSaveReqDto);
 
         return "record/record_create_form";
     }
 
     @PostMapping("/record/create")
-    public String createRecord(@Validated @ModelAttribute RecordSaveReqDTO recordSaveReqDTO, BindingResult bindingResult,
-                               HttpServletRequest request, Model model) {
-
+    public String createRecord(@Validated @ModelAttribute RecordSaveReqDto recordSaveReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null) {
-            // TODO: 로그인 페이지로 이동하도록 변경
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher)) {
             return "redirect:/";
         }
 
         if (bindingResult.hasErrors()) {
             log.info("error={}", bindingResult);
-            model.addAttribute("recordSaveReqDTO", recordSaveReqDTO);
+            model.addAttribute("recordSaveReqDto", recordSaveReqDto);
             return "record/record_create_form";
         }
 
-        recordService.saveRecord(recordSaveReqDTO);
-        return "redirect:/record/" + recordSaveReqDTO.getStudentId();
+        recordService.saveRecord(recordSaveReqDto);
+        return "redirect:/record/" + recordSaveReqDto.getStudentId();
     }
 
     @GetMapping("/record/update/{recordId}")
-    public String showUpdateRecordForm(@PathVariable("recordId") Long recordId,
-                                       @RequestParam("studentId") Long studentId,
-                                       HttpServletRequest request,
-                                       Model model) {
+    public String showUpdateRecordForm(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null) {
-            // TODO: 로그인 페이지로 이동하도록 변경
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher)) {
             return "redirect:/";
         }
 
-        RecordRespDTO recordRespDTO = recordService.getRecord(recordId);
+        RecordRespDto recordRespDto = recordService.getRecord(recordId);
 
-        model.addAttribute("studentId", studentId);
-        model.addAttribute("record", recordRespDTO);
+        RecordUpdateReqDto recordUpdateReqDto = new RecordUpdateReqDto();
+        recordUpdateReqDto.setRecordId(recordId);
+        recordUpdateReqDto.setStudentId(studentId);
+        recordUpdateReqDto.setContent(recordRespDto.getContent());
+
+        model.addAttribute("recordUpdateReqDto", recordUpdateReqDto);
+
         return "record/record_update_form";
     }
 
     @PostMapping("/record/update/{recordId}")
-    public String updateRecord(@PathVariable("recordId") Long recordId,
-                               @RequestParam("content") String content,
-                               @RequestParam("studentId") Long studentId) {
-        recordService.modifyContent(recordId, content);
-        return "redirect:/record/" + studentId;
+    public String updateRecord(@Validated @ModelAttribute RecordUpdateReqDto recordUpdateReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
+
+        HttpSession session = request.getSession(false);
+        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+
+        if (session == null || loginSession == null) {
+            return "redirect:/login";
+        }
+
+        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
+        if (!(loginSession instanceof Teacher)) {
+            return "redirect:/";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("recordUpdateReqDto", recordUpdateReqDto);
+            return "record/record_update_form";
+        }
+
+        recordService.modifyContent(recordUpdateReqDto.getRecordId(), recordUpdateReqDto.getContent());
+
+        return "redirect:/record/" + recordUpdateReqDto.getStudentId();
     }
 
     @GetMapping("/record/delete/{recordId}")
-    public String deleteRecord(@PathVariable("recordId") Long recordId,
-                               @RequestParam("studentId") Long studentId) {
+    public String deleteRecord(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId) {
         recordService.deleteRecord(recordId);
 
         return "redirect:/record/" + studentId;

@@ -8,25 +8,31 @@
 </head>
 <body>
 
-<div class="p-2">
+    <!-- 헤더 시작 -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+        </header>
+    </div>
+    <!-- 헤더 끝 -->
 
-    <form th:action="@{/record/update/{recordId}(recordId=${recordId})}" method="post" th:object="${record}">
+<div class="container p-2">
+
+    <form th:action="@{/record/update/{recordId}(recordId=${recordUpdateReqDto.recordId})}" method="post" th:object="${recordUpdateReqDto}">
+
+        <div class="alert alert-warning text-center" th:errors="*{recordId}">피드백 id 오류</div>
+        <div class="alert alert-warning text-center" th:errors="*{studentId}">학생 id 오류</div>
+        <div class="alert alert-warning text-danger text-center" th:errors="*{content}">내용 오류 입니다.</div>
 
         <div class="mb-3">
             <h3 class="my-3 border-bottom pb-2">피드백 수정</h3>
         </div>
 
-        <input type="hidden" name="studentId" th:value="${studentId}"/>
-
-<!--        <div class="mb-3">-->
-<!--            <label for="content" class="form-label" th:text="|내용 작성|">내용</label>-->
-<!--            <textarea id="content" class="form-control" rows="10"  th:field="*{content}" ></textarea>-->
-<!--        </div>-->
+        <input type="hidden" name="studentId" th:value="*{studentId}"/>
 
         <div id="editor"></div>
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->
-        <textarea name="content" id="hiddenContent" style="display: none;"></textarea>
-
+        <textarea style="display: none;" id="hiddenContent" th:errorclass="field-error" th:field="*{content}"></textarea>
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
 
     </form>
@@ -39,7 +45,7 @@
         el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
         height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
         initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        initialValue: '[[${record.content}]]',
+        initialValue: '[[${recordUpdateReqDto.content}]]',
         previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
     });
 

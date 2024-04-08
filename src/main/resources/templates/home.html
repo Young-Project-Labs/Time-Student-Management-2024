@@ -4,59 +4,174 @@
 
     <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Document</title>
 </head>
 <body>
 
-<div class="pb-2 px-2">
-    <div class="border border-primary border-2">
-        <!-- 헤더 시작 -->
-        <div class="container">
-            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-            </header>
+<div class="p-2">
+    <!-- 헤더 시작 -->
+    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+
+        <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+            <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+            <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
         </div>
-        <!-- 헤더 끝 -->
-    </div>
+        <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
 
-    <div class="container-fluid    border border-warning border-3">
-        <div class="row">
+        <!--로그인이 되었을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <!--                <button type="button" class="btn btn-primary">button 1</button>-->
+                <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
+                <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
 
-            <div class="col-3 text-center    border border-danger border-3">
-                this is side bar
-                <div th:each="num : ${#numbers.sequence(1, 30)}" class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action" th:text="|school name ${num}|">The
-                        current link item</a>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="dropdown-item">
+                                <i class="fa-solid fa-heart"></i>
+                                <span th:text="|${session.loginMember.name}님|"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown-item">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                                   class="link-dark text-decoration-none">내 정보 수정</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown-item">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <form method="post" action="/logout" class="d-inline">
+                                    <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                        로그아웃
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="col-9     border border-success border-3">
-                <div class="row">
+        </div>
+        <!--로그인이 되었을 때 보여줄 버튼 끝-->
+    </header>
+    <!-- 헤더 끝 -->
 
-                    <div class="col-2 border border-success border-3">
-                        this is select bar
+    <!--브레드 크럼 시작-->
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis text-dark" href="/">
+                <i class="fa-solid fa-house"></i>
+                <!--                <span class="visually-hidden">Home</span>-->
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">Home</li>
+    </ol>
+    <!--브레드 크럼 끝-->
+
+    <div class="container-fluid ">
+        <div class="row">
+
+            <!--사이드 바 시작-->
+            <div class="col-3 text-center border border-2 rounded-3 ">
+
+                <ul class="list-group list-group-flush">
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__elementary__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__elementary__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="초등"></span>
+                    </li>
+
+                    <div th:if="${elementarySchools != null}" class="collapse" id="collapse__elementary__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${elementarySchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
                     </div>
 
-                    <div class="col  border border-primary border-3">
-                        this is search bar
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__middle__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__middle__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="중등"></span>
+                    </li>
+
+                    <div th:if="${middleSchools != null}" class="collapse" id="collapse__middle__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${middleSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__high__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__high__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="고등"></span>
+                    </li>
+
+                    <div th:if="${highSchools != null}" class="collapse" id="collapse__high__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${highSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+                </ul>
+
+            </div>
+            <!--사이드 바 끝-->
+
+            <div class="col-9 ">
+                <div class="row">
+
+                    <div class="col ">
+                        <!--검색 바 시작-->
+                        <form id="searchForm" th:action="@{/search}" method="get">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                <input name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
+                                       aria-describedby="basic-addon1">
+                                <input type="submit" value="검색" class="btn btn-outline-primary student__search__bar">
+                            </div>
+                        </form>
+                        <!--검색 바 끝-->
                     </div>
                 </div>
 
-                <div class="     border border-danger border-3">
-                    this is main content
-                    <p>Please select an option</p>
-                    <ol>
-                        <li><a href="record/recordList.html" th:href="@{/record/1}">학생에 대한 레코드 리스트 화면 개발 페이지 바로가기</a>
-                        </li>
-                        <li><a href="/login">로그인 페이지</a></li>
-                        <li><a href="/join">회원가입 페이지</a></li>
-                        <li><a href="#" th:href="@{/teacher}">선생님 관리 페이지</a></li>
-                    </ol>
+                <div class="main-content">
+                    <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center" id="searchResultMessage">
+                        데이터가 선택되지 않았습니다.
 
-                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'STUDENT')}">
-                        <span th:text="|${session.loginMember.name} 학생|"></span>
-                        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
+                    </div>
+
+                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                        <span th:text="|${session.loginMember.name} 선생님|"></span>
+                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
                         <form method="post" action="/logout">
                             <button type="submit">로그아웃</button>
                         </form>
@@ -75,5 +190,73 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".school-name-link").click(function (event) {
+            event.preventDefault(); // 기본 이벤트를 방지합니다.
+            var href = $(this).attr('href'); // 클릭된 링크의 href 값을 가져옵니다.
+            var schoolName = $(this).text().trim();
+
+            $("#breadcrumb-school").text(schoolName)
+
+            $.ajax({
+                url: href, // 서버로 요청을 보낼 URL
+                type: 'GET', // HTTP 요청 방식
+                success: function (response) {
+                    // 요청이 성공하면, 응답으로 받은 데이터를 main content 영역에 채웁니다.
+                    $(".main-content").html(response);
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = "검색 결과를 불러오는 중 오류가 발생했습니다.";
+                    displayErrorMessage(errorMessage);
+                }
+            });
+        });
+
+        $("#searchForm").submit(function (event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
+
+            var formData = $(this).serialize(); // 폼 데이터를 가져옵니다.
+            var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: formData,
+                success: function (response) {
+                    $(".main-content").html(response);
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = "검색 결과가 존재하지 않습니다.";
+                    displayErrorMessage(errorMessage);
+                }
+            });
+        });
+
+        function displayErrorMessage(message) {
+            var errorHtml = '<div class="alert alert-danger text-center">' + message + '</div>';
+            $(".main-content").html(errorHtml);
+        }
+    });
+
+    // 학급 버튼 클릭 시 꺽쇠 변경 이벤트
+    $(document).ready(function () {
+        $(".school__name__type").click(function () {
+            // 현재 클릭된 항목의 아이콘을 찾습니다.
+            var icon = $(this).find(".fa-solid");
+
+            // 아이콘이 'fa-chevron-right' 클래스를 가지고 있다면 'fa-chevron-down'으로 변경합니다.
+            // 그렇지 않다면 'fa-chevron-right'으로 변경합니다.
+            if (icon.hasClass("fa-chevron-right")) {
+                icon.removeClass("fa-chevron-right").addClass("fa-chevron-down");
+            } else {
+                icon.removeClass("fa-chevron-down").addClass("fa-chevron-right");
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>

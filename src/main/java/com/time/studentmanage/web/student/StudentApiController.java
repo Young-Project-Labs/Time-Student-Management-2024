@@ -1,7 +1,6 @@
 package com.time.studentmanage.web.student;
 
 import com.time.studentmanage.service.StudentService;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class StudentApiController {
     private final StudentService studentService;
+
     @GetMapping("/id/check")
     public ResponseEntity<?> checkIdDuplication(@RequestParam(value = "userId") String userId){
         log.info("userId={}", userId);

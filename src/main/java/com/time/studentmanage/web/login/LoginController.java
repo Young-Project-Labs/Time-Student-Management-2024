@@ -1,22 +1,17 @@
 package com.time.studentmanage.web.login;
 
-import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.tuple.CreationTimestampGeneration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.net.http.HttpRequest;
 import java.util.Optional;
 
 @Controller
@@ -33,7 +28,7 @@ public class LoginController {
             return "redirect:/";
         }
 
-        return "login/loginPage";
+        return "login/login_form";
     }
 
     @PostMapping("/login")
@@ -41,7 +36,7 @@ public class LoginController {
         //dto 검증
         if (bindingResult.hasErrors()) {
             log.error("error={}", bindingResult.getFieldError());
-            return "login/loginPage";
+            return "login/login_form";
         }
         //로그인 진행
         Optional<?> loginMemberOP = loginService.login(form.getLoginId(), form.getPassword(), form.getMemberType());
@@ -49,7 +44,7 @@ public class LoginController {
         //조회 실패(로그인 실패)
         if (!loginMemberOP.isPresent()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
-            return "login/loginPage";
+            return "login/login_form";
         }
 
         //성공 시 세션 저장
