@@ -18,7 +18,6 @@ public class StudentUpdateReqDto {
     private Long id;
     private String name;
     private String userId;
-    private String password;
     private String phoneNumber;
     private String schoolName;
     private String parentName;
@@ -35,7 +34,6 @@ public class StudentUpdateReqDto {
         this.id = studentRespDto.getId();
         this.name = studentRespDto.getName();
         this.userId = studentRespDto.getUserId();
-        this.password = studentRespDto.getPassword();
         this.phoneNumber = studentRespDto.getPhoneNumber();
         this.schoolName = studentRespDto.getSchoolName();
         this.parentName = studentRespDto.getParentName();
@@ -48,27 +46,12 @@ public class StudentUpdateReqDto {
         this.address = studentRespDto.getAddress();
     }
 
-    public StudentUpdateReqDto(String name, String phoneNumber, String schoolName, String parentName, String parentPhoneNumber, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.schoolName = schoolName;
-        this.parentName = parentName;
-        this.parentPhoneNumber = parentPhoneNumber;
-        this.grade = grade;
-        this.attendanceStatus = attendanceStatus;
-        this.memberType = memberType;
-        this.gender = gender;
-        this.classType = classType;
-        this.address = address;
-    }
-
     //Dto -> Student 엔티티 변환
     public Student toEntity() {
         Student student = Student.builder()
                 .id(id)
                 .name(name)
                 .userId(userId)
-                .password(password)
                 .phoneNumber(phoneNumber)
                 .schoolName(schoolName)
                 .parentName(parentName)
