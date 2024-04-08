@@ -51,7 +51,8 @@ public class StudentController {
         if (sessionObject == null) {
             return "redirect:/";
         }
-        // 세션에 저장된 id
+
+        //세션에 저장된 id
         Long studentId = ((Student) sessionObject).getId();
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);

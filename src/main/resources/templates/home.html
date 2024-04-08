@@ -166,6 +166,15 @@
                 <div class="main-content">
                     <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center" id="searchResultMessage">
                         데이터가 선택되지 않았습니다.
+
+                    </div>
+
+                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                        <span th:text="|${session.loginMember.name} 선생님|"></span>
+                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
+                        <form method="post" action="/logout">
+                            <button type="submit">로그아웃</button>
+                        </form>
                     </div>
                 </div>
             </div>
