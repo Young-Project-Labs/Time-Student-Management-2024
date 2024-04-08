@@ -47,7 +47,7 @@ public class LoginService {
          * memberType = TEACHER
          */
         if (memberType == MemberType.TEACHER) {
-            Optional<Teacher> teacherOP = teacherRepository.findByUserId(loginId);
+            Optional<Teacher> teacherOP = teacherRepository.findByEmail(loginId);
             //ID에 맞는 학생이 없는 경우
             if (!teacherOP.isPresent()) {
                 return Optional.empty();

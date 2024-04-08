@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<body>
+<div class="">
+    <!-- 헤더 시작 -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+        </header>
+    </div>
+    <!-- 헤더 끝 -->
+</div>
+
+<h1 class="d-flex justify-content-center m-5">선생님 등록</h1>
+
+<div class="container d-flex justify-content-center ">
+    <form action="/teacher/create" method="post" th:object="${teacherSaveReqDto}" onsubmit="return valid()" class="border border-primary-subtle border-3 rounded p-3" id="teacherSaveForm">
+        <input type="hidden" name="memberType" value="TEACHER">
+
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="name">선생님 성함</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="선생님 성함" th:errorclass="field-error">
+                <div th:class="field-error" th:errors="*{name}">선생님 성함 오류 메시지</div>
+            </div>
+
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="phoneNumber">선생님 연락처</label>
+                <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber" th:field="*{phoneNumber}" placeholder="선생님 연락처" th:errorclass="field-error"/>
+                <div th:class="field-error" th:errors="*{phoneNumber}">선생님 연락처 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-3 form-check">
+                <label class="form-check-label mb-2" for="email">이메일</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="field-error" maxlength="20">
+                    <button type="button" id="duplicationBtn" class="btn btn-outline-primary ml-2" onclick="checkEmailDuplication()">중복 체크</button>
+                </div>
+                <div id="emailHelp" class="form-text">이메일은 xxx@time.com 형식으로 가입 해주세요.<br> 이메일은 로그인 시 아이디로 사용됩니다. </div>
+                <div><span id="result_checkEmail"></span></div>
+                <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-3 form-check">
+                <label class="form-check-label mb-2" for="email">패스워드</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" th:field="*{password}" th:errorclass="field-error" maxlength="20">
+                </div>
+                <div id="passwordHelp" class="form-text">패스워드는 임시로 사용할 수 있게 간단하게 설정 해주세요. </div>
+
+                <div th:class="field-error" th:errors="*{password}">패스워드 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check">
+                <label class="form-check-label mb-2" for="position">직급</label>
+                <select class="form-select" id="position" name="position" th:errorclass="field-error">
+                    <option selected value="">직급을 선택 하세요.</option>
+                    <option value="TEACHER">선생님</option>
+                    <option value="CHIEF">원장</option>
+                    <option value="ADMIN">관리자</option>
+                </select>
+                <div th:class="field-error" th:errors="*{position}">직급 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 form-check" name="gender">
+                <label class="form-check-label mb-2" for="gender">성별</label>
+                <div class="input-group" id="gender">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="male" value="MALE" name="gender">
+                        <label class="form-check-label" for="male">남</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="female" value="FEMALE" name="gender">
+                        <label class="form-check-label" for="female">여</label>
+                    </div>
+                </div>
+                <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5 mb-5">
+            <button type="submit" class="btn btn-primary btn mb-3 me-3">등록</button>
+            <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">뒤로 가기</button>
+        </div>
+
+    </form>
+</div>
+    <!-- 하이픈 자동 추가 -->
+    <script>
+    const autoHyphen = (target) => {
+        target.value = target.value
+         .replace(/[^0-9]/g, '')
+         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+    }
+
+    </script>
+
+    <!-- 폼 숫자 입력 함수 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+           var numericInputs = document.querySelectorAll('.numeric-only');
+
+           numericInputs.forEach(function(input) {
+               input.addEventListener('input', enforceNumericOnly);
+           });
+       });
+
+       function enforceNumericOnly(event) {
+           event.target.value = event.target.value.replace(/[^0-9]/g, '');
+       }
+    </script>
+
+
+
+    <!-- 다음 우편주소 API -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        function openZipSearch(data){
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = '';
+
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        addr = data.jibunAddress;
+                    }
+
+                    document.getElementById("zipCode").value = data.zonecode;
+                    document.getElementById("address").value = addr;
+                    document.getElementById("streetAddress").value = addr;
+                    document.getElementById("detail_address").focus();
+                }
+            }).open();
+        }
+    </script>
+    <!-- 중복 체크 Ajax-->
+    <script>
+    let submitCheckEmail = false;
+
+    function valid() {
+      var isValid = true; // 유효성 검사 결과를 저장할 변수
+
+      if(submitCheckEmail == false){
+        alert('이메일 중복 체크가 필요합니다.');
+        $("#email").focus();
+        isValid = false; // 유효하지 않으므로 false로 설정
+      }
+
+      return isValid;
+    }
+
+      function checkEmailDuplication(){
+          $.ajax({
+              url: '/teacher/email/check',
+              type: 'GET',
+              contentType: 'application/json',
+              data:{
+                  email: $('#email').val()
+              },
+              success: function(result){
+                  // 사용 가능한 아이디
+                  $("#result_checkEmail").html(result).css("color", "green");
+                  $("#email").trigger("focus");
+                  submitCheckEmail = true;
+              },error: function(error){
+                  // 이미 존재하는 아이디
+                  $("#result_checkEmail").html(error.responseJSON.message).css("color", "red");
+                  $("#email").trigger("focus");
+                  submitCheckEmail = false;
+              }
+
+
+           });
+      }
+
+    </script>
+
+</div>
+</body>
+</html>
