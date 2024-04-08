@@ -5,11 +5,9 @@ import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.service.StudentService;
-import com.time.studentmanage.service.TeacherService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,59 +23,52 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
-    private final TeacherService teacherService;
 
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("studentSaveReqDto") StudentSaveReqDto studentSaveReqDto, Model model) {
-        return "/student/joinForm";
+        return "/student/join_form";
     }
 
     @PostMapping("/join")
-    public String joinStudent(@Valid @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult, Model model) {
+    public String joinStudent(@Valid @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult,
+            Model model) {
         log.info("studentSaveReqDto={}", studentSaveReqDto);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("studentSaveReqDto", studentSaveReqDto);
-            return "/student/joinForm";
+            return "/student/join_form";
         }
 
         studentService.saveStudent(studentSaveReqDto);
         return "redirect:/";
     }
 
-    // 학생 개인 정보 수정(마이페이지)
+    // 학생 개인 정보 수정 폼(마이페이지)
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable("id") int id, HttpSession session, Model model) {
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        //세션이 없는 경우 진입X
+        // 세션이 없는 경우 진입X
         if (sessionObject == null) {
             return "redirect:/";
         }
-
-        /**
-         * MemberType에 따른 분기
-         *
-         */
-        //학생
+        // 세션에 저장된 id
         Long studentId = ((Student) sessionObject).getId();
+
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
+
         model.addAttribute("studentRespDto", studentRespDto);
 
-        //선생
-//        } else if (sessionObject instanceof Teacher) {
-//            Long teacherId = ((Teacher) sessionObject).getId();
-//            TeacherRespDto teacherInfo = teacherService.getTeacherInfo(teacherId);
-//            model.addAttribute("teacherInfo", teacherInfo);
-//
-//        }
-        return "/student/editForm";
+        return "/student/edit_form";
     }
 
-
+    /**
+     * POST:학생 정보 수정
+     */
     @PostMapping("/edit/{id}")
-    public String editInfo(@PathVariable("id") int id, @ModelAttribute StudentRespDto studentRespDto, BindingResult bindingResult, HttpSession session) {
+    public String editInfo(@PathVariable("id") int id, @ModelAttribute StudentRespDto studentRespDto,
+            BindingResult bindingResult, HttpSession session) {
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        //세션이 없는 경우 진입X
+        // 세션이 없는 경우 진입X
         if (sessionObject == null) {
             return "redirect:/";
         }
@@ -88,12 +79,13 @@ public class StudentController {
         log.info("studentUpdateReqDto 체크={}", studentUpdateReqDto);
 
         // edit
-        StudentRespDto updateRespDto = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
+        studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
         return "redirect:/";
     }
 
     @GetMapping("/school")
-    public String showStudentList(@RequestParam(value = "schoolName") String schoolName, Model model) { // , required = false
+    public String showStudentList(@RequestParam(value = "schoolName") String schoolName, Model model) { // , required =
+                                                                                                        // false
 
         if (schoolName == null || schoolName.equals("")) {
             throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");

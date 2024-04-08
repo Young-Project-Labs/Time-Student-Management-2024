@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+  <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+  <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<title>선생 목록</title>
+<body>
+    <div class="">
+      <!-- 헤더 시작 -->
+      <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+          <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+        </header>
+      </div>
+      <!-- 헤더 끝 -->
+    </div>
+
+    <!-- 선생 추가 버튼 -->
+    <div class="container md-3">
+        <button class="btn btn-outline-primary ml-2 float-start" th:onclick="|location.href='@{/teacher/create}'|">등록하기</button>
+    </div>
+    <!-- 선생 목록 테이블-->
+    <div class="container">
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">선생번호</th>
+          <th scope="col">직급</th>
+          <th scope="col">이름</th>
+          <th scope="col">전화번호</th>
+          <th scope="col">이메일</th>
+          <th scope="col">수정</th>
+          <th scope="col">삭제</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="teacher : ${teacherList}">
+          <th scope="row" th:text="${teacher.id}"></th>
+          <td th:text="${teacher.position}"></td>
+          <td th:text="${teacher.name}"></td>
+          <td th:text="${teacher.phoneNumber}"></td>
+          <td th:text="${teacher.email}"></td>
+          <td><button type="submit" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/teacher/edit/{id}(id=${teacher.id})}'|">수정</button></td>
+          <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/teacher/delete/{id}(id=${teacher.id})}'|">삭제</button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+
+</body>
+</html>

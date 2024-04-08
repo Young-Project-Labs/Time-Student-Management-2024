@@ -9,6 +9,8 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,49 +29,48 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    //학생 회원가입
+    // 학생 회원가입
     public Long saveStudent(StudentSaveReqDto saveReqDto) {
-        //1. 학생 존재 여부 확인(학생 & 전화번호)
-        Optional<Student> studentOP = studentRepository.findByNameAndPhoneNumber(saveReqDto.getName(), saveReqDto.getPhoneNumber());
+        // 1. 학생 존재 여부 확인(학생 & 전화번호)
+        Optional<Student> studentOP = studentRepository.findByNameAndPhoneNumber(saveReqDto.getName(),
+                saveReqDto.getPhoneNumber());
 
         if (studentOP.isPresent()) {
             throw new IllegalArgumentException("이미 존재 하는 학생 입니다.");
         }
 
-        //2. save로 저장(toEntity 시 패스워드 인코딩 진행)
+        // 2. save로 저장(toEntity 시 패스워드 인코딩 진행)
         Student result = studentRepository.save(saveReqDto.toEntity(bCryptPasswordEncoder));
         return result.getId();
     }
 
-    //아이디 중복 체크
+    // 아이디 중복 체크
     @Transactional(readOnly = true)
     public Boolean checkIdDuplication(String checkId) {
         return studentRepository.existsByUserId(checkId);
     }
 
-    //학생_정보_수정
+    // 학생_정보_수정
     public StudentRespDto updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
         Optional<Student> studentOP = studentRepository.findById(id);
 
         if (!studentOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
-        //changeEntity
-//        studentOP.get().changeEntity(updateReqDto.getId(),updateReqDto.toEntity());
+
         Student updateStudent = updateReqDto.toEntity();
         log.info("service check={}", updateStudent);
         Student resultStudent = studentRepository.save(updateStudent);
-        //dto 변환
+        // dto 변환
         StudentRespDto resultDto = new StudentRespDto(resultStudent);
         return resultDto;
 
     }
 
-    //학생_삭제
+    // 학생_삭제
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
-
 
     // 학교별_학생_조회(학년별_정렬)
     @Transactional(readOnly = true)
@@ -86,8 +87,8 @@ public class StudentService {
 
     }
 
-    @Transactional(readOnly = true)
     // 학생_상세_정보_조회
+    @Transactional(readOnly = true)
     public StudentRespDto getStudentInfo(Long id) {
         Optional<Student> studentOP = studentRepository.findById(id);
         if (!studentOP.isPresent()) {
@@ -151,7 +152,8 @@ public class StudentService {
             String schoolName = contentBits[0].trim();
             String studentName = contentBits[1].trim();
 
-            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName, studentName);
+            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
+                    studentName);
 
             List<StudentRespDto> respDtoList = createRespDtoList(searchedBySchoolNameAndStudentNameList);
 
@@ -166,13 +168,15 @@ public class StudentService {
 
     private List<StudentRespDto> createRespDtoList(List<Student> targetList) {
         List<StudentRespDto> resultDto = targetList.stream()
-                .map(s -> createStudentRespDtoWithSearchedResult(s.getId(), s.getName(), s.getGrade(), s.getSchoolName()))
+                .map(s -> createStudentRespDtoWithSearchedResult(s.getId(), s.getName(), s.getGrade(),
+                        s.getSchoolName()))
                 .collect(Collectors.toList());
 
         return resultDto;
     }
 
-    private StudentRespDto createStudentRespDtoWithSearchedResult(Long id, String name, Integer grade, String schoolName) {
+    private StudentRespDto createStudentRespDtoWithSearchedResult(Long id, String name, Integer grade,
+            String schoolName) {
         StudentRespDto studentRespDto = new StudentRespDto();
         studentRespDto.setId(id);
         studentRespDto.setName(name);
@@ -181,8 +185,5 @@ public class StudentService {
 
         return studentRespDto;
     }
-
-    //TODO: 학년 클릭 시 -> 학년별_학생_조회
-
 
 }

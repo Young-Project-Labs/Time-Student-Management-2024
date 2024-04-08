@@ -28,7 +28,7 @@ public class Student extends BaseMemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
     private Long id;
-
+//    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
     private String userId;
     private String password;
     private String name;

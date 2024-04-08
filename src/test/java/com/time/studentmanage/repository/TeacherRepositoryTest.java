@@ -16,6 +16,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+
 @Transactional
 @Slf4j
 @DataJpaTest
@@ -24,7 +28,6 @@ class TeacherRepositoryTest {
     @Autowired
     TeacherRepository teacherRepository;
     @Test
-    //TODO: 빌더 패턴 적용 필요
     void 선생님_회원_가입_테스트() {
         //given
         Teacher teacher1 = createTeacher();
@@ -33,12 +36,35 @@ class TeacherRepositoryTest {
         teacherRepository.save(teacher1);
 
         //then
-        Assertions.assertThat(teacherRepository.findAll().size()).isEqualTo(1);
+        assertThat(teacherRepository.findAll().size()).isEqualTo(1);
+
+    }
+
+    @Test
+    void 선생님_목록_테스트(){
+        //given
+        Teacher teacher1 = createTeacher();
+        Teacher teacher2 = createTeacher();
+
+        teacherRepository.save(teacher1);
+        teacherRepository.save(teacher2);
+        //when
+        List<Teacher> teacherList = teacherRepository.findAll();
+        //then
+        assertThat(teacherList).hasSize(2);
 
     }
 
     private static Teacher createTeacher() {
-        Teacher teacher1 = new Teacher("대박샘", "pjj@time.com", "1234", "010-3434-5678", MemberType.TEACHER, Position.CHIEF, "pjj@time.com", GenderType.MALE);
-        return teacher1;
+        Teacher teacher = Teacher.builder()
+                .name("대박샘")
+                .password("1234")
+                .phoneNumber("010-3434-5678")
+                .memberType(MemberType.TEACHER)
+                .position(Position.CHIEF)
+                .email("pjj@time.com")
+                .gender(GenderType.FEMALE)
+                .build();
+        return teacher;
     }
 }

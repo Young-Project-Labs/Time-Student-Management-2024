@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class Teacher extends BaseMemberEntity {
 
@@ -24,11 +26,10 @@ public class Teacher extends BaseMemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "teacher_id")
     private Long id;
-
-    private String userId;
     private String password;
     private String name;
     private String phoneNumber;
+//    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -48,9 +49,8 @@ public class Teacher extends BaseMemberEntity {
 
 
     @Builder
-    public Teacher(String name, String userId, String password, String phoneNumber, MemberType memberType, Position position, String email, GenderType gender) {
+    public Teacher(String name, String password, String phoneNumber, MemberType memberType, Position position, String email, GenderType gender) {
         this.name = name;
-        this.userId = userId;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -60,13 +60,16 @@ public class Teacher extends BaseMemberEntity {
     }
 
     public void changeEntity(Long id, Teacher updateTeacher) {
+        this.id = id;
         this.name = updateTeacher.getName();
-        this.userId = updateTeacher.getUserId();
-        this.password = updateTeacher.getPassword();
         this.phoneNumber = updateTeacher.getPhoneNumber();
         this.email = updateTeacher.getEmail();
         this.position = updateTeacher.getPosition();
         this.memberType = updateTeacher.getMemberType();
         this.gender = updateTeacher.getGender();
+    }
+    //패스워드만 변경
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
