@@ -86,27 +86,24 @@ class StudentServiceTest {
         StudentSaveReqDto saveReqDto = createStudentDto();
         Student student = saveReqDto.toEntity(bCryptPasswordEncoder);
         ReflectionTestUtils.setField(student, "id", fakeId);
-
+        log.info("수정 전 student={}", student.toString());
         //수정 후 예상 엔티티
         StudentUpdateReqDto updateReqDto = updateStudentDto();
         // 재원여부 & 퇴원일 임의 값으로 Setter
         updateReqDto.setAttendanceStatus(AttendanceStatus.N);
 
         Student updateStudent = updateReqDto.toEntity();
-        ReflectionTestUtils.setField(updateStudent, "id", fakeId);
 
         //stub
         when(studentRepository.findById(any())).thenReturn(Optional.of(student));
-        //stub2(수정 후 save)
-        when(studentRepository.save(any())).thenReturn(updateStudent);
 
         //when
-        StudentRespDto respDto = studentService.updateStudentInfo(fakeId, updateReqDto);
-        log.info("respDto={}", respDto);
+        studentService.updateStudentInfo(fakeId, updateReqDto);
 
         //then
-        assertThat(respDto.getName()).isEqualTo(updateStudent.getName());
-        assertThat(respDto.getAttendanceStatus()).isEqualTo(AttendanceStatus.N);
+        log.info("수정 후 student={}", student.toString());
+        assertThat(student.getName()).isEqualTo(updateStudent.getName());
+        assertThat(student.getAttendanceStatus()).isEqualTo(AttendanceStatus.N);
 
     }
 

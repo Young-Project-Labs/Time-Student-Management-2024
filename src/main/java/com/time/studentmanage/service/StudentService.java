@@ -31,7 +31,7 @@ public class StudentService {
 
     // 학생 회원가입
     public Long saveStudent(StudentSaveReqDto saveReqDto) {
-        // 1. 학생 존재 여부 확인(학생 & 전화번호)
+        // 학생 존재 여부 확인(학생 & 전화번호)
         Optional<Student> studentOP = studentRepository.findByNameAndPhoneNumber(saveReqDto.getName(),
                 saveReqDto.getPhoneNumber());
 
@@ -46,26 +46,33 @@ public class StudentService {
 
     // 아이디 중복 체크
     @Transactional(readOnly = true)
+    public void checkIdDuplication(String userId) {
+        // 아이디 검증
+        boolean regexResult = userId.matches("^[a-z0-9]{6,20}$");
 
-    public Boolean checkIdDuplication(String checkId) {
-        return studentRepository.existsByUserId(checkId);
+        if (!regexResult) {
+            if (userId.length() < 6) {
+                throw new IllegalArgumentException("아이디 길이가 6자 미만입니다.");
+            }
+            throw new IllegalArgumentException("아이디 형식을 확인해주세요.");
+        }
+
+        // 중복 검증
+        // true (존재하는 경우)
+        if (studentRepository.existsByUserId(userId)) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
     }
 
     // 학생_정보_수정
-    public StudentRespDto updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
+    public void updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
         Optional<Student> studentOP = studentRepository.findById(id);
 
         if (!studentOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
-
-        Student updateStudent = updateReqDto.toEntity();
-        log.info("service check={}", updateStudent);
-        Student resultStudent = studentRepository.save(updateStudent);
-        // dto 변환
-        StudentRespDto resultDto = new StudentRespDto(resultStudent);
-        return resultDto;
-
+        //더티체킹 발생
+        studentOP.get().changeEntity(id, updateReqDto.toEntity());
     }
 
     // 학생_삭제
@@ -185,5 +192,12 @@ public class StudentService {
         studentRespDto.setSchoolName(schoolName);
 
         return studentRespDto;
+    }
+    //학생 패스워드 변경
+    public void updatePwd(Long studentId, String password) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 ID입니다."));
+        //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
+        student.changePassword(bCryptPasswordEncoder.encode(password));
     }
 }

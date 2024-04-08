@@ -138,9 +138,10 @@ public class Student extends BaseMemberEntity {
         this.id = id;
         this.name = updateStudent.getName();
         this.userId = updateStudent.getUserId();
-        this.password = updateStudent.getPassword();
         this.phoneNumber = updateStudent.getPhoneNumber();
         this.schoolName = updateStudent.getSchoolName();
+        this.parentName = updateStudent.getParentName();
+        this.parentPhoneNumber = updateStudent.getParentPhoneNumber();
         this.grade = updateStudent.getGrade();
         this.attendanceStatus = updateStudent.getAttendanceStatus();
         this.quitDate = updateStudent.getQuitDate();
