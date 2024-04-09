@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.model.IModel;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class StudentController {
     }
 
     @PostMapping("/join")
-    public String joinStudent(@Valid @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult,
+    public String joinStudent(@Validated @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult,
             Model model) {
         log.info("studentSaveReqDto={}", studentSaveReqDto);
 
@@ -66,12 +68,17 @@ public class StudentController {
      * POST:학생 정보 수정
      */
     @PostMapping("/edit/{id}")
-    public String editInfo(@PathVariable("id") int id, @ModelAttribute StudentRespDto studentRespDto,
-            BindingResult bindingResult, HttpSession session) {
+    public String editInfo(@PathVariable("id") int id, @Validated @ModelAttribute StudentRespDto studentRespDto,
+            BindingResult bindingResult, HttpSession session, Model model) {
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
         // 세션이 없는 경우 진입X
         if (sessionObject == null) {
             return "redirect:/";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("studentRespDto", studentRespDto);
+            return "/student/edit_form";
         }
         log.info("studentRespDto체크={}", studentRespDto);
 
