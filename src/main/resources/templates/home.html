@@ -164,9 +164,8 @@
                 </div>
 
                 <div class="main-content">
-                    <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center" id="searchResultMessage">
+                    <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center">
                         데이터가 선택되지 않았습니다.
-
                     </div>
 
                     <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
@@ -204,8 +203,40 @@
                 url: href, // 서버로 요청을 보낼 URL
                 type: 'GET', // HTTP 요청 방식
                 success: function (response) {
-                    // 요청이 성공하면, 응답으로 받은 데이터를 main content 영역에 채웁니다.
-                    $(".main-content").html(response);
+                    $(".main-content").empty()
+                    if (response.errorResult !== null) {
+                        var errorMessage = response.errorResult.message;
+                        displayErrorMessage(errorMessage);
+                    } else {
+                        var resultHtml =
+                            '<table class="table table-hover">' +
+                            '<thead>' +
+                            '    <tr>' +
+                            '        <th scope="col">학년</th>' +
+                            '        <th scope="col">이름</th>' +
+                            '    </tr>' +
+                            '</thead>' +
+                            '<tbody>';
+
+                        // 각 학생 정보에 대한 행을 추가
+                        $.each(response.data, function (index, student) {
+                            resultHtml +=
+                                '<tr>' +
+                                '    <td>' +
+                                '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
+                                '    </td>' +
+                                '    <td>' +
+                                '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
+                                '    </td>' +
+                                '</tr>';
+                        });
+
+                        resultHtml += '</tbody></table>';
+
+                        // 결과 HTML을 ".main-content"에 추가
+                        $(".main-content").empty().append(resultHtml);
+                    }
+
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "검색 결과를 불러오는 중 오류가 발생했습니다.";
@@ -224,11 +255,51 @@
                 url: url,
                 type: 'GET',
                 data: formData,
+                dataType: 'json',
                 success: function (response) {
-                    $(".main-content").html(response);
+
+                    $(".main-content").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
+
+                    if (response.errorResult !== null) {
+                        var errorMessage = response.errorResult.message;
+                        displayErrorMessage(errorMessage);
+                    } else {
+                        var resultHtml =
+                            '<table class="table table-hover">' +
+                            '<thead>' +
+                            '    <tr>' +
+                            '        <th scope="col">학교명</th>' +
+                            '        <th scope="col">학년</th>' +
+                            '        <th scope="col">이름</th>' +
+                            '    </tr>' +
+                            '</thead>' +
+                            '<tbody>';
+
+                        // 각 학생 정보에 대한 행을 추가
+                        $.each(response.data, function (index, student) {
+                            resultHtml +=
+                                '<tr>' +
+                                '    <td>' +
+                                '        <a href="/record/' + student.id + '">' + student.schoolName + '</a>' +
+                                '    </td>' +
+                                '    <td>' +
+                                '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
+                                '    </td>' +
+                                '    <td>' +
+                                '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
+                                '    </td>' +
+                                '</tr>';
+                        });
+
+                        resultHtml += '</tbody></table>';
+
+                        // 결과 HTML을 ".main-content"에 추가
+                        $(".main-content").empty().append(resultHtml);
+                    }
+
                 },
                 error: function (xhr, status, error) {
-                    var errorMessage = "검색 결과가 존재하지 않습니다.";
+                    var errorMessage = "검색어를 입력하지 않습니다.";
                     displayErrorMessage(errorMessage);
                 }
             });
