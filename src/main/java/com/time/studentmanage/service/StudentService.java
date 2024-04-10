@@ -1,22 +1,16 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.dto.student.StudentRespDto;
-import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
-import com.time.studentmanage.domain.dto.student.StudentSchoolListRespDto;
-import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -121,31 +115,22 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentRespDto> getAllStudentsBySchoolName(String schoolName) {
-        List<Student> studentList = studentRepository.findAllBySchoolNameOrderByGradeAsc(schoolName);
+    public List<SelectedSchoolRespDto> getAllStudentsBySchoolName(String schoolName) {
 
-        List<StudentRespDto> resultDto = studentList.stream()
-                .map(s -> createStudentRespDtoWithIdAndNameAndGrade(s.getId(), s.getName(), s.getGrade()))
+        List<Student> studentList = studentRepository.findAllBySchoolNameOrderByGradeAsc(schoolName);
+        List<SelectedSchoolRespDto> resultDto = studentList.stream()
+                .map(s -> new SelectedSchoolRespDto(s.getId(), s.getName(), s.getGrade()))
                 .collect(Collectors.toList());
+
+        if (resultDto == null || resultDto.size() == 0) {
+            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+        }
 
         return resultDto;
     }
 
-    private StudentRespDto createStudentRespDtoWithIdAndNameAndGrade(Long id, String name, Integer grade) {
-        StudentRespDto studentRespDto = new StudentRespDto();
-        studentRespDto.setId(id);
-        studentRespDto.setName(name);
-        studentRespDto.setGrade(grade);
-
-        return studentRespDto;
-    }
-
     @Transactional(readOnly = true)
-    public List<StudentRespDto> getSearchedStudent(String content) {
-
-        if (content.trim().equals("") || content == null) {
-            throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
-        }
+    public List<SearchStudentRespDto> getSearchedStudent(String content) {
 
         if (content.contains("+")) {
             String[] contentBits = content.split("\\+");
@@ -156,34 +141,29 @@ public class StudentService {
             List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
                     studentName);
 
-            List<StudentRespDto> respDtoList = createRespDtoList(searchedBySchoolNameAndStudentNameList);
+            List<SearchStudentRespDto> resultDto = createRespDtoList(searchedBySchoolNameAndStudentNameList);
 
-            return respDtoList;
+            if (resultDto == null || resultDto.size() == 0) {
+                throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+            }
+
+            return resultDto;
         }
 
         List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
-        List<StudentRespDto> respDtoList = createRespDtoList(searchedByStudentNameList);
+        List<SearchStudentRespDto> resultDto = createRespDtoList(searchedByStudentNameList);
 
-        return respDtoList;
-    }
-
-    private List<StudentRespDto> createRespDtoList(List<Student> targetList) {
-        List<StudentRespDto> resultDto = targetList.stream()
-                .map(s -> createStudentRespDtoWithSearchedResult(s.getId(), s.getName(), s.getGrade(),
-                        s.getSchoolName()))
-                .collect(Collectors.toList());
+        if (resultDto == null || resultDto.size() == 0) {
+            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+        }
 
         return resultDto;
     }
 
-    private StudentRespDto createStudentRespDtoWithSearchedResult(Long id, String name, Integer grade,
-            String schoolName) {
-        StudentRespDto studentRespDto = new StudentRespDto();
-        studentRespDto.setId(id);
-        studentRespDto.setName(name);
-        studentRespDto.setGrade(grade);
-        studentRespDto.setSchoolName(schoolName);
-
-        return studentRespDto;
+    private List<SearchStudentRespDto> createRespDtoList(List<Student> targetList) {
+        List<SearchStudentRespDto> resultDto = targetList.stream()
+                .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
+                .collect(Collectors.toList());
+        return resultDto;
     }
 }
