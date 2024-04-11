@@ -1,5 +1,5 @@
 package com.time.studentmanage.domain.enums;
 
-public enum AnswerStatus {
-    GENERAL, SECRET, DELETED
+public enum ClassStatus {
+    PUBLIC, SECRET, DELETED
 }
