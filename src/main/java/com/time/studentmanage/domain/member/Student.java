@@ -1,7 +1,6 @@
 package com.time.studentmanage.domain.member;
 
-import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;

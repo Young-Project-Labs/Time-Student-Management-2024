@@ -1,6 +1,6 @@
 package com.time.studentmanage.repository.record;
 
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.member.Student;
 
 import java.time.LocalDateTime;

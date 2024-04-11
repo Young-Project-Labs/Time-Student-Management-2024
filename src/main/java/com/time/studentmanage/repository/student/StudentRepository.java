@@ -1,4 +1,4 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
 import com.time.studentmanage.domain.member.Student;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,5 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.time.studentmanage.domain.enums.AttendanceStatus;

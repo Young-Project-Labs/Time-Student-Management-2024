@@ -1,4 +1,4 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
 import com.querydsl.core.Tuple;
 import com.time.studentmanage.domain.member.Student;

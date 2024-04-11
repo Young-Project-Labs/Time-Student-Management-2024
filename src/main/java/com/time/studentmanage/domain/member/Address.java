@@ -1,4 +1,4 @@
-package com.time.studentmanage.domain;
+package com.time.studentmanage.domain.member;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
