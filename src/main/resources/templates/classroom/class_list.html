@@ -1,0 +1,109 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <title>학급 페이지 입니다.</title>
+</head>
+<body>
+
+<!-- 헤더 시작 -->
+<header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+
+    <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+        <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+        <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
+    </div>
+    <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
+
+    <!--로그인이 되었을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <!--                <button type="button" class="btn btn-primary">button 1</button>-->
+            <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
+            <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-heart"></i>
+                            <span th:text="|${session.loginMember.name}님|"></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                               class="link-dark text-decoration-none">내 정보 수정</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <form method="post" action="/logout" class="d-inline">
+                                <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                    로그아웃
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <!--로그인이 되었을 때 보여줄 버튼 끝-->
+</header>
+<!-- 헤더 끝 -->
+
+<!-- 학급 추가 버튼 시작 -->
+<div class="container md-3">
+    <button class="btn btn-outline-primary ml-2 float-start" th:onclick="|location.href='@{/class/create}'|" th:text="|학급 생성하기|">등록하기</button>
+</div>
+<!-- 학급 추가 버튼 끝 -->
+
+<!-- 학급 목록 테이블 시작 -->
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">학급</th>
+            <th scope="col">학급 이름</th>
+            <th scope="col">수업 시간</th>
+            <th scope="col">학급 수</th>
+            <th scope="col">수정</th>
+            <th scope="col">삭제</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="class : ${classRoomList}">
+            <th scope="row" th:text="${class.classType.description}"></th>
+            <td th:text="${class.name}"></td>
+            <td th:text="${class.classInfo}"></td>
+            <td th:text="${class.studentList.size()}"></td>
+            <td>
+                <button type="submit" class="btn btn-primary btn mb-3 me-3"
+                        th:onclick="|location.href='@{/class/edit/{id}(id=${class.id})}'|">수정
+                </button>
+            </td>
+            <td>
+                <button type="submit" class="btn btn-danger btn mb-3 me-3"
+                        th:onclick="|location.href='@{/class/delete/{id}(id=${class.id})}'|">삭제
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- 학급 목록 테이블 끝 -->
+</body>
+</html>
