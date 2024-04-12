@@ -118,7 +118,7 @@ public class TestUtil {
     }
 
     public static StudentUpdateReqDto updateStudentDto() {
-        StudentUpdateReqDto updateReqDto = new StudentUpdateReqDto("수정엔티티","cs@time.com","용호중학교","수정어머님","010-1111-2222", 1, AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE, ClassType.ELEMENTARY, new Address("반림동", "현대 아파트", "102-1201"));
+        StudentUpdateReqDto updateReqDto = new StudentUpdateReqDto(1L, "수정엔티티","cs@time.com","010-1111-2222","용호중학교","수정어머님","010-1111-2223", 1, AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE, ClassType.ELEMENTARY, new Address("반림동", "현대 아파트", "102-1201"));
         return updateReqDto;
     }
 

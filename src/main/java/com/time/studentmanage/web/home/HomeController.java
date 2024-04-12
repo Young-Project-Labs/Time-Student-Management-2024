@@ -22,18 +22,19 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-
-        if (session == null) {
-            return "redirect:/login";
-        }
-
-        // TODO: 학생으로 로그인하면 학생 전용 페이지로 로딩, 선생님으로 로그인하면 선생님 전용 홈페이지로 이동
-        // TODO: 학생/선생 전용 홈페이지 필요
+        HttpSession session = request.getSession();
+            /**
+             * 로그인한 사용자가 학생
+             */
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) instanceof Student) {
             Long id = ((Student) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION)).getId();
             log.info("student id ={}", id);
-        } else if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) instanceof Teacher) {
+            return "home_student";
+            /**
+             * 로그인한 사용자가 선생님
+             */
+        }
+        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) instanceof Teacher) {
             Long id = ((Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION)).getId();
             log.info("teacher id ={}", id);
 
@@ -42,8 +43,10 @@ public class HomeController {
             model.addAttribute("elementarySchools", schoolNameRespDto.getElementarySchools());
             model.addAttribute("middleSchools", schoolNameRespDto.getMiddleSchools());
             model.addAttribute("highSchools", schoolNameRespDto.getHighSchools());
+            return "home_teacher";
         }
 
-        return "home";
+        // 세션이 없거나, 학생 및 선생님이 없는 경우 로그인 페이지로
+        return "redirect:/login";
     }
 }

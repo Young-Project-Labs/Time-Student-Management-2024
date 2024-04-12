@@ -39,7 +39,7 @@ public class LoginController {
             return "login/login_form";
         }
         //로그인 진행
-        Optional<?> loginMemberOP = loginService.login(form.getLoginId(), form.getPassword(), form.getMemberType());
+        Optional<?> loginMemberOP = loginService.login(form.getLoginId(), form.getPassword());
 
         //조회 실패(로그인 실패)
         if (!loginMemberOP.isPresent()) {

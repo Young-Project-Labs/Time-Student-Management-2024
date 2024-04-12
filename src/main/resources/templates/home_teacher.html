@@ -27,9 +27,10 @@
         <!--로그인이 되었을 때 보여줄 버튼 시작-->
         <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <!--                <button type="button" class="btn btn-primary">button 1</button>-->
-                <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
-                <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
+                <button th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/teacher'">
+                    선생 관리 페이지</button>
+                <button th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/student'">
+                    학생 관리 페이지</button>
 
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
@@ -46,7 +47,7 @@
                         <li>
                             <div class="dropdown-item">
                                 <i class="fa-solid fa-user-gear"></i>
-                                <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                                <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
                                    class="link-dark text-decoration-none">내 정보 수정</a>
                             </div>
                         </li>
@@ -166,22 +167,6 @@
                 <div class="main-content">
                     <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center">
                         데이터가 선택되지 않았습니다.
-                    </div>
-
-                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
-                        <span th:text="|${session.loginMember.name} 선생님|"></span>
-                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
-                        <form method="post" action="/logout">
-                            <button type="submit">로그아웃</button>
-                        </form>
-                    </div>
-
-                    <div th:if="${session.loginMember != null and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
-                        <span th:text="|${session.loginMember.name} 선생님|"></span>
-                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}">내 정보 수정</a>
-                        <form method="post" action="/logout">
-                            <button type="submit">로그아웃</button>
-                        </form>
                     </div>
                 </div>
             </div>

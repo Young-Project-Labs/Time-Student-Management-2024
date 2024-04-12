@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,7 @@ public class TeacherController {
 
     //선생 등록 로직
     @PostMapping("/teacher/create")
-    public String createTeacher(@Valid @ModelAttribute TeacherSaveReqDto teacherSaveReqDto, BindingResult bindingResult) {
+    public String createTeacher(@Validated @ModelAttribute TeacherSaveReqDto teacherSaveReqDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/teacher/teacher_create_form";
         }
@@ -91,7 +92,7 @@ public class TeacherController {
 
     //선생 수정 로직
     @PostMapping("/teacher/edit/{id}")
-    public String editTeacher(@PathVariable(value = "id") Long id, @Valid TeacherUpdateReqDto teacherUpdateReqDto, BindingResult bindingResult, HttpSession session) {
+    public String editTeacher(@PathVariable(value = "id") Long id, @Validated TeacherUpdateReqDto teacherUpdateReqDto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors() || session == null) {
             return "/teacher/teacher_edit_form";
         }
