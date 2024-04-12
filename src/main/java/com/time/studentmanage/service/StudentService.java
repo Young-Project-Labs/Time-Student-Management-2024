@@ -167,6 +167,26 @@ public class StudentService {
         return resultDto;
     }
 
+    /**
+     * 학생 전체 목록(/student)에서 검색바 조회
+     * @param searchType -> name, parentName, schoolName
+     * @param content
+     * @return
+     */
+    public List<StudentRespDto> getSearchedStudentBySearchType(String searchType, String content) {
+        List<Student> searchedStudents = studentRepository.findAllBySearch(searchType, content);
+
+        List<StudentRespDto> resultDto = searchedStudents.stream()
+                .map(student -> new StudentRespDto(student))
+                .collect(Collectors.toList());
+
+        if (resultDto.isEmpty() || resultDto.size() == 0) {
+            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+        }
+        return resultDto;
+
+    }
+
     private List<SearchStudentRespDto> createRespDtoList(List<Student> targetList) {
         List<SearchStudentRespDto> resultDto = targetList.stream()
                 .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
@@ -180,4 +200,16 @@ public class StudentService {
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));
     }
+    //학생 전체목록
+    public List<StudentRespDto> getAllStudent() {
+        List<Student> studentList = studentRepository.findAll();
+
+        List<StudentRespDto> studentRespDtoList = studentList.stream()
+                .map(student -> new StudentRespDto(student))
+                .collect(Collectors.toList());
+
+        return studentRespDtoList;
+    }
+
+
 }

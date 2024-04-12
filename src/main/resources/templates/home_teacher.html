@@ -27,8 +27,10 @@
         <!--로그인이 되었을 때 보여줄 버튼 시작-->
         <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <button th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}" type="button" class="btn btn-primary">
-                    관리자 페이지로 이동</button>
+                <button th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/teacher'">
+                    선생 관리 페이지</button>
+                <button th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/student'">
+                    학생 관리 페이지</button>
 
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"

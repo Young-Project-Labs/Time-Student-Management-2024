@@ -1,9 +1,6 @@
 package com.time.studentmanage.web.student;
 
-import com.time.studentmanage.domain.dto.student.SearchStudentRespDto;
-import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
-import com.time.studentmanage.domain.dto.student.StudentSearchResult;
-import com.time.studentmanage.domain.dto.student.StudentUpdatePwdReqDto;
+import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.dto.student.SearchStudentRespDto;
 import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchResult;
@@ -63,12 +60,30 @@ public class StudentApiController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "content") String content) {
+    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "searchType", required = false) String searchType, @RequestParam(value = "content") String content) {
 
         if (content.trim().equals("") || content == null) {
             throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
         }
+        //searchType 있는 경우 -> 학생 목록에서의 검색 로직
+        if (searchType != null) {
+            /**
+             * 학생 전체 목록(/student)에서 검색바 조회
+             * @param searchType -> name, parentName, schoolName
+             * @param keyword
+             * @return
+             */
+            log.info("searchStudent 메서드 searchType={}", searchType);
+            log.info("searchStudent 메서드 content={}", content);
+            if (content.trim().equals("") || content == null) {
+                throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
+            }
 
+            List<StudentRespDto> studentRespDtoList = studentService.getSearchedStudentBySearchType(searchType, content);
+            return ResponseEntity.ok(new StudentSearchResult(studentRespDtoList, null));
+        }
+
+        //searchType 없는 경우 -> 피드백 목록에서의 검색 로직
         List<SearchStudentRespDto> studentList = studentService.getSearchedStudent(content);
 
         return ResponseEntity.ok(new StudentSearchResult(studentList, null));
