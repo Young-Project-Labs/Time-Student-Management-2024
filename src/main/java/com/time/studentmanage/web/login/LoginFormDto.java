@@ -12,5 +12,4 @@ public class LoginFormDto {
     private String loginId;
     @NotBlank
     private String password;
-    private MemberType memberType;
 }

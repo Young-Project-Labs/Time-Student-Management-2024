@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+  <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+  <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<title>학생 목록</title>
+<body>
+    <div class="">
+      <!-- 헤더 시작 -->
+      <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+          <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+        </header>
+      </div>
+      <!-- 헤더 끝 -->
+    </div>
+
+    <div class="container md-6">
+      <h1>학생 목록</h1>
+    </div>
+
+  <form action="#" id="searchForm" th:action="@{/search}" method="get">
+    <div class="container">
+      <div class="row justify-content-end">
+          <div class="col-auto">
+            <select class="form-select" id="searchType" name="searchType">
+              <option value="name">학생이름</option>
+              <option value="parentName">부모님성함</option>
+              <option value="schoolName">학교명</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <div class="input-group">
+              <input type="text" class="form-control" id="content" placeholder="검색">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">검색</button>
+                <button type="button" onclick="location.href = location.href;" class="btn btn-primary">초기화</button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </form>
+
+    <!-- 학생 목록 테이블-->
+    <div class="container" id="studentList">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">학생번호</th>
+            <th scope="col">학생 이름</th>
+            <th scope="col">학생 연락처</th>
+            <th scope="col">학교</th>
+            <th scope="col">부모님 성함</th>
+            <th scope="col">부모님 연락처</th>
+            <th scope="col">재원 여부</th>
+            <th scope="col">수정</th>
+            <th scope="col">삭제</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="student : ${studentList}">
+            <th scope="row" th:text="${student.id}"></th>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.phoneNumber}"></td>
+            <td th:text="${student.schoolName}"></td>
+            <td th:text="${student.parentName}"></td>
+            <td th:text="${student.parentPhoneNumber}"></td>
+            <td th:text="${student.attendanceStatus}"></td>
+            <td><button type="submit" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/edit/{id}(id=${student.id})}'|">수정</button></td>
+            <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/delete/{id}(id=${student.id})}'|">삭제</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      $("#searchForm").submit(function (event) {
+                event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
+                var searchType = $("#searchType").val();
+                var content = $("#content").val();
+                var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                      searchType: searchType,
+                      content: content
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#studentList").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
+
+
+                        if (response.errorResult !== null) {
+                            var errorMessage = response.errorResult.message;
+                            displayErrorMessage(errorMessage);
+                        } else {
+                            $(".container .table").remove(); // 기존 테이블 제거
+
+                            // 새로운 테이블 생성
+                            var newTable = $('<table class="table"></table>');
+                            var thead = $('<thead></thead>');
+                            thead.append('<tr><th scope="col">학생번호</th><th scope="col">학생 이름</th><th scope="col">학생 연락처</th><th scope="col">학교</th><th scope="col">부모님 성함</th><th scope="col">부모님 연락처</th><th scope="col">재원 여부</th><th scope="col">수정</th><th scope="col">삭제</th></tr>');
+                            newTable.append(thead);
+
+                            var tbody = $('<tbody id="main-content"></tbody>');
+
+                            $.each(response.data, function(index, student) {
+                                var row = $("<tr></tr>");
+                                row.append($("<th scope='row'></th>").text(student.id));
+                                row.append($("<td></td>").text(student.name));
+                                row.append($("<td></td>").text(student.phoneNumber));
+                                row.append($("<td></td>").text(student.schoolName));
+                                row.append($("<td></td>").text(student.parentName));
+                                row.append($("<td></td>").text(student.parentPhoneNumber));
+                                row.append($("<td></td>").text(student.attendanceStatus));
+
+                                row.append($("<td></td>").append($("<button type='button' class='btn btn-primary btn mb-3 me-3'>수정</button>").click(function() {
+                                    location.href = '/edit/' + student.id;
+                                })));
+                                row.append($("<td></td>").append($("<button type='button' class='btn btn-danger btn mb-3 me-3'>삭제</button>").click(function() {
+                                    location.href = '/delete/' + student.id;
+                                })));
+
+                                tbody.append(row);
+                            });
+
+                            newTable.append(tbody);
+                            console.log(newTable);
+                            $("#studentList").append(newTable); // 새로운 테이블을 .container에 추가
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("검색어가 입력되지 않았습니다.");
+                        $("#content").focus()
+                    }
+                });
+                function displayErrorMessage(message) {
+                    var errorHtml = '<div class="alert alert-danger text-center mt-3">' + message + '</div>';
+                    $("#studentList").html(errorHtml);
+                }
+            });
+    </script>
+
+
+
+    </body>
+    </html>

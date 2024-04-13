@@ -22,11 +22,12 @@ public class LoginService {
 
 
 
-    public Optional<?> login(String loginId, String password, MemberType memberType) {
+    public Optional<?> login(String loginId, String password) {
         /**
          * memberType = STUDENT
          */
-        if (memberType == MemberType.STUDENT) {
+        if (!loginId.contains("@time.com")) {
+            log.info("학생 로그인");
             Optional<Student> studentOP = studentRepository.findByUserId(loginId);
             //ID에 맞는 학생이 없는 경우
             if (!studentOP.isPresent()) {
@@ -44,10 +45,12 @@ public class LoginService {
 
         /**
          * memberType = TEACHER
+         * userID@time.com
          */
-        if (memberType == MemberType.TEACHER) {
+        if (loginId.contains("@time.com")) {
+            log.info("선생 로그인");
             Optional<Teacher> teacherOP = teacherRepository.findByEmail(loginId);
-            //ID에 맞는 학생이 없는 경우
+            //ID에 맞는 선생 없는 경우
             if (!teacherOP.isPresent()) {
                 return Optional.empty();
             }

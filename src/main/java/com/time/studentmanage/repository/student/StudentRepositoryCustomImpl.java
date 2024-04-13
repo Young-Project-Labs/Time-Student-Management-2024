@@ -47,6 +47,14 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         return result;
     }
 
+    public List<Student> findAllBySearch(String searchType, String content) {
+        QStudent student = QStudent.student;
+        return query.selectFrom(student)
+                .where(getSearchPredicate(searchType, content))
+                .fetch();
+
+    }
+
     private BooleanExpression likeStudentName(String studentName) {
         if (!StringUtils.hasText(studentName)) {
             return null;
@@ -63,5 +71,25 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         }
 
         return QStudent.student.schoolName.like("%" + schoolName + "%");
+    }
+
+    private BooleanExpression getSearchPredicate(String searchType, String content) {
+        QStudent student = QStudent.student;
+
+        if (content == null || content.trim().isEmpty()) {
+            return null;
+        }
+
+        switch (searchType) {
+            case "name":
+                return student.name.containsIgnoreCase(content);
+            case "parentName":
+                return student.parentName.containsIgnoreCase(content);
+            case "schoolName":
+                return student.schoolName.containsIgnoreCase(content);
+            default:
+                return null;
+        }
+
     }
 }

@@ -6,6 +6,8 @@ import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -15,18 +17,32 @@ import lombok.*;
 @ToString
 public class StudentUpdateReqDto {
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String userId;
-    private String password;
+    @NotBlank
+    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
+    @NotBlank
     private String schoolName;
+    @NotBlank
     private String parentName;
+    @NotBlank
+    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
+    @NotNull
+    @Min(1) @Max(6)
     private Integer grade;
+    @NotNull
     private AttendanceStatus attendanceStatus;
+    @NotNull
     private MemberType memberType;
+    @NotNull
     private GenderType gender;
+    @NotNull
     private ClassType classType;
+    @Valid
     private Address address;
 
     //StudentRespDto -> StudentUpdateReqDto 생성자
@@ -34,7 +50,6 @@ public class StudentUpdateReqDto {
         this.id = studentRespDto.getId();
         this.name = studentRespDto.getName();
         this.userId = studentRespDto.getUserId();
-        this.password = studentRespDto.getPassword();
         this.phoneNumber = studentRespDto.getPhoneNumber();
         this.schoolName = studentRespDto.getSchoolName();
         this.parentName = studentRespDto.getParentName();
@@ -47,27 +62,12 @@ public class StudentUpdateReqDto {
         this.address = studentRespDto.getAddress();
     }
 
-    public StudentUpdateReqDto(String name, String phoneNumber, String schoolName, String parentName, String parentPhoneNumber, int grade, AttendanceStatus attendanceStatus, MemberType memberType, GenderType gender, ClassType classType, Address address) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.schoolName = schoolName;
-        this.parentName = parentName;
-        this.parentPhoneNumber = parentPhoneNumber;
-        this.grade = grade;
-        this.attendanceStatus = attendanceStatus;
-        this.memberType = memberType;
-        this.gender = gender;
-        this.classType = classType;
-        this.address = address;
-    }
-
     //Dto -> Student 엔티티 변환
     public Student toEntity() {
         Student student = Student.builder()
                 .id(id)
                 .name(name)
                 .userId(userId)
-                .password(password)
                 .phoneNumber(phoneNumber)
                 .schoolName(schoolName)
                 .parentName(parentName)
