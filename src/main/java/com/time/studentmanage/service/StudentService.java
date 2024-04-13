@@ -1,5 +1,6 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
@@ -87,6 +88,16 @@ public class StudentService {
                 .collect(Collectors.toList());
         return studentRespDtoList;
 
+    }
+
+    @Transactional
+    public void connectClassRoomById(Long id, ClassRoom classRoom) {
+        Optional<Student> studentOp = studentRepository.findById(id);
+        if (!studentOp.isPresent()) {
+            throw new DataNotFoundException("해당하는 학생이 없습니다.");
+        }
+        Student studentPs = studentOp.get();
+        studentPs.addClassRoom(classRoom);
     }
 
     // 학생_상세_정보_조회

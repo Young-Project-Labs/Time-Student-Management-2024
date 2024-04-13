@@ -1,5 +1,6 @@
 package com.time.studentmanage.domain.member;
 
+import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
@@ -60,6 +61,10 @@ public class Student extends BaseMemberEntity {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "class_room_id")
+    private ClassRoom classRoom;
+
     @Builder(toBuilder = true)
 
     public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
@@ -87,6 +92,10 @@ public class Student extends BaseMemberEntity {
         teacher.getStudentList().add(this);
     }
 
+    public void addClassRoom(ClassRoom classRoom) {
+        this.classRoom = classRoom;
+        classRoom.getStudentList().add(this);
+    }
 
     //수정 메서드
     public void changeName(String name) {

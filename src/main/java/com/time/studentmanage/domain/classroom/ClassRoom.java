@@ -29,29 +29,28 @@ public class ClassRoom extends BaseTimeEntity {
 
     private String name; // 학급 대표 이름
 
+    private String classInfo; // 학급 특이사항
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher; // 학급 담당 선생님
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "student_id")
-    private Student student;
-
-    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.REMOVE) // 삭제 주기를 같게 하기 위함
-    private List<ClassRoomDate> classRoomDateList = new ArrayList<>();
+    @OneToMany(mappedBy = "classRoom")
+    private List<Student> studentList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ClassType classType;
 
-    @Enumerated(EnumType.STRING)
-    private ClassStatus classStatus;
-
     @Builder
-    public ClassRoom(String name, Teacher teacher, Student student, ClassType classType, ClassStatus classStatus) {
+    public ClassRoom(String name, String classInfo, Teacher teacher, ClassType classType) {
         this.name = name;
+        this.classInfo = classInfo;
         this.teacher = teacher;
-        this.student = student;
         this.classType = classType;
-        this.classStatus = classStatus;
     }
+
+    public void changeClassRoomName(String name) {
+        this.name = name;
+    }
+
 }

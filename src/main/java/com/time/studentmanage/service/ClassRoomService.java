@@ -23,7 +23,7 @@ public class ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final TeacherRepository teacherRepository;
 
-    public Long saveClassRoom(ClassSaveReqDto classSaveReqDto) {
+    public ClassRoom saveClassRoom(ClassSaveReqDto classSaveReqDto) {
         Optional<Teacher> teacherOp = teacherRepository.findById(classSaveReqDto.getTeacherId());
 
         // 선생님 아이디가 유효한지 검사
@@ -42,7 +42,7 @@ public class ClassRoomService {
 
         ClassRoom savedClass = classRoomRepository.save(classRoom);
 
-        return savedClass.getId();
+        return savedClass;
     }
 
     public void updateClassRoomName(Long id, String name) {

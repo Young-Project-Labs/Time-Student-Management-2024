@@ -2,6 +2,8 @@ package com.time.studentmanage.web.classroom;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
+import com.time.studentmanage.domain.dto.student.StudentRespDto;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.service.ClassRoomService;
 import com.time.studentmanage.service.StudentService;
@@ -15,11 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -80,7 +84,12 @@ public class ClassRoomController {
             return "classroom/class_create_form";
         }
 
-        classRoomService.saveClassRoom(classSaveReqDto);
+        ClassRoom savedClassRoom = classRoomService.saveClassRoom(classSaveReqDto);
+
+        String[] idBits = classSaveReqDto.getSelectedStudents().split(" ");
+        for (String strId : idBits) {
+            studentService.connectClassRoomById(Long.valueOf(strId), savedClassRoom);
+        }
 
         return "redirect:/class";
     }
