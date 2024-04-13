@@ -1,10 +1,10 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
+import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.repository.classroom.ClassRoomRepository;
-import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -68,9 +69,12 @@ public class ClassRoomService {
     }
 
     // TODO: 적절한 dto로 매핑하기
-    public List<ClassRoom>  getAllTeacherClassRoom(Teacher teacher) {
+    public List<ClassRoomInfoDto> getAllTeacherClassRoom(Teacher teacher) {
         List<ClassRoom> classRoomList = classRoomRepository.findAllByTeacherOrderByClassType(teacher);
 
-        return classRoomList;
+        List<ClassRoomInfoDto> resultDtoList = classRoomList.stream()
+                .map(c -> new ClassRoomInfoDto(c.getId(), c.getName(), c.getClassInfo(), c.getClassType(), c.getStudentList().size()))
+                .collect(Collectors.toList());
+        return resultDtoList;
     }
 }

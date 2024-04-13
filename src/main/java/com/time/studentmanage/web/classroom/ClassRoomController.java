@@ -1,6 +1,7 @@
 package com.time.studentmanage.web.classroom;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
+import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.member.Student;
@@ -45,7 +46,7 @@ public class ClassRoomController {
             return "redirect:/";
         }
 
-        List<ClassRoom> allTeacherClassRoomList = classRoomService.getAllTeacherClassRoom(teacher);
+        List<ClassRoomInfoDto> allTeacherClassRoomList = classRoomService.getAllTeacherClassRoom(teacher);
 
         model.addAttribute("classRoomList", allTeacherClassRoomList);
 
