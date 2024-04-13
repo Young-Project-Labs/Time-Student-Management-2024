@@ -101,8 +101,8 @@
                        th:errorclass="field-error">
                 <input type="hidden" name="teacherId" th:value="${session.loginMember.id}">
 
-                <div class="alert alert-warning text-center">
-                    <div th:class="field-error" th:errors="*{selectedStudents}">대표 학생 한명을 추가 해주세요</div>
+                <div th:class="field-error">
+                    <div class="alert alert-warning text-center" th:errors="*{selectedStudents}">대표 학생 한명을 추가 해주세요</div>
                 </div>
                 <div class="d-flex justify-content-center mt-1 mb-5">
                     <button type="submit" class="btn btn-primary btn mb-3 me-3">학급 생성</button>
@@ -189,28 +189,6 @@
 
     // 선택된 학생 목록을 저장하기 위한 배열
     var selectedStudents = [];
-
-    // // '추가' 버튼 클릭 이벤트 처리
-    // $(document).on('click', '.add-student-button', function() {
-    //     var studentId = $(this).data('id');
-    //     var studentSchoolName = $(this).closest('tr').find('td:eq(0) a').text();
-    //     var studentGrade = $(this).closest('tr').find('td:eq(1) a').text();
-    //     var studentName = $(this).closest('tr').find('td:eq(2) a').text();
-    //
-    //     // 선택된 학생 정보 객체 생성
-    //     var studentInfo = {
-    //         id: studentId,
-    //         schoolName: studentSchoolName,
-    //         grade: studentGrade,
-    //         name: studentName
-    //     };
-    //
-    //     // 학생 목록에 추가
-    //     selectedStudents.push(studentInfo);
-    //
-    //     // 선택된 학생 목록 업데이트
-    //     updateSelectedStudentsList();
-    // });
 
     // '추가' 버튼 클릭 이벤트 처리
     $(document).on('click', '.add-student-button', function () {

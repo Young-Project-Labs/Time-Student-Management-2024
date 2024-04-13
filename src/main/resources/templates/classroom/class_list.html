@@ -78,7 +78,8 @@
             <th scope="col">학급</th>
             <th scope="col">학급 이름</th>
             <th scope="col">수업 시간</th>
-            <th scope="col">학급 수</th>
+            <th scope="col">학생 수</th>
+            <th scope="col">학급 정보</th>
             <th scope="col">수정</th>
             <th scope="col">삭제</th>
         </tr>
@@ -90,6 +91,11 @@
             <td th:text="${class.name}"></td>
             <td th:text="${class.classInfo}"></td>
             <td th:text="${class.studentList.size()}"></td>
+            <td>
+                <button type="submit" class="btn btn-primary btn mb-3 me-3"
+                        th:onclick="|location.href='@{/class/{id}(id=${class.id})}'|">학급 정보
+                </button>
+            </td>
             <td>
                 <button type="submit" class="btn btn-primary btn mb-3 me-3"
                         th:onclick="|location.href='@{/class/edit/{id}(id=${class.id})}'|">수정
