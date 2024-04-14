@@ -1,10 +1,7 @@
 package com.time.studentmanage.domain.dto.classroom;
 
-import com.time.studentmanage.domain.dto.student.SearchStudentRespDto;
 import com.time.studentmanage.domain.enums.ClassType;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
