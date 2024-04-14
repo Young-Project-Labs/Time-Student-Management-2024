@@ -1,26 +1,113 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
-    <title>학급 등록 페이지</title>
+    <title>학급 정보 페이지 입니다.</title>
 </head>
 <body>
 
 <!-- 헤더 시작 -->
-<div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-    </header>
-</div>
+<header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+
+    <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+        <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+        <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
+    </div>
+    <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
+
+    <!--로그인이 되었을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <!--                <button type="button" class="btn btn-primary">button 1</button>-->
+            <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
+            <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-heart"></i>
+                            <span th:text="|${session.loginMember.name}님|"></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                               class="link-dark text-decoration-none">내 정보 수정</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <form method="post" action="/logout" class="d-inline">
+                                <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                    로그아웃
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <!--로그인이 되었을 때 보여줄 버튼 끝-->
+</header>
 <!-- 헤더 끝 -->
 
-<div class="container">
-    <div class="container d-flex flex-column justify-content-center ">
+
+<div class="container mt-3" th:object="${classRoomDetailInfoDto}">
+
+    <!--학급 기본 정보 수정 폼 시작-->
+    <form action th:action="@{/class/create}" method="post"
+          class="border border-primary-subtle border-3 rounded p-3">
+        <div class="row">
+
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="학급 이름" th:field="*{name}">
+            </div>
+            <div class="col-md-3">
+                <select id="classType" th:field="*{classType}" class="form-select" aria-label="Default select example">
+                    <option value="ELEMENTARY">초등</option>
+                    <option value="MIDDLE">중등</option>
+                    <option value="HIGH">고등</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="학급 정보" th:field="*{classInfo}">
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mt-1">기본 정보 수정</button>
+            </div>
+
+        </div>
+    </form>
+    <!--학급 기본 정보 수정 폼 끝-->
+
+    <div class=" mt-1 border border-primary-subtle border-3 rounded p-3">
+        <!-- 학생 목록 시작 -->
+        <h3>학생 목록</h3>
+        <ul class="list-group" id="outside-student-list" th:each="student, studentStat : *{studentList}">
+            <li class="list-group-item">
+                <input class="form-check-input me-1" type="checkbox" value="" th:id="|checkbox${studentStat.index}|">
+                <label class="form-check-label" th:for="|checkbox${studentStat.index}|" th:value="${student.id}"
+                       th:text="|${student.schoolName} ${student.grade}학년 ${student.name}|">학생 이름</label>
+            </li>
+        </ul>
+
         <!-- 모달 창 시작 -->
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button id="modalTriggerButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             학생을 먼저 추가해 주세요
         </button>
 
@@ -65,55 +152,36 @@
         </div>
         <!-- 모달 창 끝 -->
 
-        <!--학급 등록 폼 시작-->
-        <form action th:action="@{/class/create}" method="post" th:object="${classSaveReqDto}"
-              class="border border-primary-subtle border-3 rounded p-3">
-            <div class="row">
+        <button type="button" class="btn btn-primary btn-sm">학생 추가</button>
+        <button type="button" class="btn btn-primary btn-sm">전체 선택/해제</button>
+        <button type="button" class="btn btn-primary btn-sm">선택한 학생 삭제</button>
 
-                <div class="col-md-6 mb-3 form-check">
-                    <label class="form-check-label mb-2" for="name" th:text="|학급 이름|">학급 이름</label>
-                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="학급 이름"
-                           th:errorclass="field-error">
-                    <div th:class="field-error" th:errors="*{name}">학급 이름 오류 메시지</div>
-                </div>
-                <div class="col-md-6 mb-3 form-check">
-                    <label class="form-check-label mb-2" for="classInfo" th:text="|학급 정보|">학급 정보</label>
-                    <input type="text" class="form-control" id="classInfo" th:field="*{classInfo}"
-                           placeholder="학급 정보 ex) 월,수,금 / 화,목" th:errorclass="field-error">
-                    <div th:class="field-error" th:errors="*{classInfo}">학급 정보 오류 메시지</div>
-                </div>
-                <div class="col-md-6 mb-3 form-check">
-                    <label class="form-check-label mb-2" for="classType" th:text="|학급 타입|">학급 타입</label>
-
-                    <select id="classType" name="classType" class="form-select" aria-label="Default select example"
-                            th:errorclass="field-error">
-                        <option selected>-</option>
-                        <option value="ELEMENTARY">초등</option>
-                        <option value="MIDDLE">중등</option>
-                        <option value="HIGH">고등</option>
-                    </select>
-
-                    <div th:class="field-error" th:errors="*{classType}">학급 타입 오류 메시지</div>
-                </div>
-
-                <!-- 선택된 학생 목록을 저장할 숨겨진 입력 필드 -->
-                <input type="hidden" name="selectedStudents" id="selectedStudentsInput" th:value="*{selectedStudents}"
-                       th:errorclass="field-error">
-                <input type="hidden" name="teacherId" th:value="${session.loginMember.id}">
-
-                <div th:class="field-error">
-                    <div class="alert alert-warning text-center" th:errors="*{selectedStudents}">대표 학생 한명을 추가 해주세요</div>
-                </div>
-                <div class="d-flex justify-content-center mt-1 mb-5">
-                    <button type="submit" class="btn btn-primary btn mb-3 me-3">학급 생성</button>
-                    <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">생성 취소</button>
-                </div>
-
-            </div>
-        </form>
-        <!--학급 등록 폼 끝-->
-
+        <!-- 학생 목록 끝 -->
     </div>
+
+    <div class=" mt-1 border border-primary-subtle border-3 rounded p-3">
+        <!-- 알림장 작성 폼 시작 -->
+        <h3>알림장 작성</h3>
+        <textarea class="form-control" rows="5" placeholder="알림장 내용을 여기에 작성하세요."></textarea>
+        <button type="button" class="btn btn-primary mt-2">알림장 보내기</button>
+        <!-- 알림장 작성 폼 끝 -->
+    </div>
+
+
+
+    <!-- 숙제 및 알림장 목록 -->
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">내용</th>
+            <th scope="col">날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 여기에 숙제 및 알림장 정보를 동적으로 추가 -->
+        </tbody>
+    </table>
 </div>
 
 <script>
@@ -258,6 +326,7 @@
         // 선택된 학생 목록을 보여주는 모달을 닫습니다.
         $('#staticBackdrop').modal('hide');
     });
+
 </script>
 
 </body>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <title>기본 정보 수정 페이지</title>
+</head>
+<body>
+<!-- 헤더 시작 -->
+<header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+
+    <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+        <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+        <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
+    </div>
+    <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
+
+    <!--로그인이 되었을 때 보여줄 버튼 시작-->
+    <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <!--                <button type="button" class="btn btn-primary">button 1</button>-->
+            <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
+            <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-heart"></i>
+                            <span th:text="|${session.loginMember.name}님|"></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                               class="link-dark text-decoration-none">내 정보 수정</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <form method="post" action="/logout" class="d-inline">
+                                <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                    로그아웃
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <!--로그인이 되었을 때 보여줄 버튼 끝-->
+</header>
+<!-- 헤더 끝 -->
+
+<div class="container mt-3" th:object="${basicClassRoomInfoDto}">
+    <!--학급 기본 정보 수정 폼 시작-->
+    <form action th:action="@{/class/create}" method="post"
+          class="border border-primary-subtle border-3 rounded p-3">
+        <div class="row">
+
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="학급 이름" th:field="*{name}">
+            </div>
+            <div class="col-md-3">
+                <select id="classType" th:field="*{classType}" class="form-select" aria-label="Default select example">
+                    <option value="ELEMENTARY">초등</option>
+                    <option value="MIDDLE">중등</option>
+                    <option value="HIGH">고등</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="학급 정보" th:field="*{classInfo}">
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mt-1">기본 정보 수정</button>
+            </div>
+
+        </div>
+    </form>
+    <!--학급 기본 정보 수정 폼 끝-->
+</div>
+</body>
+</html>

@@ -1,10 +1,9 @@
 package com.time.studentmanage.web.classroom;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
+import com.time.studentmanage.domain.dto.classroom.ClassRoomBasicInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
-import com.time.studentmanage.domain.dto.student.StudentRespDto;
-import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.service.ClassRoomService;
 import com.time.studentmanage.service.StudentService;
@@ -19,12 +18,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -93,5 +91,38 @@ public class ClassRoomController {
         }
 
         return "redirect:/class";
+    }
+
+//    @GetMapping("/class/{id}")
+//    public String showClassRoomInfo(@PathVariable("id") Long id,
+//                                    @ModelAttribute("classRoomDetailInfoDto") ClassRoomBasicInfoDto classRoomDetailInfoDto) {
+//        Optional<ClassRoom> classRoomOp = classRoomService.findById(id);
+//
+//        if (!classRoomOp.isPresent()) {
+//            throw new IllegalArgumentException("존재하지 않는 학급 정보 입니다.");
+//        }
+//
+//        ClassRoom classRoomPs = classRoomOp.get();
+//
+//        List<SearchStudentRespDto> studentInfoList = classRoomPs.getStudentList().stream()
+//                .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
+//                .collect(Collectors.toList());
+//
+//        classRoomDetailInfoDto.setName(classRoomPs.getName());
+//        classRoomDetailInfoDto.setClassInfo(classRoomPs.getClassInfo());
+//        classRoomDetailInfoDto.setClassType(classRoomPs.getClassType());
+//        classRoomDetailInfoDto.setStudentList(studentInfoList);
+//
+//        log.info("classRoomDetailInfoDto={}", classRoomDetailInfoDto);
+//
+//        return "/classroom/class_info";
+//    }
+
+    @GetMapping("/class/{id}/basic/info")
+    public String showBasicInfoEditForm(@PathVariable("id") Long id, Model model) {
+        ClassRoomBasicInfoDto basicClassRoomInfoDto = classRoomService.getBasicClassRoomInfo(id);
+
+        model.addAttribute("basicClassRoomInfoDto", basicClassRoomInfoDto);
+        return "classroom/class_basic_info_edit_form";
     }
 }
