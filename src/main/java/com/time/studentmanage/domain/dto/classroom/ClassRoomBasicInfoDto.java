@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ClassRoomBasicInfoDto {
+    private Long id;
     private String name;
     private String classInfo;
     private ClassType classType;

@@ -48,18 +48,6 @@ public class ClassRoomService {
         return savedClass;
     }
 
-    public void updateClassRoomName(Long id, String name) {
-        Optional<ClassRoom> classRoomOp = classRoomRepository.findById(id);
-
-        if (!classRoomOp.isPresent()) {
-            throw new IllegalArgumentException("학급 정보가 존재하지 않습니다.");
-        }
-
-        ClassRoom classRoomPS = classRoomOp.get();
-
-        classRoomPS.changeClassRoomName(name);
-    }
-
     public void deleteClassRoom(Long id) {
         Optional<ClassRoom> classRoomOp = classRoomRepository.findById(id);
 
@@ -88,6 +76,20 @@ public class ClassRoomService {
 
         ClassRoom classRoomPs = classRoomOp.get();
 
-        return new ClassRoomBasicInfoDto(classRoomPs.getName(), classRoomPs.getClassInfo(), classRoomPs.getClassType());
+        return new ClassRoomBasicInfoDto(classRoomPs.getId(), classRoomPs.getName(), classRoomPs.getClassInfo(), classRoomPs.getClassType());
+    }
+
+    public void updateClassRoomBasicInfo(Long id, ClassRoomBasicInfoDto classRoomBasicInfoDto) {
+        Optional<ClassRoom> classRoomOp = classRoomRepository.findById(id);
+
+        if (!classRoomOp.isPresent()) {
+            throw new IllegalArgumentException("학급 정보가 존재하지 않습니다.");
+        }
+
+        ClassRoom classRoomPS = classRoomOp.get();
+
+        classRoomPS.changeClassRoomName(classRoomBasicInfoDto.getName());
+        classRoomPS.changeClassInfo(classRoomBasicInfoDto.getClassInfo());
+        classRoomPS.changeClassType(classRoomBasicInfoDto.getClassType());
     }
 }

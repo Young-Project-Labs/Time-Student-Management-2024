@@ -53,4 +53,12 @@ public class ClassRoom extends BaseTimeEntity {
         this.name = name;
     }
 
+    public void changeClassInfo(String classInfo) {
+        this.classInfo = classInfo;
+    }
+
+    public void changeClassType(ClassType classType) {
+        this.classType = classType;
+    }
+
 }

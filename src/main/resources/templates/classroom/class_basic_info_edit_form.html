@@ -64,7 +64,7 @@
 
 <div class="container mt-3" th:object="${basicClassRoomInfoDto}">
     <!--학급 기본 정보 수정 폼 시작-->
-    <form action th:action="@{/class/create}" method="post"
+    <form action th:action="@{/class/{id}/basic/info(id=${basicClassRoomInfoDto.id})}" method="post"
           class="border border-primary-subtle border-3 rounded p-3">
         <div class="row">
 
