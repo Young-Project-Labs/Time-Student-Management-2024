@@ -7,59 +7,11 @@
 </head>
 <body>
 <!-- 헤더 시작 -->
-<header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
-    <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-
-    <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
-    <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
-        <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
-        <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
-    </div>
-    <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
-
-    <!--로그인이 되었을 때 보여줄 버튼 시작-->
-    <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <!--                <button type="button" class="btn btn-primary">button 1</button>-->
-            <!--  TODO: 여기 관리자 페이지 링크 추가하기  -->
-            <button type="button" class="btn btn-primary">관리자 페이지로 이동</button>
-
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    <i class="fa-solid fa-user"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <div class="dropdown-item">
-                            <i class="fa-solid fa-heart"></i>
-                            <span th:text="|${session.loginMember.name}님|"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="dropdown-item">
-                            <i class="fa-solid fa-user-gear"></i>
-                            <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
-                               class="link-dark text-decoration-none">내 정보 수정</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="dropdown-item">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            <form method="post" action="/logout" class="d-inline">
-                                <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
-                                    로그아웃
-                                </button>
-                            </form>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-    </div>
-    <!--로그인이 되었을 때 보여줄 버튼 끝-->
-</header>
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+    </header>
+</div>
 <!-- 헤더 끝 -->
 
 <div class="container mt-3" th:object="${basicClassRoomInfoDto}">

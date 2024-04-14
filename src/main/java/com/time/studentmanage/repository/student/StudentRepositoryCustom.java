@@ -12,4 +12,6 @@ public interface StudentRepositoryCustom {
     List<Student> findAllBySearchEngine(String schoolName, String studentName);
 
     List<Student> findAllBySearch(String searchType, String keyword);
+
+    List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName);
 }

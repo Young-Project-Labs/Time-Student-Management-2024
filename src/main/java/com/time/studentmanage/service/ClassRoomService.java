@@ -4,6 +4,8 @@ import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.classroom.ClassRoomBasicInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
+import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.classroom.ClassRoomRepository;
@@ -91,5 +93,25 @@ public class ClassRoomService {
         classRoomPS.changeClassRoomName(classRoomBasicInfoDto.getName());
         classRoomPS.changeClassInfo(classRoomBasicInfoDto.getClassInfo());
         classRoomPS.changeClassType(classRoomBasicInfoDto.getClassType());
+    }
+
+    public List<ClassStudentRespDto> getClassStudentList(Long id) {
+        Optional<ClassRoom> classRoomOp = classRoomRepository.findById(id);
+
+        if (!classRoomOp.isPresent()) {
+            throw new IllegalArgumentException("학급 정보가 존재하지 않습니다.");
+        }
+
+        ClassRoom classRoomPS = classRoomOp.get();
+
+        List<ClassStudentRespDto> resultList = classRoomPS.getStudentList().stream()
+                .map(s -> new ClassStudentRespDto(s.getId(), s.getSchoolName(), s.getGrade(), s.getName(), s.getPhoneNumber()))
+                .collect(Collectors.toList());
+
+        return resultList;
+    }
+
+    public ClassRoom findById(Long classId) {
+        return classRoomRepository.findById(classId).get();
     }
 }

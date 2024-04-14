@@ -21,6 +21,4 @@ public interface StudentRepository extends JpaRepository<Student, Long>, Student
     Boolean existsByUserId(String checkId);
 
     List<Student> findAllBySchoolNameOrderByGradeAsc(String schoolName);
-
-    List<Student> findAllByNameLikeOrderBySchoolName(String name);
 }

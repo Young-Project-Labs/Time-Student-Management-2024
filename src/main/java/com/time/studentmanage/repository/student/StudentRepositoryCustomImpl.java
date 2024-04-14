@@ -47,6 +47,20 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         return result;
     }
 
+    public List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName) {
+
+        QStudent student = QStudent.student;
+
+        List<Student> result = query.selectFrom(student)
+                .where(student.attendanceStatus.eq(AttendanceStatus.Y),
+                        likeStudentName(studentName)
+                                .and(student.classRoom.isNull())
+                )
+                .fetch();
+
+        return result;
+    }
+
     public List<Student> findAllBySearch(String searchType, String content) {
         QStudent student = QStudent.student;
         return query.selectFrom(student)

@@ -4,6 +4,8 @@ import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.classroom.ClassRoomBasicInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
 import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
+import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.service.ClassRoomService;
 import com.time.studentmanage.service.StudentService;
@@ -83,36 +85,11 @@ public class ClassRoomController {
 
         String[] idBits = classSaveReqDto.getSelectedStudents().split(" ");
         for (String strId : idBits) {
-            studentService.connectClassRoomById(Long.valueOf(strId), savedClassRoom);
+            studentService.connectClassRoom(Long.valueOf(strId), savedClassRoom);
         }
 
         return "redirect:/class";
     }
-
-//    @GetMapping("/class/{id}")
-//    public String showClassRoomInfo(@PathVariable("id") Long id,
-//                                    @ModelAttribute("classRoomDetailInfoDto") ClassRoomBasicInfoDto classRoomDetailInfoDto) {
-//        Optional<ClassRoom> classRoomOp = classRoomService.findById(id);
-//
-//        if (!classRoomOp.isPresent()) {
-//            throw new IllegalArgumentException("존재하지 않는 학급 정보 입니다.");
-//        }
-//
-//        ClassRoom classRoomPs = classRoomOp.get();
-//
-//        List<SearchStudentRespDto> studentInfoList = classRoomPs.getStudentList().stream()
-//                .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
-//                .collect(Collectors.toList());
-//
-//        classRoomDetailInfoDto.setName(classRoomPs.getName());
-//        classRoomDetailInfoDto.setClassInfo(classRoomPs.getClassInfo());
-//        classRoomDetailInfoDto.setClassType(classRoomPs.getClassType());
-//        classRoomDetailInfoDto.setStudentList(studentInfoList);
-//
-//        log.info("classRoomDetailInfoDto={}", classRoomDetailInfoDto);
-//
-//        return "/classroom/class_info";
-//    }
 
     @GetMapping("/class/{id}/basic/info")
     public String showBasicInfoEditForm(@PathVariable("id") Long id, Model model) {
@@ -129,4 +106,22 @@ public class ClassRoomController {
 
         return "redirect:/class";
     }
+
+    @GetMapping("/class/{classId}/student/info")
+    public String showClassStudentManagePage(@PathVariable("classId") Long id, Model model) {
+        List<ClassStudentRespDto> classStudentList = classRoomService.getClassStudentList(id);
+
+        model.addAttribute("classStudentList", classStudentList);
+        return "classroom/class_student";
+    }
+
+    @GetMapping("/class/{classId}/delete/student")
+    public String deleteClassStudent(@PathVariable("classId") Long classId,
+                                     @RequestParam("studentId") Long studentId) {
+        ClassRoom classRoom = classRoomService.findById(classId);
+        studentService.disconnectClassRoom(studentId, classRoom);
+
+        return "redirect:/class/" + classId + "/student/info";
+    }
+
 }
