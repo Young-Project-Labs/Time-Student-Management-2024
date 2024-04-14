@@ -30,7 +30,7 @@ public class ClassRoomController {
     private final ClassRoomService classRoomService;
     private final StudentService studentService;
 
-    @GetMapping("/class")
+    @GetMapping("/class/list")
     public String showClassPage(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
@@ -88,7 +88,7 @@ public class ClassRoomController {
             studentService.connectClassRoom(Long.valueOf(strId), savedClassRoom);
         }
 
-        return "redirect:/class";
+        return "redirect:/class/list";
     }
 
     @GetMapping("/class/{id}/basic/info")
@@ -104,7 +104,7 @@ public class ClassRoomController {
 
         classRoomService.updateClassRoomBasicInfo(id, classRoomBasicInfoDto);
 
-        return "redirect:/class";
+        return "redirect:/class/list";
     }
 
     @GetMapping("/class/{classId}/student/info")
@@ -132,6 +132,6 @@ public class ClassRoomController {
         }
 
         classRoomService.deleteClassRoom(id);
-        return "redirect:/class";
+        return "redirect:/class/list";
     }
 }
