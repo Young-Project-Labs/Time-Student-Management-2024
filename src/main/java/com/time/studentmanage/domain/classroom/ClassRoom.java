@@ -61,4 +61,8 @@ public class ClassRoom extends BaseTimeEntity {
         this.classType = classType;
     }
 
+    public void removeStudentList(Student student) {
+        studentList.remove(student);
+    }
+
 }

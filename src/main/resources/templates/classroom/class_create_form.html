@@ -36,7 +36,7 @@
                     <div class="modal-body">
 
                         <!--검색 바 시작-->
-                        <form id="searchForm" th:action="@{/search}" method="get">
+                        <form id="searchForm" th:action="@{/class/student/search}" method="get">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                                 <input name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
@@ -104,9 +104,9 @@
                 <div th:class="field-error">
                     <div class="alert alert-warning text-center" th:errors="*{selectedStudents}">대표 학생 한명을 추가 해주세요</div>
                 </div>
-                <div class="d-flex justify-content-center mt-1 mb-5">
-                    <button type="submit" class="btn btn-primary btn mb-3 me-3">학급 생성</button>
-                    <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">생성 취소</button>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary btn me-2">학급 생성</button>
+                    <a class="btn btn-danger btn" th:href="@{/class}" role="button">취소</a>
                 </div>
 
             </div>
@@ -152,15 +152,9 @@
                     $.each(response.data, function (index, student) {
                         resultHtml +=
                             '<tr>' +
-                            '    <td>' +
-                            '        <a href="/record/' + student.id + '">' + student.schoolName + '</a>' +
-                            '    </td>' +
-                            '    <td>' +
-                            '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
-                            '    </td>' +
-                            '    <td>' +
-                            '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
-                            '    </td>' +
+                            '    <td>' + student.schoolName + '</td>' +
+                            '    <td>' + student.grade + '</td>' +
+                            '    <td>' + student.name + '</td>' +
                             '    <td>' +
                             '        <button class="btn btn-primary add-student-button add-student-button" data-id="' + student.id + '">추가</button>' + // '추가' 버튼 추가
                             '    </td>' +
@@ -193,9 +187,9 @@
     // '추가' 버튼 클릭 이벤트 처리
     $(document).on('click', '.add-student-button', function () {
         var studentId = $(this).data('id');
-        var studentSchoolName = $(this).closest('tr').find('td:eq(0) a').text();
-        var studentGrade = $(this).closest('tr').find('td:eq(1) a').text();
-        var studentName = $(this).closest('tr').find('td:eq(2) a').text();
+        var studentSchoolName = $(this).closest('tr').find('td:eq(0)').text();
+        var studentGrade = $(this).closest('tr').find('td:eq(1)').text();
+        var studentName = $(this).closest('tr').find('td:eq(2)').text();
 
         // 동일한 학생이 이미 목록에 있는지 확인
         var isStudentAlreadySelected = selectedStudents.some(function (student) {

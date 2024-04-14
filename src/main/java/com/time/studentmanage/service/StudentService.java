@@ -236,12 +236,12 @@ public class StudentService {
         studentPs.addClassRoom(classRoom);
     }
 
-    public void disconnectClassRoom(Long studentId, ClassRoom classRoom) {
+    public void disconnectClassRoom(Long studentId) {
         Optional<Student> studentOp = studentRepository.findById(studentId);
         if (!studentOp.isPresent()) {
             throw new DataNotFoundException("해당하는 학생이 없습니다.");
         }
         Student studentPs = studentOp.get();
-        studentPs.removeClassRoom(classRoom);
+        studentPs.removeClassRoom();
     }
 }

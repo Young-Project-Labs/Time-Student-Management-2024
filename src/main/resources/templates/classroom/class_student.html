@@ -23,10 +23,15 @@
     <input type="hidden" id="classId" th:value="${classId}">
 
     <!-- 모달 창 시작 -->
-    <!-- Button trigger modal -->
-    <button id="modalTriggerButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        학생 등록
-    </button>
+
+
+    <div>
+        <button id="modalTriggerButton" type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">
+            학생 등록
+        </button>
+        <a class="btn btn-outline-danger btn-sm" th:href="@{/class}" role="button">뒤로 가기</a>
+    </div>
 
     <!-- 모달 창 시작 -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

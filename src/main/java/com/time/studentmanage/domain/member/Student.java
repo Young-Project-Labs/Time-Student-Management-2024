@@ -97,9 +97,8 @@ public class Student extends BaseMemberEntity {
         classRoom.getStudentList().add(this);
     }
 
-    public void removeClassRoom(ClassRoom classRoom) {
+    public void removeClassRoom() {
         this.classRoom = null;
-        classRoom.getStudentList().removeIf(student -> student.equals(this)); // 학생 정보를 찾아서 제거
     }
 
 

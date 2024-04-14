@@ -118,10 +118,20 @@ public class ClassRoomController {
     @GetMapping("/class/{classId}/delete/student")
     public String deleteClassStudent(@PathVariable("classId") Long classId,
                                      @RequestParam("studentId") Long studentId) {
-        ClassRoom classRoom = classRoomService.findById(classId);
-        studentService.disconnectClassRoom(studentId, classRoom);
+        studentService.disconnectClassRoom(studentId);
 
         return "redirect:/class/" + classId + "/student/info";
     }
 
+    @GetMapping("/class/delete/{id}")
+    public String deleteClassRoom(@PathVariable("id") Long id) {
+        ClassRoom classRoom = classRoomService.findById(id);
+
+        for (Student student : classRoom.getStudentList()) {
+            studentService.disconnectClassRoom(student.getId());
+        }
+
+        classRoomService.deleteClassRoom(id);
+        return "redirect:/class";
+    }
 }
