@@ -75,13 +75,12 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">학급</th>
-            <th scope="col">학급 이름</th>
-            <th scope="col">수업 시간</th>
+            <th scope="col">학급 구분</th>
+            <th scope="col">이름</th>
+            <th scope="col">수업 구분</th>
             <th scope="col">학생 수</th>
-            <th scope="col">학급 정보</th>
-            <th scope="col">수정</th>
-            <th scope="col">삭제</th>
+            <th scope="col">기본 정보 수정</th>
+            <th scope="col">학생 관리</th>
         </tr>
         </thead>
 
@@ -93,17 +92,12 @@
             <td th:text="${class.classSize}"></td>
             <td>
                 <button type="submit" class="btn btn-primary btn mb-3 me-3"
-                        th:onclick="|location.href='@{/class/{id}(id=${classId})}'|">학급 정보
+                        th:onclick="|location.href='@{/class/update/basic/{id}(id=${class.classId})}'|">수정
                 </button>
             </td>
             <td>
                 <button type="submit" class="btn btn-primary btn mb-3 me-3"
-                        th:onclick="|location.href='@{/class/edit/{id}(id=${class.id})}'|">수정
-                </button>
-            </td>
-            <td>
-                <button type="submit" class="btn btn-danger btn mb-3 me-3"
-                        th:onclick="|location.href='@{/class/delete/{id}(id=${class.id})}'|">삭제
+                        th:onclick="|location.href='@{/class/edit/{id}(id=${class.classId})}'|">관리
                 </button>
             </td>
         </tr>
