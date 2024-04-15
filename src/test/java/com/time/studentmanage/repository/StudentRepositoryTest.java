@@ -1,12 +1,12 @@
 package com.time.studentmanage.repository;
 
-import com.querydsl.core.Tuple;
-import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.member.Address;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

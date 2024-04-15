@@ -1,0 +1,258 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <title>학급 등록 페이지</title>
+</head>
+<body>
+
+<!-- 헤더 시작 -->
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+    </header>
+</div>
+<!-- 헤더 끝 -->
+
+<div class="container">
+    <div class="container d-flex flex-column justify-content-center ">
+        <!-- 모달 창 시작 -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            학생을 먼저 추가해 주세요
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">학생 검색</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!--검색 바 시작-->
+                        <form id="searchForm" th:action="@{/class/student/search}" method="get">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                <input name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
+                                       aria-describedby="basic-addon1">
+                                <input type="submit" value="검색" class="btn btn-outline-primary student__search__bar">
+                            </div>
+                        </form>
+                        <!--검색 바 끝-->
+
+                        <div class="main-content">
+                        </div>
+
+                        <!--추가하기를 눌러 선택된 학생 목록을 보여줄 부분-->
+                        <div id="selected-students">
+                            <h3>선택된 학생 목록</h3>
+                            <ul id="selected-students-list"></ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="add-students-button" type="button" class="btn btn-primary">학생 선택 완료</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 모달 창 끝 -->
+
+        <!--학급 등록 폼 시작-->
+        <form action th:action="@{/class/create}" method="post" th:object="${classSaveReqDto}"
+              class="border border-primary-subtle border-3 rounded p-3">
+            <div class="row">
+
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="name" th:text="|학급 이름|">학급 이름</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="학급 이름"
+                           th:errorclass="field-error">
+                    <div th:class="field-error" th:errors="*{name}">학급 이름 오류 메시지</div>
+                </div>
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="classInfo" th:text="|학급 정보|">학급 정보</label>
+                    <input type="text" class="form-control" id="classInfo" th:field="*{classInfo}"
+                           placeholder="학급 정보 ex) 월,수,금 / 화,목" th:errorclass="field-error">
+                    <div th:class="field-error" th:errors="*{classInfo}">학급 정보 오류 메시지</div>
+                </div>
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="classType" th:text="|학급 타입|">학급 타입</label>
+
+                    <select id="classType" name="classType" class="form-select" aria-label="Default select example"
+                            th:errorclass="field-error">
+                        <option selected>-</option>
+                        <option value="ELEMENTARY">초등</option>
+                        <option value="MIDDLE">중등</option>
+                        <option value="HIGH">고등</option>
+                    </select>
+
+                    <div th:class="field-error" th:errors="*{classType}">학급 타입 오류 메시지</div>
+                </div>
+
+                <!-- 선택된 학생 목록을 저장할 숨겨진 입력 필드 -->
+                <input type="hidden" name="selectedStudents" id="selectedStudentsInput" th:value="*{selectedStudents}"
+                       th:errorclass="field-error">
+                <input type="hidden" name="teacherId" th:value="${session.loginMember.id}">
+
+                <div th:class="field-error">
+                    <div class="alert alert-warning text-center" th:errors="*{selectedStudents}">대표 학생 한명을 추가 해주세요</div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary btn me-2">학급 생성</button>
+                    <a class="btn btn-danger btn" th:href="@{/class/list}" role="button">취소</a>
+                </div>
+
+            </div>
+        </form>
+        <!--학급 등록 폼 끝-->
+
+    </div>
+</div>
+
+<script>
+    $("#searchForm").submit(function (event) {
+        event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
+
+        var formData = $(this).serialize(); // 폼 데이터를 가져옵니다.
+        var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: formData,
+            dataType: 'json',
+            success: function (response) {
+
+                $(".main-content").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
+
+                if (response.errorResult !== null) {
+                    var errorMessage = response.errorResult.message;
+                    displayErrorMessage(errorMessage);
+                } else {
+                    var resultHtml =
+                        '<table class="table table-hover">' +
+                        '<thead>' +
+                        '    <tr>' +
+                        '        <th scope="col">학교명</th>' +
+                        '        <th scope="col">학년</th>' +
+                        '        <th scope="col">이름</th>' +
+                        '        <th scope="col"></th>' +
+                        '    </tr>' +
+                        '</thead>' +
+                        '<tbody>';
+
+                    // 각 학생 정보에 대한 행을 추가
+                    $.each(response.data, function (index, student) {
+                        resultHtml +=
+                            '<tr>' +
+                            '    <td>' + student.schoolName + '</td>' +
+                            '    <td>' + student.grade + '</td>' +
+                            '    <td>' + student.name + '</td>' +
+                            '    <td>' +
+                            '        <button class="btn btn-primary add-student-button add-student-button" data-id="' + student.id + '">추가</button>' + // '추가' 버튼 추가
+                            '    </td>' +
+                            '</tr>';
+                    });
+
+                    resultHtml += '</tbody></table>';
+
+                    // 결과 HTML을 ".main-content"에 추가
+                    $(".main-content").empty().append(resultHtml);
+
+                }
+
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = "검색어를 입력하지 않습니다.";
+                displayErrorMessage(errorMessage);
+            }
+        });
+    });
+
+    function displayErrorMessage(message) {
+        var errorHtml = '<div class="alert alert-danger text-center">' + message + '</div>';
+        $(".main-content").html(errorHtml);
+    }
+
+    // 선택된 학생 목록을 저장하기 위한 배열
+    var selectedStudents = [];
+
+    // '추가' 버튼 클릭 이벤트 처리
+    $(document).on('click', '.add-student-button', function () {
+        var studentId = $(this).data('id');
+        var studentSchoolName = $(this).closest('tr').find('td:eq(0)').text();
+        var studentGrade = $(this).closest('tr').find('td:eq(1)').text();
+        var studentName = $(this).closest('tr').find('td:eq(2)').text();
+
+        // 동일한 학생이 이미 목록에 있는지 확인
+        var isStudentAlreadySelected = selectedStudents.some(function (student) {
+            return student.id === studentId;
+        });
+
+        if (!isStudentAlreadySelected) {
+            // 선택된 학생 정보 객체 생성
+            var studentInfo = {
+                id: studentId,
+                schoolName: studentSchoolName,
+                grade: studentGrade,
+                name: studentName
+            };
+
+            // 학생 목록에 추가
+            selectedStudents.push(studentInfo);
+
+            // 선택된 학생 목록 업데이트
+            updateSelectedStudentsList();
+        } else {
+            // 선택된 학생이 이미 목록에 있을 경우, 사용자에게 알림
+            alert('이미 추가된 학생입니다.');
+        }
+    });
+
+    // 선택된 학생 목록을 업데이트하는 함수
+    function updateSelectedStudentsList() {
+        var listHtml = '';
+        $.each(selectedStudents, function (index, student) {
+            listHtml += '<li>' + student.schoolName + ' ' + student.grade + '학년 ' + student.name +
+                ' <button class="btn btn-danger remove-student-button btn-sm ml-1" data-id="' + student.id + '">취소</button></li>'; // '취소' 버튼 추가
+        });
+        $('#selected-students-list').html(listHtml);
+    }
+
+    // '취소' 버튼 클릭 이벤트 처리
+    $(document).on('click', '.remove-student-button', function () {
+        var studentId = $(this).data('id');
+
+        // 선택된 학생 목록에서 해당 학생을 찾아 삭제
+        selectedStudents = selectedStudents.filter(function (student) {
+            return student.id !== studentId;
+        });
+
+        // 선택된 학생 목록 업데이트
+        updateSelectedStudentsList();
+    });
+
+    // "학생 선택 완료" 버튼 클릭 이벤트 처리
+    $('#add-students-button').click(function () {
+        // 선택된 학생 목록을 하나의 문자열로 변환
+        var selectedStudentsStr = selectedStudents.map(function (student) {
+            return student.id + ' ';
+        }).join('');
+
+        // 숨겨진 입력 필드에 선택된 학생 목록 문자열을 설정
+        $('#selectedStudentsInput').val(selectedStudentsStr);
+
+        // 선택된 학생 목록을 보여주는 모달을 닫습니다.
+        $('#staticBackdrop').modal('hide');
+    });
+</script>
+
+</body>
+</html>

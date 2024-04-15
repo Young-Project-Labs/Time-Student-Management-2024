@@ -2,10 +2,10 @@ package com.time.studentmanage.repository.record;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.time.studentmanage.domain.QRecord;
-import com.time.studentmanage.domain.Record;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
+import com.time.studentmanage.domain.record.QRecord;
+import com.time.studentmanage.domain.record.Record;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

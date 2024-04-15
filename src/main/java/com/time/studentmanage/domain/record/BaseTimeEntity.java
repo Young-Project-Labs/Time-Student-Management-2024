@@ -1,4 +1,4 @@
-package com.time.studentmanage.domain;
+package com.time.studentmanage.domain.record;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

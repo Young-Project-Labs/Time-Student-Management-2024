@@ -1,6 +1,6 @@
 package com.time.studentmanage.domain.dto.record;
 
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;

@@ -1,9 +1,11 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.classroom.ClassRoom;
+import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
 import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.StudentRepository;
+import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -212,4 +214,34 @@ public class StudentService {
     }
 
 
+    public List<ClassStudentRespDto> getSearchedStudentNotIncludeClassRoom(String content) {
+        List<Student> studentList = studentRepository.findAllBySearchEngineWithNameNotIncludeClass(content);
+
+        List<ClassStudentRespDto> resultDtoList = studentList.stream()
+                .map(s -> new ClassStudentRespDto(s.getId(), s.getSchoolName(), s.getGrade(), s.getName(), s.getPhoneNumber()))
+                .collect(Collectors.toList());
+
+        if (resultDtoList == null || resultDtoList.size() == 0) {
+            throw new DataNotFoundException("학생 정보가 없거나 이미 추가된 학생 입니다.");
+        }
+        return resultDtoList;
+    }
+
+    public void connectClassRoom(Long id, ClassRoom classRoom) {
+        Optional<Student> studentOp = studentRepository.findById(id);
+        if (!studentOp.isPresent()) {
+            throw new DataNotFoundException("해당하는 학생이 없습니다.");
+        }
+        Student studentPs = studentOp.get();
+        studentPs.addClassRoom(classRoom);
+    }
+
+    public void disconnectClassRoom(Long studentId) {
+        Optional<Student> studentOp = studentRepository.findById(studentId);
+        if (!studentOp.isPresent()) {
+            throw new DataNotFoundException("해당하는 학생이 없습니다.");
+        }
+        Student studentPs = studentOp.get();
+        studentPs.removeClassRoom();
+    }
 }

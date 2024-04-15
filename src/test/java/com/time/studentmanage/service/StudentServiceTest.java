@@ -6,7 +6,7 @@ import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.StudentRepository;
+import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
 import com.time.studentmanage.domain.member.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +21,4 @@ public interface StudentRepository extends JpaRepository<Student, Long>, Student
     Boolean existsByUserId(String checkId);
 
     List<Student> findAllBySchoolNameOrderByGradeAsc(String schoolName);
-
-    List<Student> findAllByNameLikeOrderBySchoolName(String name);
 }

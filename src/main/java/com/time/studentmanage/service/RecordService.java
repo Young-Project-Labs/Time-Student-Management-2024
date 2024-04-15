@@ -1,6 +1,6 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
@@ -8,8 +8,8 @@ import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
-import com.time.studentmanage.repository.StudentRepository;
-import com.time.studentmanage.repository.TeacherRepository;
+import com.time.studentmanage.repository.student.StudentRepository;
+import com.time.studentmanage.repository.teacher.TeacherRepository;
 import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

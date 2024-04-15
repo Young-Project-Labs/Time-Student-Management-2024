@@ -1,7 +1,7 @@
 package com.time.studentmanage;
 
-import com.time.studentmanage.domain.Address;
-import com.time.studentmanage.domain.Record;
+import com.time.studentmanage.domain.member.Address;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Student;
@@ -9,7 +9,6 @@ import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

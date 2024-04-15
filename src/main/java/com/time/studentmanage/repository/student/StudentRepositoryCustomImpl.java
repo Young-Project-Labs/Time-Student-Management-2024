@@ -1,6 +1,5 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
@@ -43,6 +42,20 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
                 .where(student.attendanceStatus.eq(AttendanceStatus.Y),
                         likeSchoolName(schoolName),
                         likeStudentName(studentName))
+                .fetch();
+
+        return result;
+    }
+
+    public List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName) {
+
+        QStudent student = QStudent.student;
+
+        List<Student> result = query.selectFrom(student)
+                .where(student.attendanceStatus.eq(AttendanceStatus.Y),
+                        likeStudentName(studentName)
+                                .and(student.classRoom.isNull())
+                )
                 .fetch();
 
         return result;

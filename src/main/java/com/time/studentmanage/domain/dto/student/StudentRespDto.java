@@ -1,6 +1,6 @@
 package com.time.studentmanage.domain.dto.student;
 
-import com.time.studentmanage.domain.Address;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

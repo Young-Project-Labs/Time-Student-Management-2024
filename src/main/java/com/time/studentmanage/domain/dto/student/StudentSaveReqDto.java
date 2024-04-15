@@ -1,12 +1,11 @@
 package com.time.studentmanage.domain.dto.student;
 
-import com.time.studentmanage.domain.Address;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
-import jakarta.persistence.Embedded;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;

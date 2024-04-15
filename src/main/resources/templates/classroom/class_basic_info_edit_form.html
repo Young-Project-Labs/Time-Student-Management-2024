@@ -1,0 +1,47 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <title>기본 정보 수정 페이지</title>
+</head>
+<body>
+<!-- 헤더 시작 -->
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
+    </header>
+</div>
+<!-- 헤더 끝 -->
+
+<div class="container mt-3" th:object="${basicClassRoomInfoDto}">
+    <!--학급 기본 정보 수정 폼 시작-->
+    <form action th:action="@{/class/{id}/basic/info(id=${basicClassRoomInfoDto.id})}" method="post"
+          class="border border-primary-subtle border-3 rounded p-3">
+        <div class="row">
+
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="학급 이름" th:field="*{name}">
+            </div>
+            <div class="col-md-3">
+                <select id="classType" th:field="*{classType}" class="form-select" aria-label="Default select example">
+                    <option value="ELEMENTARY">초등</option>
+                    <option value="MIDDLE">중등</option>
+                    <option value="HIGH">고등</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="학급 정보" th:field="*{classInfo}">
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm me-1 mt-1">기본 정보 수정</button>
+                <a class="btn btn-danger btn-sm mt-1" th:href="@{/class/list}" role="button">취소</a>
+            </div>
+
+        </div>
+    </form>
+    <!--학급 기본 정보 수정 폼 끝-->
+</div>
+</body>
+</html>

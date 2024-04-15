@@ -1,4 +1,4 @@
-package com.time.studentmanage.repository;
+package com.time.studentmanage.repository.student;
 
 import com.querydsl.core.Tuple;
 import com.time.studentmanage.domain.member.Student;
@@ -12,4 +12,6 @@ public interface StudentRepositoryCustom {
     List<Student> findAllBySearchEngine(String schoolName, String studentName);
 
     List<Student> findAllBySearch(String searchType, String keyword);
+
+    List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName);
 }

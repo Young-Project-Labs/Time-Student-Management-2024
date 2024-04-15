@@ -1,4 +1,4 @@
-package com.time.studentmanage.web;
+package com.time.studentmanage.web.record;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
