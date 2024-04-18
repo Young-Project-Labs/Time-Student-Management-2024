@@ -39,6 +39,9 @@ public class Student extends BaseMemberEntity {
     private String parentName;
     private String parentPhoneNumber;
 
+    @Column(length = 100) // provider (oauth login 구분)
+    private String provider;
+
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
 
@@ -65,9 +68,9 @@ public class Student extends BaseMemberEntity {
     @JoinColumn(name = "class_room_id")
     private ClassRoom classRoom;
 
-    @Builder(toBuilder = true)
 
-    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher) {
+    @Builder(toBuilder = true)
+    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, String provider) {
         this.id = id;
         this.name = name;
         this.userId = userId;
@@ -79,6 +82,7 @@ public class Student extends BaseMemberEntity {
         this.quitDate = quitDate;
         this.parentName = parentName;
         this.parentPhoneNumber = parentPhoneNumber;
+        this.provider = provider;
         this.memberType = memberType;
         this.gender = gender;
         this.classType = classType;
