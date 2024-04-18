@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -243,5 +244,17 @@ public class StudentService {
         }
         Student studentPs = studentOp.get();
         studentPs.removeClassRoom();
+    }
+    //카카오 회원가입 여부 체크
+    public Optional<Student> checkJoinKakaoStudent(String userId) {
+        String provider = "KAKAO";
+        Optional<Student> studentOP = studentRepository.findByUserIdAndProvider(userId, provider);
+        return studentOP;
+    }
+
+    //카카오 회원가입
+    public Long saveStudentKaKao(KakaoSaveReqDto kakaoSaveReqDto) {
+        Student saveStudent = studentRepository.save(kakaoSaveReqDto.toEntity());
+        return saveStudent.getId();
     }
 }
