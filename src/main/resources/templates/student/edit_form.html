@@ -64,8 +64,8 @@
             </div>
         </div>
 
-        <!-- 원장, 관리자 및 자신의 계정만 비밀번호 변경 가능 -->
-        <div class="row" th:if="${session.loginMember.id == id or !#strings.equals(session.loginMember.position, 'TEACHER')}">
+        <!-- 원장, 관리자 및 자신의 계정만 + 카카오 로그인을 하지 않은 경우 비밀번호 변경 가능 -->
+        <div class="row" th:if="${(session.loginMember.id == id or !#strings.equals(session.loginMember.position, 'TEACHER')) and !#strings.equals(session.loginMember.provider, 'KAKAO')}">
             <div class="col-md-6 mb-3 form-check">
                 <label class="form-check-label mb-2" for="pwdbtn">패스워드</label>
                 <button type="button" id="pwdbtn" class="btn btn-outline-primary">패스워드 변경</button>
