@@ -89,10 +89,11 @@
                             <a href="/" class="nav-link active" aria-current="page">홈</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link">공지사항</a>
+                            <a th:href="@{/}" class="nav-link">공지사항</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link">학습 피드백</a>
+                            <a href="/login" th:if="|${session.isEmpty()}|" class="nav-link">학습 피드백</a>
+                            <a th:if="|${!session.isEmpty()}|" th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link">학습 피드백</a>
                         </li>
                         <li>
                             <a href="#" class="nav-link">문의하기</a>

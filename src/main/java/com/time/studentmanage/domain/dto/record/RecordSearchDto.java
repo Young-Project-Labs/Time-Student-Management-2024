@@ -18,8 +18,6 @@ public class RecordSearchDto {
 
     private String content;
 
-    private Long teacherId;
-
     private Long studentId;
 
     private String studentName;

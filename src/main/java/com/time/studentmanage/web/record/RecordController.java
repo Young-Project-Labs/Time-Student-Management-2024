@@ -45,10 +45,7 @@ public class RecordController {
             return "redirect:/login";
         }
 
-        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
-            return "redirect:/";
-        }
+
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
         List<RecordRespDto> recordList = recordService.getStudentList(id);
@@ -72,11 +69,6 @@ public class RecordController {
             return "redirect:/login";
         }
 
-        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher teacher)) {
-            return "redirect:/";
-        }
-
         if (result.hasErrors()) {
             log.info("errors={}", result);
             List<RecordRespDto> recordList = recordService.getStudentList(studentId);
@@ -84,8 +76,6 @@ public class RecordController {
             model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
         }
-
-        recordSearchDto.setTeacherId(teacher.getId());
 
         StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
         List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDto);
