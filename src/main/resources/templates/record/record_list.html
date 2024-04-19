@@ -28,7 +28,7 @@
                aria-disabled="false" th:text="|피드백 작성하기|">피드백 작성하기
             </a>
 
-            <button class="btn btn-outline-info btn-sm" th:onclick="|location.href='@{/edit/{id}(id=${session.loginMember.id})}'|">
+            <button th:if="${!#strings.equals(session.loginMember.memberType, 'TEACHER')}" class="btn btn-outline-info btn-sm" th:onclick="|location.href='@{/edit/{id}(id=${session.loginMember.id})}'|">
                 <i class="fa-regular fa-user"></i>
                 <span th:text="|${recordSearchDto.studentName}님 정보수정|">정보수정</span>
             </button>
