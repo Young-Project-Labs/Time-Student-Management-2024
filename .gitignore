@@ -133,4 +133,7 @@ fabric.properties
 
 src/main/generated
 
+## custom ##
+application-secret.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all
