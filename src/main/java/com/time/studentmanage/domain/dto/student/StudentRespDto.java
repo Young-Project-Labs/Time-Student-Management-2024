@@ -33,6 +33,8 @@ public class StudentRespDto {
     @NotBlank
     @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
+    @NotBlank
+    private String provider; // 회원가입 유형 ex) KAKAO, GENERAL
     @NotNull
     private Integer grade;
     @NotNull

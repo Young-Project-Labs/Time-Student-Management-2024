@@ -28,7 +28,7 @@
         <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">로그인 실패</p>
     </div>
     <button type="submit" class="btn btn-primary">로그인</button>
-
+    <a th:href="${location}"><img src="/img/kakao_login.png" alt="카카오 로그인"></a>
 </form>
 <hr>
 <button type="button" class="btn btn-outline-primary ml-2" aria-describedby="joinHelp" onclick="location.href='/join'">회원 가입</button>
