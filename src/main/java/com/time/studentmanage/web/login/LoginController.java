@@ -4,13 +4,17 @@ import com.time.studentmanage.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
@@ -20,14 +24,24 @@ import java.util.Optional;
 public class LoginController {
     private final LoginService loginService;
 
+    @Value("${kakao.client_id}")
+    private String client_id;
+
+    @Value("${kakao.redirect_uri}")
+    private String redirect_uri;
+
+
     @GetMapping("/login")
-    public String loginPage(@ModelAttribute("loginFormDto") LoginFormDto form, HttpSession session) {
+    public String loginPage(@ModelAttribute("loginFormDto") LoginFormDto form, HttpSession session, Model model) {
         //세션이 있는 경우 진입X
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) != null) {
             log.info("sessionTest={}",session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).toString());
             return "redirect:/";
         }
-
+        //카카오 로그인 시 필요한 code 요청 API 주소 (code를 성공적으로 받으면, redirect_uri로)
+        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+client_id+"&redirect_uri="+redirect_uri;
+        log.info("location={}", location);
+        model.addAttribute("location", location);
         return "login/login_form";
     }
 

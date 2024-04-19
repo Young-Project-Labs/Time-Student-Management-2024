@@ -36,3 +36,7 @@ server:
     session:
       tracking-modes: cookie
 
+kakao:
+  client_id: {사용자 애플리케이션 REST API 키 삽입} # REST API 앱키
+  redirect_uri: http://localhost:8080/oauth/kakao
+
