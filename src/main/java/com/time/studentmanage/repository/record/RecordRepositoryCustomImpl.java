@@ -1,12 +1,19 @@
 package com.time.studentmanage.repository.record;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.time.studentmanage.domain.dto.record.QRecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.record.QRecord;
 import com.time.studentmanage.domain.record.Record;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,6 +30,34 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
 
     public RecordRepositoryCustomImpl(EntityManager em) {
         this.query = new JPAQueryFactory(em);
+    }
+
+    public Page<RecordRespDto> findAllPaging(Student student, Pageable pageable) {
+        QRecord record = QRecord.record;
+
+        List<RecordRespDto> fetch = query.select(
+                        new QRecordRespDto(record.id,
+                                record.content,
+                                record.teacher.name,
+                                record.student.name,
+                                record.status,
+                                record.createDate,
+                                record.modifiedDate)
+                )
+                .from(record)
+                .where(record.status.eq(RecordStatus.PUBLISHED)
+                        .and(record.student.eq(student)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> count = query.select(record.count())
+                .from(record)
+                .where(record.status.eq(RecordStatus.PUBLISHED)
+                        .and(record.student.eq(student)));
+
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     // 내용을 선택 + 검색어를 입력 + 날짜 기간을 선택
