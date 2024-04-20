@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository.record;
 
+import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.*;
@@ -14,11 +15,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.createRecord;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +67,51 @@ class RecordRepositoryTest {
 
         // then
         assertThat(findRecord.getContent()).isEqualTo(savedRecord.getContent());
+    }
+
+    @Test
+    public void createDummyRecordData(Student student, Teacher teacher) {
+        for (int i = 0; i < 10; i++) {
+            Record record = Record.builder()
+                    .student(student)
+                    .teacher(teacher)
+                    .content((i + 1) + "번 테스트 피드백 입니다.")
+                    .status(RecordStatus.PUBLISHED)
+                    .build();
+            record.addStudent(student);
+            record.addTeacher(teacher);
+
+            recordRepository.save(record);
+        }
+    }
+
+    @Test
+    void 페이징_처리_피드백_조회_테스트() {
+        //given
+        Student s = Student.builder()
+                .name("철수")
+                .userId("cs@time.com").password("1234")
+                .phoneNumber("010-1111-2222").schoolName("용호초등학교")
+                .classType(ClassType.ELEMENTARY).grade(1)
+                .memberType(MemberType.STUDENT).gender(GenderType.MALE)
+                .address(new Address("반림동", "현대 아파트", "102-1201"))
+                .attendanceStatus(AttendanceStatus.Y)
+                .build();
+        Teacher t = new Teacher("줄리아", "1234", "010-1212-3456", MemberType.TEACHER, Position.TEACHER, "julia@time.com", GenderType.FEMALE);
+
+        Student student = studentRepository.save(s);
+        Teacher teacher = teacherRepository.save(t);
+
+        createDummyRecordData(student, teacher);
+
+        //when
+        Pageable pageable = PageRequest.of(1, 8);
+        Page<RecordRespDto> result = recordRepository.findAllPaging(student, pageable);
+
+        //then
+        log.info("result={}", result);
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(2);
+
     }
 
     @Test
