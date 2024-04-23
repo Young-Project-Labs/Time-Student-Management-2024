@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: toast-editor-load}"></th:block>
+
+    <title>피드백 정보</title>
+</head>
+<body>
+<!-- 헤더 시작 -->
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
+            <span class="fs-4">타임 영어 전문 학원</span>
+        </a>
+
+        <!-- 아코디언 위에 버튼 추가 -->
+        <div class="d-flex justify-content-end mb-3">
+            <button id="toggleAccordion" class="btn btn-secondary btn-sm me-1">모두 펼치기/닫기</button>
+            <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
+               th:href="@{/record/create(studentId=${studentId})} " class="btn btn-primary btn-sm" role="button"
+               aria-disabled="false" th:text="|피드백 작성하기|">피드백 작성하기
+            </a>
+
+            <button th:if="${!#strings.equals(session.loginMember.memberType, 'TEACHER')}" class="btn btn-outline-info btn-sm" th:onclick="|location.href='@{/edit/{id}(id=${session.loginMember.id})}'|">
+                <i class="fa-regular fa-user"></i>
+                <span th:text="|${recordSearchDto.studentName}님 정보수정|">정보수정</span>
+            </button>
+
+        </div>
+    </header>
+</div>
+<!-- 헤더 끝 -->
+
+<div class="container">
+    <h3 class="text-center" th:text="|${record.studentName} 피드백|"></h3>
+    <h5 class="d-flex justify-content-end pb-2 mb-2 border-bottom" th:text="|작성자: ${record.teacherName}|">작성자</h5>
+
+    <div class="markdown-content pb-2 mb-2 border-bottom" th:text="${record.content}"></div>
+
+    <div class="d-flex justify-content-end">
+        <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
+           th:href="@{/record/update/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
+           class="btn btn-primary btn-sm mx-1" role="button" aria-disabled="false" th:text="수정하기">수정하기</a>
+        <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
+           class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+           th:text="삭제하기">삭제하기</a>
+
+        <!-- Modal 시작 -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">피드백 삭제</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <strong class="me-auto d-flex justify-content-center">해당 피드백을 삭제 하시겠습니까?</strong>
+                    </div>
+                    <div class="modal-footer d-flex flex-row justify-content-around">
+                        <!--삭제 확인 버튼 시작-->
+                        <div>
+                            <a th:href="@{/record/delete/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
+                               class="btn btn-danger btn-sm" role="button" aria-disabled="false" th:text="삭제">삭제</a>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+                                    th:text="취소"></button>
+                        </div>
+                        <!--삭제 확인 버튼 끝-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal 끝 -->
+
+    </div>
+</div>
+
+<script>
+    // 토스트 ui 뷰어 렌더링 함수
+    // 페이지 로드 시 실행되는 함수
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // 마크다운 내용을 표시할 모든 요소를 선택
+        document.querySelectorAll('.markdown-content').forEach((element) => {
+            // 요소 내부의 텍스트(마크다운 형식)를 가져옴
+            const markdown = element.textContent.trim();
+
+            // Toast UI Editor Viewer 인스턴스 생성
+            const viewer = new toastui.Editor.factory({
+                el: element, // 마크다운을 표시할 요소
+                viewer: true, // Viewer 모드 활성화
+                initialValue: markdown // 초기 표시할 마크다운 내용
+            });
+        });
+    });
+</script>
+</body>
+</html>
