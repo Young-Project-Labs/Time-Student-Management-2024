@@ -12,10 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -196,6 +193,7 @@ public class StudentService {
                 .collect(Collectors.toList());
         return resultDto;
     }
+
     //학생 패스워드 변경
     public void updatePwd(Long studentId, String password) {
         Student student = studentRepository.findById(studentId)
@@ -203,6 +201,7 @@ public class StudentService {
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));
     }
+
     //학생 전체목록
     public List<StudentRespDto> getAllStudent() {
         List<Student> studentList = studentRepository.findAll();
@@ -245,6 +244,7 @@ public class StudentService {
         Student studentPs = studentOp.get();
         studentPs.removeClassRoom();
     }
+
     //카카오 회원가입 여부 체크
     public Optional<Student> checkJoinKakaoStudent(String userId) {
         String provider = "KAKAO";
@@ -257,4 +257,10 @@ public class StudentService {
         Student saveStudent = studentRepository.save(kakaoSaveReqDto.toEntity());
         return saveStudent.getId();
     }
+
+    public Optional<Student> findId(FindIdDto findIdDto) {
+        Optional<Student> studentOP = studentRepository.findByNameAndEmail(findIdDto.getName(), findIdDto.getEmail());
+        return studentOP;
+    }
+    
 }

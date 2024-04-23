@@ -1,5 +1,6 @@
 package com.time.studentmanage.web.student;
 
+import com.time.studentmanage.domain.dto.student.FindIdDto;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -104,5 +106,27 @@ public class StudentController {
         // edit
         studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
         return "redirect:/";
+    }
+
+    @GetMapping("/student/find_id")
+    public String findIdForm(@ModelAttribute("findIdDto") FindIdDto findIdDto) {
+        return "/login/find_id_form";
+    }
+
+    @PostMapping("/student/find_id")
+    public String findId(@Validated @ModelAttribute("findIdDto") FindIdDto findIdDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("findIdDto", findIdDto);
+            return "/login/find_id_form";
+        }
+
+        Optional<Student> findStudent = studentService.findId(findIdDto);
+        if (findStudent.isPresent()) {
+            //이름 & 이메일로 조회 했을 때 존재하는 경우 아이디를 리턴한다.
+            model.addAttribute("resultId", findStudent.get().getUserId());
+        } else {
+            model.addAttribute("resultId", "조회 결과가 없습니다.");
+        }
+        return "/login/find_id_result";
     }
 }
