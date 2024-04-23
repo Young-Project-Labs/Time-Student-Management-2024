@@ -13,6 +13,9 @@ import com.time.studentmanage.repository.teacher.TeacherRepository;
 import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,6 +119,7 @@ public class RecordService {
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setStudentName(r.getStudent().getName());
         recordRespDTO.setContent(r.getContent());
+        recordRespDTO.setTeacherName(r.getTeacher().getName());
         return recordRespDTO;
     }
 
@@ -139,6 +143,30 @@ public class RecordService {
         }
 
         return respList;
+    }
+
+    /**
+     * 기존 페이징 처리가 되지 않고 학생의 모든 피드백을 조회하던 메서드를
+     * queryDSL, PageImpl을 사용하여 페이징 처리
+     *
+     * @param studentId
+     * @param page 페이징 시작 number
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Page<RecordRespDto> getAllStudentRecord(Long studentId, int page) {
+        Optional<Student> studentOP = studentRepository.findById(studentId);
+
+        if (!studentOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 학생 정보입니다.");
+        }
+
+        Student studentPS = studentOP.get();
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<RecordRespDto> pageList = recordRepository.findAllPaging(studentPS, pageable);
+
+        return pageList;
     }
 
     @Transactional(readOnly = true)
