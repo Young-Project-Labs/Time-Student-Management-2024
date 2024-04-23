@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +38,9 @@ public class RecordController {
     }
 
     @GetMapping("/record/{studentId}")
-    public String records(@PathVariable("studentId") Long id, HttpServletRequest request, Model model) {
+    public String records(@PathVariable("studentId") Long id,
+                          @RequestParam(value = "page", defaultValue = "0") int page,
+                          HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -45,22 +48,24 @@ public class RecordController {
             return "redirect:/login";
         }
 
+        // TODO 페이징 처리 메서드 적용해서 페이징 처리하기 2024 04 19
+        Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
 
-
-        StudentRespDto studentRespDto = studentService.getStudentInfo(id);
-        List<RecordRespDto> recordList = recordService.getStudentList(id);
+//        StudentRespDto studentRespDto = studentService.getStudentInfo(id);
 
         RecordSearchDto recordSearchDto = new RecordSearchDto();
-        recordSearchDto.setStudentName(studentRespDto.getName());
+//        recordSearchDto.setStudentName(studentRespDto.getName());
 
+        model.addAttribute("pagingResult", pagingResult);
         model.addAttribute("recordSearchDto", recordSearchDto);
-        model.addAttribute("recordList", recordList);
 
         return "record/record_list";
     }
 
     @PostMapping("/record/{studentId}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result, @PathVariable("studentId") Long studentId, HttpServletRequest request, Model model) {
+    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result,
+                                @PathVariable("studentId") Long studentId, @RequestParam(value = "page", defaultValue = "0") int page,
+                                HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
@@ -71,20 +76,35 @@ public class RecordController {
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
-            model.addAttribute("recordList", recordList);
+//            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
+            Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(studentId, page);
+            model.addAttribute("pagingResult", pagingResult);
             model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
         }
 
-        StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
+//        StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
         List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDto);
+        Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(studentId, page);
 
-        model.addAttribute("recordList", recordList);
-        model.addAttribute("studentName", studentRespDto.getName());
+//        model.addAttribute("recordList", recordList);
+//        model.addAttribute("studentName", studentRespDto.getName());
+        model.addAttribute("pagingResult", pagingResult);
         model.addAttribute("recordSearchDto", recordSearchDto);
 
         return "record/record_list";
+    }
+
+    @GetMapping("/record/detail/{id}")
+    public String showRecordDetail(@PathVariable("id") Long recordId,
+                                   @RequestParam("studentId") Long studentId,
+                                   Model model) {
+
+        RecordRespDto record = recordService.getRecord(recordId);
+
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("record", record);
+        return "record/record_detail";
     }
 
     @GetMapping("/record/create")
