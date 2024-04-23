@@ -40,6 +40,7 @@ public class TestUtil {
                 .name("철수")
                 .userId("cs@time.com").password("1234")
                 .phoneNumber("010-1111-2222").schoolName("용호초등학교")
+                .email("test@naver.com")
                 .classType(ClassType.ELEMENTARY).grade(1)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
                 .address(new Address("반림동", "현대 아파트", "102-1201"))
@@ -49,6 +50,7 @@ public class TestUtil {
         Student student2 = Student.builder()
                 .name("진진진")
                 .userId("jjj@time.com").password("1234")
+                .email("test1@naver.com")
                 .phoneNumber("010-2222-3333").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(6)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -59,6 +61,7 @@ public class TestUtil {
         Student student3 = Student.builder()
                 .name("노진구")
                 .userId("njk@time.com").password("1234")
+                .email("test2@naver.com")
                 .phoneNumber("010-4444-5555").schoolName("용호중학교")
                 .classType(ClassType.MIDDLE).grade(3)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -69,6 +72,7 @@ public class TestUtil {
         Student student4 = Student.builder()
                 .name("짱구")
                 .userId("jg@time.com").password("1234")
+                .email("test3@naver.com")
                 .phoneNumber("010-1111-2222").schoolName("반림중학교")
                 .classType(ClassType.MIDDLE).grade(2)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -79,6 +83,7 @@ public class TestUtil {
         Student student5 = Student.builder()
                 .name("뚱이")
                 .userId("star@time.com").password("1234")
+                .email("test4@naver.com")
                 .phoneNumber("010-1111-2222").schoolName("용호고등학교")
                 .classType(ClassType.HIGH).grade(3)
                 .memberType(MemberType.STUDENT).gender(GenderType.MALE)
@@ -111,7 +116,7 @@ public class TestUtil {
     }
 
     public static StudentSaveReqDto createStudentDto() {
-        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","철수어머님","010-9999-9999","용호초등학교",1,AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
+        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","철수어머님","010-9999-9999","용호초등학교","test@naver.com",1,AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
 
         return saveReqDto;
     }

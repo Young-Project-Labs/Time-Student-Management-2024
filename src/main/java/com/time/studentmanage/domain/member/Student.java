@@ -38,6 +38,8 @@ public class Student extends BaseMemberEntity {
     private LocalDateTime quitDate;
     private String parentName;
     private String parentPhoneNumber;
+    @Column(unique = true)
+    private String email;
 
     @Column(length = 100) // provider (oauth login 구분)
     private String provider;
@@ -70,7 +72,7 @@ public class Student extends BaseMemberEntity {
 
 
     @Builder(toBuilder = true)
-    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, String provider) {
+    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, String provider, String email) {
         this.id = id;
         this.name = name;
         this.userId = userId;
@@ -82,6 +84,7 @@ public class Student extends BaseMemberEntity {
         this.quitDate = quitDate;
         this.parentName = parentName;
         this.parentPhoneNumber = parentPhoneNumber;
+        this.email = email;
         this.provider = provider;
         this.memberType = memberType;
         this.gender = gender;
