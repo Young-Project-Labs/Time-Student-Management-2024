@@ -10,8 +10,8 @@
 <form action="/login" th:object="${loginFormDto}" method="post">
     <div class="d-flex flex-column justify-content-center mb-3">
         <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-label" for="exampleCheck1">아이디 저장</label>
+            <input type="checkbox" class="form-check-input" id="idSaveCheck">
+            <label class="form-label" for="idSaveCheck">아이디 저장</label>
         </div>
         <label for="loginId" class="form-check-label mb-1">아이디</label>
         <input type="text" class="form-control" id="loginId" placeholder="아이디를 입력하세요." th:field="*{loginId}" th:errorclass="field-error">
@@ -32,8 +32,68 @@
 </form>
 <hr>
 <button type="button" class="btn btn-outline-primary ml-2" aria-describedby="joinHelp" onclick="location.href='/join'">회원 가입</button>
-<button type="button" class="btn btn-outline-primary ml-2">아이디/비밀번호 찾기</button>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/find_id'">아이디 찾기</button>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/find_pwd'">비밀번호 찾기</button>
 <div id="joinHelp" class="form-text">처음 온 학생들은 회원 가입을 먼저 진행 해주세요.</div>
+
+<script>
+    // 쿠키 저장하기
+    function setCookie(cookieName, value, exdays) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var cookieValue = escape(value)
+                + ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
+        document.cookie = cookieName + "=" + cookieValue;
+    }
+
+    // 쿠키 삭제
+    function deleteCookie(cookieName) {
+        var expireDate = new Date();
+        expireDate.setDate(expireDate.getDate() - 1);
+        document.cookie = cookieName + "= " + "; expires="
+                + expireDate.toGMTString();
+    }
+
+    // 쿠키 가져오기
+    function getCookie(cookieName) {
+        cookieName = cookieName + '=';
+        var cookieData = document.cookie;
+        var start = cookieData.indexOf(cookieName);
+        var cookieValue = '';
+        if (start != -1) { // 쿠키가 존재하면
+            start += cookieName.length;
+            var end = cookieData.indexOf(';', start);
+            if (end == -1) // 쿠키 값의 마지막 위치 인덱스 번호 설정
+                end = cookieData.length;
+            console.log("end위치  : " + end);
+            cookieValue = cookieData.substring(start, end);
+        }
+        return unescape(cookieValue);
+    }
+
+    $(document).ready(function() {
+        var key = getCookie("key");
+        $("#loginId").val(key);
+
+        if($("#loginId").val() != ""){
+            $("#idSaveCheck").attr("checked", true);
+        }
+
+        $("#idSaveCheck").change(function(){
+            if($("#idSaveCheck").is(":checked")){
+                setCookie("key", $("#loginId").val(), 7);
+            }else{
+                deleteCookie("key");
+            }
+        });
+
+        $("#loginId").keyup(function(){
+            if($("#idSaveCheck").is(":checked")){
+                setCookie("key", $("#loginId").val(), 7);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
