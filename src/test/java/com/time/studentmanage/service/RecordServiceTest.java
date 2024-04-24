@@ -18,11 +18,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -335,14 +340,18 @@ class RecordServiceTest {
         recordSearchDTO.setDates("2024/03/21 - 2024/03/27");
         recordSearchDTO.setContent("hello");
 
+        RecordRespDto recordRespDto2 = new RecordRespDto(record2.getId(), record2.getContent(), record2.getTeacher().getName(), record2.getStudent().getName(), record2.getStatus(), record2.getCreateDate(), record2.getModifiedDate());
+        RecordRespDto recordRespDto1 = new RecordRespDto(record1.getId(), record1.getContent(), record1.getTeacher().getName(), record1.getStudent().getName(), record1.getStatus(), record1.getCreateDate(), record1.getModifiedDate());
+
+        Pageable pageable = PageRequest.of(0, 10);
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
-        when(recordRepository.findAllByContentSearch(any(), anyString(), any(), any())).thenReturn(List.of(record2, record1));
+        when(recordRepository.findAllByContentSearch(any(), anyString(), any(), any(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(recordRespDto2, recordRespDto1), pageable, 2));
 
         //when
-        List<RecordRespDto> result = recordService.getFilteredResults(recordSearchDTO);
+        Page<RecordRespDto> result = recordService.getFilteredResults(recordSearchDTO, 0);
 
         //then
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getCreateDate()).isEqualTo(record2.getCreateDate());
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(2);
+        assertThat(result.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(record2.getCreateDate());
     }
 }

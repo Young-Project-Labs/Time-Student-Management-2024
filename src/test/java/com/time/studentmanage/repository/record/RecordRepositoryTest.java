@@ -1,11 +1,11 @@
 package com.time.studentmanage.repository.record;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
-import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.*;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +69,6 @@ class RecordRepositoryTest {
         assertThat(findRecord.getContent()).isEqualTo(savedRecord.getContent());
     }
 
-    @Test
     public void createDummyRecordData(Student student, Teacher teacher) {
         for (int i = 0; i < 10; i++) {
             Record record = Record.builder()
@@ -153,19 +152,18 @@ class RecordRepositoryTest {
         recordRepository.save(record3);
 
         // when
+        Pageable pageable = PageRequest.of(0, 8);
         List<Record> result = recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, s);
-        List<Record> filteredResult1 = recordRepository.findAllByContentSearch(s, "나다", null, null);
-        List<Record> filteredResult2 = recordRepository.findAllByContentSearch(s, "차", null, null);
+        Page<RecordRespDto> filteredResult1 = recordRepository.findAllByContentSearch(s, "나다", null, null, pageable);
+        Page<RecordRespDto> filteredResult2 = recordRepository.findAllByContentSearch(s, "차", null, null, pageable);
 
         // then
         assertThat(result.size()).isEqualTo(3);
+        assertThat(filteredResult1.get().collect(Collectors.toList()).size()).isEqualTo(1);
+        assertThat(filteredResult1.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record1.getContent());
 
-        assertThat(filteredResult1.size()).isEqualTo(1);
-        assertThat(filteredResult1.get(0).getContent()).isEqualTo(record1.getContent());
-
-        assertThat(filteredResult2.size()).isEqualTo(1);
-        assertThat(filteredResult2.get(0).getContent()).isEqualTo(record3.getContent());
-
+        assertThat(filteredResult2.get().collect(Collectors.toList()).size()).isEqualTo(1);
+        assertThat(filteredResult2.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record3.getContent());
     }
 
     @Test
@@ -231,15 +229,15 @@ class RecordRepositoryTest {
         recordRepository.save(record5);
 
         //when
-        List<Record> result1 = recordRepository.findAllByTeacherNameSearch(s, t1.getName(), null, null);
-        List<Record> result2 = recordRepository.findAllByTeacherNameSearch(s, t3.getName(), null, null);
+        Pageable pageable = PageRequest.of(0, 8);
+        Page<RecordRespDto> result1 = recordRepository.findAllByTeacherNameSearch(s, t1.getName(), null, null, pageable);
+        Page<RecordRespDto> result2 = recordRepository.findAllByTeacherNameSearch(s, t3.getName(), null, null, pageable);
 
         //then
-        assertThat(result1.size()).isEqualTo(2);
-        assertThat(result1.get(0).getTeacher().getName()).isEqualTo(t1.getName());
-        assertThat(result2.size()).isEqualTo(1);
-        assertThat(result2.get(0).getContent()).isEqualTo(record3.getContent());
-
+        assertThat(result1.get().collect(Collectors.toList()).size()).isEqualTo(2);
+        assertThat(result1.get().collect(Collectors.toList()).get(0).getTeacherName()).isEqualTo(t1.getName());
+        assertThat(result2.get().collect(Collectors.toList()).size()).isEqualTo(1);
+        assertThat(result2.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record3.getContent());
     }
 
     @Test
@@ -311,14 +309,16 @@ class RecordRepositoryTest {
         ReflectionTestUtils.setField(record5, "createDate", LocalDateTime.of(2024, 3, 25, 0, 0));
 
         //when
-        List<Record> result = recordRepository.findAllByContentSearch(s, null,
+        Pageable pageable = PageRequest.of(0, 8);
+        Page<RecordRespDto> result = recordRepository.findAllByContentSearch(s, null,
                 LocalDateTime.of(2024, 3, 1, 0, 0),
-                LocalDateTime.of(2024, 3, 31, 0, 0));
+                LocalDateTime.of(2024, 3, 31, 0, 0),
+                pageable);
 
         //then
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getCreateDate()).isEqualTo(LocalDateTime.of(2024, 3, 15, 23, 15));
-        assertThat(result.get(0).getContent()).isEqualTo(record4.getContent());
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(2);
+        assertThat(result.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(LocalDateTime.of(2024, 3, 15, 23, 15));
+        assertThat(result.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record4.getContent());
     }
 
     @Test
@@ -389,14 +389,16 @@ class RecordRepositoryTest {
         ReflectionTestUtils.setField(record5, "createDate", LocalDateTime.of(2024, 3, 25, 0, 0));
 
         //when
-        List<Record> result = recordRepository.findAllByContentSearch(s, "파하",
+        Pageable pageable = PageRequest.of(0, 8);
+        Page<RecordRespDto> result = recordRepository.findAllByContentSearch(s, "파하",
                 LocalDateTime.of(2024, 3, 1, 0, 0),
-                LocalDateTime.of(2024, 3, 31, 0, 0));
+                LocalDateTime.of(2024, 3, 31, 0, 0),
+                pageable);
 
         //then
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getContent()).isEqualTo("카타파하");
-        assertThat(result.get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(1);
+        assertThat(result.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record4.getContent());
+        assertThat(result.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
     }
 
     @Test
@@ -467,20 +469,24 @@ class RecordRepositoryTest {
         ReflectionTestUtils.setField(record5, "createDate", LocalDateTime.of(2024, 3, 25, 0, 0));
 
         //when
-        List<Record> resultJuliaJan = recordRepository.findAllByTeacherNameSearch(s, "줄리아",
+        Pageable pageable = PageRequest.of(0, 8);
+        Page<RecordRespDto> resultJuliaJan = recordRepository.findAllByTeacherNameSearch(s, "줄리아",
                 LocalDateTime.of(2024, 1, 1, 0, 0),
-                LocalDateTime.of(2024, 1, 31, 0, 0));
+                LocalDateTime.of(2024, 1, 31, 0, 0),
+                pageable);
 
-        List<Record> resultJuliaJanToMay = recordRepository.findAllByTeacherNameSearch(s, "줄리아",
+        Page<RecordRespDto> resultJuliaJanToMay = recordRepository.findAllByTeacherNameSearch(s, "줄리아",
                 LocalDateTime.of(2024, 1, 1, 0, 0),
-                LocalDateTime.of(2024, 5, 31, 0, 0));
+                LocalDateTime.of(2024, 5, 31, 0, 0),
+                pageable);
+
         //then
-        assertThat(resultJuliaJan.size()).isEqualTo(2);
-        assertThat(resultJuliaJan.get(0).getCreateDate()).isEqualTo(record2.getCreateDate());
+        assertThat(resultJuliaJan.get().collect(Collectors.toList()).size()).isEqualTo(2);
+        assertThat(resultJuliaJan.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(record2.getCreateDate());
 
-        assertThat(resultJuliaJanToMay.size()).isEqualTo(3);
-        assertThat(resultJuliaJanToMay.get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
-        assertThat(resultJuliaJanToMay.get(0).getContent()).isEqualTo(record4.getContent());
+        assertThat(resultJuliaJanToMay.get().collect(Collectors.toList()).size()).isEqualTo(3);
+        assertThat(resultJuliaJanToMay.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
+        assertThat(resultJuliaJanToMay.get().collect(Collectors.toList()).get(0).getContent()).isEqualTo(record4.getContent());
 
     }
 
@@ -552,13 +558,15 @@ class RecordRepositoryTest {
         ReflectionTestUtils.setField(record5, "createDate", LocalDateTime.of(2024, 3, 25, 0, 0));
 
         //when
-        List<Record> resultJanToMay = recordRepository.findAllByTeacherNameSearch(s, null,
+        Pageable pageable = PageRequest.of(0, 8);
+        Page<RecordRespDto> resultJanToMay = recordRepository.findAllByTeacherNameSearch(s, null,
                 LocalDateTime.of(2024, 1, 1, 0, 0),
-                LocalDateTime.of(2024, 5, 31, 0, 0));
+                LocalDateTime.of(2024, 5, 31, 0, 0),
+                pageable);
 
         //then
-        assertThat(resultJanToMay.size()).isEqualTo(5);
-        assertThat(resultJanToMay.get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
-        assertThat(resultJanToMay.get(4).getContent()).isEqualTo(record1.getContent());
+        assertThat(resultJanToMay.get().collect(Collectors.toList()).size()).isEqualTo(5);
+        assertThat(resultJanToMay.get().collect(Collectors.toList()).get(0).getCreateDate()).isEqualTo(record4.getCreateDate());
+        assertThat(resultJanToMay.get().collect(Collectors.toList()).get(4).getContent()).isEqualTo(record1.getContent());
     }
 }
