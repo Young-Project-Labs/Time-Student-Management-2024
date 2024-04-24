@@ -89,8 +89,8 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 .where(record.status.eq(RecordStatus.PUBLISHED)
                                 .and(record.student.eq(student)),
                         likeSearchWords(searchWords),
-                        betweenDateRange(fromDate, toDate))
-                .orderBy(record.createDate.desc());
+                        betweenDateRange(fromDate, toDate)
+                );
 
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
@@ -124,8 +124,8 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 .where(record.status.eq(RecordStatus.PUBLISHED)
                                 .and(record.student.eq(student)),
                         likeTeacherName(teacherName),
-                        betweenDateRange(fromDate, toDate))
-                .orderBy(record.createDate.desc());
+                        betweenDateRange(fromDate, toDate)
+                );
 
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);

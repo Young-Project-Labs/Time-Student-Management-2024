@@ -48,13 +48,8 @@ public class RecordController {
             return "redirect:/login";
         }
 
-        // TODO 페이징 처리 메서드 적용해서 페이징 처리하기 2024 04 19
         Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
-
-//        StudentRespDto studentRespDto = studentService.getStudentInfo(id);
-
         RecordSearchDto recordSearchDto = new RecordSearchDto();
-//        recordSearchDto.setStudentName(studentRespDto.getName());
 
         model.addAttribute("pagingResult", pagingResult);
         model.addAttribute("recordSearchDto", recordSearchDto);
@@ -76,19 +71,14 @@ public class RecordController {
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-//            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
             Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(studentId, page);
             model.addAttribute("pagingResult", pagingResult);
             model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
         }
 
-//        StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
-        List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDto);
-        Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(studentId, page);
+        Page<RecordRespDto> pagingResult = recordService.getFilteredResults(recordSearchDto, 0);
 
-//        model.addAttribute("recordList", recordList);
-//        model.addAttribute("studentName", studentRespDto.getName());
         model.addAttribute("pagingResult", pagingResult);
         model.addAttribute("recordSearchDto", recordSearchDto);
 
