@@ -190,8 +190,7 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecordRespDto> getFilteredResults(RecordSearchDto recordSearchDTO) {
-        List<RecordRespDto> respList = new ArrayList<>();
+    public Page<RecordRespDto> getFilteredResults(RecordSearchDto recordSearchDTO, int page) {
         LocalDateTime fromDate;
         LocalDateTime toDate;
 
@@ -213,25 +212,20 @@ public class RecordService {
             toDate = convertLocalDateTime(dates[1]);
         }
 
+        Pageable pageable = PageRequest.of(page, 10);
+
         switch (recordSearchDTO.getSearchType()) {
 
             case CONTENT -> {
-                List<Record> resultOfContentSearch = recordRepository.findAllByContentSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate);
-
-                respList = resultOfContentSearch.stream()
-                        .map(this::createRecordRespDTO)
-                        .collect(Collectors.toList());
+                Page<RecordRespDto> resultOfContentSearch = recordRepository.findAllByContentSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate, pageable);
+                return resultOfContentSearch;
             }
             case TEACHER_NAME -> {
-                List<Record> resultOfTeacherNameSearch = recordRepository.findAllByTeacherNameSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate);
-
-                respList = resultOfTeacherNameSearch.stream()
-                        .map(this::createRecordRespDTO)
-                        .collect(Collectors.toList());
+                Page<RecordRespDto> resultOfTeacherNameSearch = recordRepository.findAllByTeacherNameSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate, pageable);
+                return resultOfTeacherNameSearch;
             }
         }
-
-        return respList;
+        return null; // TODO null 처리를 어떻게 해야할까..?
     }
 
     private Student validateStudentInfo(Long targetId) {

@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface RecordRepositoryCustom {
 
-    List<Record> findAllByContentSearch(Student student, String searchWords,
-                                        LocalDateTime fromDate, LocalDateTime toDate);
+    Page<RecordRespDto> findAllByContentSearch(Student student, String searchWords,
+                                        LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
 
-    List<Record> findAllByTeacherNameSearch(Student student, String searchWords,
-                                            LocalDateTime fromDate, LocalDateTime toDate);
+    Page<RecordRespDto> findAllByTeacherNameSearch(Student student, String searchWords,
+                                            LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
 
     Page<RecordRespDto> findAllPaging(Student student, Pageable pageable);
 }
