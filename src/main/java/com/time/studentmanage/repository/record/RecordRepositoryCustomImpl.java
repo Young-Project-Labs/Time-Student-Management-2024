@@ -5,17 +5,18 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.time.studentmanage.domain.dto.record.QRecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.enums.RecordStatus;
+import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.record.QRecord;
-import com.time.studentmanage.domain.record.Record;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,43 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
 
     public RecordRepositoryCustomImpl(EntityManager em) {
         this.query = new JPAQueryFactory(em);
+    }
+
+    public Page<RecordRespDto> findAllBySearchEngine(Student student,
+                                                     SearchType searchType, String content,
+                                                     LocalDateTime fromDate, LocalDateTime toDate,
+                                                     Pageable pageable) {
+        QRecord record = QRecord.record;
+
+        List<RecordRespDto> fetch = query.select(
+                        new QRecordRespDto(
+                                record.id,
+                                record.content,
+                                record.teacher.name,
+                                record.student.name,
+                                record.status,
+                                record.createDate,
+                                record.modifiedDate)
+                )
+                .from(record)
+                .where(record.status.eq(RecordStatus.PUBLISHED)
+                                .and(record.student.eq(student)),
+                        likeSearchTypeAndContent(searchType, content)
+                )
+                .orderBy(record.createDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> count = query.select(record.count())
+                .from(record)
+                .where(record.status.eq(RecordStatus.PUBLISHED)
+                                .and(record.student.eq(student)),
+                        likeSearchTypeAndContent(searchType, content),
+                        betweenDateRange(fromDate, toDate)
+                );
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     public Page<RecordRespDto> findAllPaging(Student student, Pageable pageable) {
@@ -47,6 +85,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 .from(record)
                 .where(record.status.eq(RecordStatus.PUBLISHED)
                         .and(record.student.eq(student)))
+                .orderBy(record.createDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -55,78 +94,6 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 .from(record)
                 .where(record.status.eq(RecordStatus.PUBLISHED)
                         .and(record.student.eq(student)));
-
-
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
-
-    // 내용을 선택 + 검색어를 입력 + 날짜 기간을 선택
-    public Page<RecordRespDto> findAllByContentSearch(Student student, String searchWords,
-                                               LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
-        QRecord record = QRecord.record;
-
-        List<RecordRespDto> fetch = query.select(
-                new QRecordRespDto(
-                        record.id,
-                        record.content,
-                        record.teacher.name,
-                        record.student.name,
-                        record.status,
-                        record.createDate,
-                        record.modifiedDate
-                        )
-                )
-                .from(record)
-                .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeSearchWords(searchWords),
-                        betweenDateRange(fromDate, toDate))
-                .orderBy(record.createDate.desc())
-                .fetch();
-
-        JPAQuery<Long> count = query.select(record.count())
-                .from(record)
-                .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeSearchWords(searchWords),
-                        betweenDateRange(fromDate, toDate)
-                );
-
-
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
-    }
-
-    public Page<RecordRespDto> findAllByTeacherNameSearch(Student student, String teacherName,
-                                                   LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
-        QRecord record = QRecord.record;
-
-        List<RecordRespDto> fetch = query.select(
-                        new QRecordRespDto(
-                                record.id,
-                                record.content,
-                                record.teacher.name,
-                                record.student.name,
-                                record.status,
-                                record.createDate,
-                                record.modifiedDate
-                        )
-                )
-                .from(record)
-                .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeTeacherName(teacherName),
-                        betweenDateRange(fromDate, toDate))
-                .orderBy(record.createDate.desc())
-                .fetch();
-
-        JPAQuery<Long> count = query.select(record.count())
-                .from(record)
-                .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeTeacherName(teacherName),
-                        betweenDateRange(fromDate, toDate)
-                );
-
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
@@ -144,6 +111,19 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
 
         LocalDateTime toDatePlusOneDay = toDate.plusDays(1);
         return QRecord.record.createDate.goe(fromDate).and(QRecord.record.createDate.loe(toDatePlusOneDay));
+    }
+
+    private BooleanExpression likeSearchTypeAndContent(SearchType searchType, String content) {
+        if (!StringUtils.hasText(content)) {
+            return null;
+        }
+
+        if (searchType == SearchType.TEACHER_NAME) {
+            return QRecord.record.teacher.name.like("%" + content + "%");
+        }
+
+
+        return QRecord.record.content.like("%" + content + "%");
     }
 
     private BooleanExpression likeSearchWords(String searchWords) {
