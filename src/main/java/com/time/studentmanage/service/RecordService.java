@@ -198,6 +198,10 @@ public class RecordService {
             throw new IllegalArgumentException("검색 조건을 선택하지 않았습니다.");
         }
 
+        if (recordSearchDTO.getDates() == null || recordSearchDTO.getDates().equals("")) {
+            throw new IllegalArgumentException("날짜 조건이 선택되지 않았습니다.");
+        }
+
         Student studentPS = validateStudentInfo(recordSearchDTO.getStudentId());
 
         // "-"로 문자열을 나누고 양 옆 공백을 제거한 후 문자 배열로 변환
@@ -225,7 +229,7 @@ public class RecordService {
                 return resultOfTeacherNameSearch;
             }
         }
-        return null; // TODO null 처리를 어떻게 해야할까..?
+        return Page.empty(pageable); // 빈 페이지 반환
     }
 
     private Student validateStudentInfo(Long targetId) {

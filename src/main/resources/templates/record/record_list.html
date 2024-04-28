@@ -30,7 +30,7 @@
                     class="btn btn-outline-info btn-sm"
                     th:onclick="|location.href='@{/edit/{id}(id=${session.loginMember.id})}'|">
                 <i class="fa-regular fa-user"></i>
-<!--                <span th:text="|${recordSearchDto.studentName}님 정보수정|">정보수정</span>-->
+                <!--                <span th:text="|${recordSearchDto.studentName}님 정보수정|">정보수정</span>-->
             </button>
 
         </div>
@@ -41,7 +41,11 @@
 <div class="container d-flex flex-column p-1">
 
     <!--  내용 & 작성자 날짜별 필터링 검색 폼 시작  -->
-    <form th:action="@{/record/{studentId}(studentId=${studentId}, page=${pagingResult.number})}" th:object="${recordSearchDto}" method="post">
+    <form th:action="@{/record/{studentId}(studentId=${studentId}, page=${pagingResult.number})}"
+          th:object="${recordSearchDto}" method="get">
+
+        <input type="hidden" name="studentId" th:value="${studentId}">
+        <input type="hidden" name="page" value="${pagingResult.number}" />
 
         <!--점보트론 시작-->
         <div class="h-70 p-3 bg-body-tertiary border rounded-3">
@@ -80,69 +84,69 @@
                     </div>
                 </div>
 
-<!--                <input type="hidden" th:field="*{studentName}">-->
-
             </div>
         </div>
         <!--점보트론 끝-->
+        <!--  내용 & 작성자 날짜별 필터링 검색 폼 끝  -->
 
-    </form>
-    <!--  내용 & 작성자 날짜별 필터링 검색 폼 끝  -->
-
-    <!-- recordList가 비어있을 때 메시지 표시 시작-->
-    <div th:if="${pagingResult.isEmpty()}">
-        <div class="alert alert-warning text-center" role="alert" th:text="#{record.noResult}">
-            피드백이 없습니다.
+        <!-- recordList가 비어있을 때 메시지 표시 시작-->
+        <div th:if="${pagingResult.isEmpty()}">
+            <div class="alert alert-warning text-center" role="alert" th:text="#{record.noResult}">
+                피드백이 없습니다.
+            </div>
         </div>
-    </div>
-    <!-- recordList가 비어있을 때 메시지 표시 끝-->
+        <!-- recordList가 비어있을 때 메시지 표시 끝-->
 
-    <!-- 페이징 시작-->
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">피드백 번호</th>
-            <th scope="col">피드백 제목</th>
-            <th scope="col">작성자</th>
-        </tr>
-        </thead>
+        <div class="main-content">
+            <!-- 페이징 시작-->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">피드백 번호</th>
+                    <th scope="col">피드백 제목</th>
+                    <th scope="col">작성자</th>
+                </tr>
+                </thead>
 
-        <tbody>
-        <tr th:each="record, recordStat : ${pagingResult}">
-            <th th:text="${recordStat.count}" scope="row">피드백 번호</th>
-            <td>
-                <a th:href="@{/record/detail/{recordId}(recordId=${record.recordId}, studentId=${studentId})}"
-                   th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')} 작성 피드백|"></a>
-            </td>
-            <td th:text="|${record.teacherName}|">작성자</td>
-        </tr>
-        </tbody>
-    </table>
-    <!-- 페이징 끝-->
+                <tbody>
+                <tr th:each="record, recordStat : ${pagingResult}">
+                    <th th:text="${recordStat.count}" scope="row">피드백 번호</th>
+                    <td>
+                        <a th:href="@{/record/detail/{recordId}(recordId=${record.recordId}, studentId=${studentId})}"
+                           th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')} 작성 피드백|"></a>
+                    </td>
+                    <td th:text="|${record.teacherName}|">작성자</td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- 페이징 끝-->
 
-    <!--페이지네이션 시작-->
-    <nav th:if="${!pagingResult.isEmpty()}" aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=0|}">&laquo;</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=${pagingResult.number - 1}|}">Previous</a>
-            </li>
-            <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
-                th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
-                th:classappend="${page == pagingResult.number} ? 'active'">
-                <a th:text="${page + 1}" class="page-link" th:href="@{|?page=${page}|}">페이지 표시</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=${pagingResult.number + 1}|}">Next</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=${pagingResult.totalPages - 1}|}">&raquo;</a>
-            </li>
-        </ul>
-    </nav>
-    <!--페이지네이션 끝-->
+            <!--페이지네이션 시작-->
+            <nav th:if="${!pagingResult.isEmpty()}" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li  class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number - 1}" th:href="@{|?page=${pagingResult.number - 1}|}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                        th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                        th:classappend="${page == pagingResult.number} ? 'active'">
+                        <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}|}">페이지 표시</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number + 1}" th:href="@{|?page=${pagingResult.number + 1}|}">Next</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.totalPages - 1}" th:href="@{|?page=${pagingResult.totalPages - 1}|}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+            <!--페이지네이션 끝-->
+        </div>
+    </form>
+
 
 </div>
 
@@ -162,6 +166,17 @@
         });
     });
 
+    document.addEventListener("DOMContentLoaded", function() {
+        // 페이지네이션 링크에 클릭 이벤트 리스너 추가
+        document.querySelectorAll('.pagination .page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // 기본 이벤트를 차단
+                var page = this.getAttribute('data-page'); // 클릭된 링크에서 페이지 번호를 가져옴
+                document.querySelector('input[name="page"]').value = page; // hidden input 필드에 페이지 번호를 설정
+                document.querySelector('form').submit(); // 폼 제출
+            });
+        });
+    });
 </script>
 
 </body>

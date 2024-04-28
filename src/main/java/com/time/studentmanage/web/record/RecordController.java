@@ -39,6 +39,7 @@ public class RecordController {
 
     @GetMapping("/record/{studentId}")
     public String records(@PathVariable("studentId") Long id,
+                          @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
                           @RequestParam(value = "page", defaultValue = "0") int page,
                           HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -49,17 +50,14 @@ public class RecordController {
         }
 
         Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
-        RecordSearchDto recordSearchDto = new RecordSearchDto();
-
         model.addAttribute("pagingResult", pagingResult);
-        model.addAttribute("recordSearchDto", recordSearchDto);
-
         return "record/record_list";
     }
 
-    @PostMapping("/record/{studentId}")
+    // TODO api 컨트롤러로 대체될 예정
+    @PostMapping("/record/{id}")
     public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result,
-                                @PathVariable("studentId") Long studentId, @RequestParam(value = "page", defaultValue = "0") int page,
+                                @PathVariable("id") Long id, @RequestParam(value = "page", defaultValue = "0") int page,
                                 HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
@@ -71,7 +69,7 @@ public class RecordController {
 
         if (result.hasErrors()) {
             log.info("errors={}", result);
-            Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(studentId, page);
+            Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
             model.addAttribute("pagingResult", pagingResult);
             model.addAttribute("recordSearchDto", recordSearchDto);
             return "record/record_list";
