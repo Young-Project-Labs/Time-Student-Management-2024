@@ -30,7 +30,6 @@ import java.util.List;
 public class RecordController {
 
     private final RecordService recordService;
-    private final StudentService studentService;
 
     @ModelAttribute("searchTypes")
     public SearchType[] searchType() {
@@ -54,31 +53,23 @@ public class RecordController {
         return "record/record_list";
     }
 
-    // TODO api 컨트롤러로 대체될 예정
-    @PostMapping("/record/{id}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result,
-                                @PathVariable("id") Long id, @RequestParam(value = "page", defaultValue = "0") int page,
-                                HttpServletRequest request, Model model) {
+    /**
+     * 페이지네이션 업데이트 처리 및 검색 타입에 따른 검색 결과 처리
+     */
+    @GetMapping("/record/list/{studentId}")
+    public String showSearchedRecordResult(@PathVariable("studentId") Long studentId, // recordSearchDto의 studentId와 필드명이 같으면 스프링에서 자동으로 바인딩 해줌
+                                           @Validated @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
+                                           BindingResult bindingResult, Model model) {
 
-        HttpSession session = request.getSession(false);
-        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-
-        if (session == null || loginSession == null) {
-            return "redirect:/login";
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}",bindingResult.getFieldErrors());
         }
 
-        if (result.hasErrors()) {
-            log.info("errors={}", result);
-            Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
-            model.addAttribute("pagingResult", pagingResult);
-            model.addAttribute("recordSearchDto", recordSearchDto);
-            return "record/record_list";
-        }
+        log.info("studentId={}", studentId);
+        log.info("recordSearchDto={}", recordSearchDto);
 
-        Page<RecordRespDto> pagingResult = recordService.getFilteredResults(recordSearchDto, 0);
-
+        Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto);
         model.addAttribute("pagingResult", pagingResult);
-        model.addAttribute("recordSearchDto", recordSearchDto);
 
         return "record/record_list";
     }
