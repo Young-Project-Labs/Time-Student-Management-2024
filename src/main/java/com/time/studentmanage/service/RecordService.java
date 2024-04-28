@@ -190,9 +190,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecordRespDto> getFilteredResults(RecordSearchDto recordSearchDTO, int page) {
-        LocalDateTime fromDate;
-        LocalDateTime toDate;
+    public Page<RecordRespDto> getPaginationResultWithSearchCondition(RecordSearchDto recordSearchDTO) {
+        LocalDateTime[] convDate = new LocalDateTime[2];
 
         if (recordSearchDTO.getSearchType() == null) {
             throw new IllegalArgumentException("검색 조건을 선택하지 않았습니다.");
@@ -210,26 +209,20 @@ public class RecordService {
                 .toArray(String[]::new);
 
         if (dates[0].equals(dates[1])) {
-            fromDate = toDate = null;
+            convDate[0] = convDate[1] = null;
         } else {
-            fromDate = convertLocalDateTime(dates[0]);
-            toDate = convertLocalDateTime(dates[1]);
+            convDate[0] = convertLocalDateTime(dates[0]);
+            convDate[1] = convertLocalDateTime(dates[1]);
         }
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(recordSearchDTO.getPage(), 10);
 
-        switch (recordSearchDTO.getSearchType()) {
 
-            case CONTENT -> {
-                Page<RecordRespDto> resultOfContentSearch = recordRepository.findAllByContentSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate, pageable);
-                return resultOfContentSearch;
-            }
-            case TEACHER_NAME -> {
-                Page<RecordRespDto> resultOfTeacherNameSearch = recordRepository.findAllByTeacherNameSearch(studentPS, recordSearchDTO.getContent(), fromDate, toDate, pageable);
-                return resultOfTeacherNameSearch;
-            }
-        }
-        return Page.empty(pageable); // 빈 페이지 반환
+        Page<RecordRespDto> pagingResult = recordRepository.findAllBySearchEngine(
+                studentPS, recordSearchDTO.getSearchType(), recordSearchDTO.getContent(),
+                convDate[0], convDate[1], pageable);
+
+        return pagingResult;
     }
 
     private Student validateStudentInfo(Long targetId) {
