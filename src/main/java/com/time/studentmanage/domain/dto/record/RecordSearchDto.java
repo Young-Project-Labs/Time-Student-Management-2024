@@ -1,7 +1,9 @@
 package com.time.studentmanage.domain.dto.record;
 
 import com.time.studentmanage.domain.enums.SearchType;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,12 +18,12 @@ public class RecordSearchDto {
 
     @NotNull
     private SearchType searchType; // 검색 타입: [CONTENT, TEACHER_NAME]
-//    @NotBlank
+    @NotBlank
     private String content;
     @NotNull
     private Long studentId;
     @NotBlank
     private String dates;
-//    @NotNull
+    @Min(0)
     private int page;
 }
