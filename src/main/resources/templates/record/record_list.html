@@ -41,11 +41,11 @@
 <div class="container d-flex flex-column p-1">
 
     <!--  내용 & 작성자 날짜별 필터링 검색 폼 시작  -->
-    <form th:action="@{/record/{studentId}(studentId=${studentId}, page=${pagingResult.number})}"
+    <form th:action="@{/record/list/{studentId}(studentId=${studentId})}"
           th:object="${recordSearchDto}" method="get">
 
         <input type="hidden" name="studentId" th:value="${studentId}">
-        <input type="hidden" name="page" value="${pagingResult.number}" />
+        <input type="hidden" name="page" th:value="${pagingResult.number}" />
 
         <!--점보트론 시작-->
         <div class="h-70 p-3 bg-body-tertiary border rounded-3">
