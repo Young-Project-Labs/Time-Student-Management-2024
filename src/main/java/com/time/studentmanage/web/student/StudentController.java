@@ -1,9 +1,6 @@
 package com.time.studentmanage.web.student;
 
-import com.time.studentmanage.domain.dto.student.FindIdDto;
-import com.time.studentmanage.domain.dto.student.StudentRespDto;
-import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
-import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
@@ -108,12 +105,12 @@ public class StudentController {
         return "redirect:/";
     }
 
-    @GetMapping("/student/find_id")
-    public String findIdForm(@ModelAttribute("findIdDto") FindIdDto findIdDto) {
+    @GetMapping("/student/findId")
+    public String idAuthRequestForm(@ModelAttribute("findIdDto") FindIdDto findIdDto) {
         return "/login/find_id_form";
     }
 
-    @PostMapping("/student/find_id")
+    @GetMapping("/student/findId-result")
     public String findId(@Validated @ModelAttribute("findIdDto") FindIdDto findIdDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("findIdDto", findIdDto);
@@ -128,5 +125,10 @@ public class StudentController {
             model.addAttribute("resultId", "조회 결과가 없습니다.");
         }
         return "/login/find_id_result";
+    }
+
+    @GetMapping("/student/findPwd")
+    public String pwdAuthRequestForm() {
+        return "/login/pwd_change_form";
     }
 }

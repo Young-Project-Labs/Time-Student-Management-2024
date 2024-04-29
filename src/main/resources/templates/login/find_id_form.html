@@ -7,7 +7,8 @@
 </head>
 <body class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
 <div><h2>아이디 찾기</h2></div>
-<form action="/student/find_id" th:object="${findIdDto}" method="post" onsubmit="return valid()">
+<form action="/student/findId-result" th:object="${findIdDto}" method="get" onsubmit="return valid()">
+    <input type="hidden" id="searchType" value="USERID">
     <div class="d-flex flex-column justify-content-center mb-3">
         <label for="name" class="form-check-label mb-1">이름</label>
         <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요." th:field="*{name}" th:errorclass="field-error">
@@ -38,7 +39,7 @@
 </form>
 <hr>
 <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
-<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/find_pwd'">비밀번호 찾기</button>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findPwd'">비밀번호 찾기</button>
 </body>
 </html>
 
@@ -52,13 +53,16 @@
 
         let userName = $("#name").val();
         let userEmail = $("#email").val();
+        let searchType = $("#searchType").val();
+
 
         $.ajax({
             type: "POST",
             url: "/mailSend",
             data: {
                 "name": userName,
-                "email": userEmail
+                "email": userEmail,
+                "searchType": searchType
             },
             success: function (res) {
                 $("#result_emailSend").html('이메일 전송이 완료되었습니다.').css("color", "green");
