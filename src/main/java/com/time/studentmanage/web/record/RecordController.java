@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +30,6 @@ import java.util.List;
 public class RecordController {
 
     private final RecordService recordService;
-    private final StudentService studentService;
 
     @ModelAttribute("searchTypes")
     public SearchType[] searchType() {
@@ -37,7 +37,10 @@ public class RecordController {
     }
 
     @GetMapping("/record/{studentId}")
-    public String records(@PathVariable("studentId") Long id, HttpServletRequest request, Model model) {
+    public String records(@PathVariable("studentId") Long id,
+                          @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
+                          @RequestParam(value = "page", defaultValue = "0") int page,
+                          HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -45,56 +48,42 @@ public class RecordController {
             return "redirect:/login";
         }
 
-        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
-            return "redirect:/";
+        Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
+        model.addAttribute("pagingResult", pagingResult);
+        return "record/record_list";
+    }
+
+    /**
+     * 페이지네이션 업데이트 처리 및 검색 타입에 따른 검색 결과 처리
+     */
+    @GetMapping("/record/list/{studentId}")
+    public String showSearchedRecordResult(@PathVariable("studentId") Long studentId, // recordSearchDto의 studentId와 필드명이 같으면 스프링에서 자동으로 바인딩 해줌
+                                           @Validated @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
+                                           BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}",bindingResult.getFieldErrors());
         }
 
-        StudentRespDto studentRespDto = studentService.getStudentInfo(id);
-        List<RecordRespDto> recordList = recordService.getStudentList(id);
+        log.info("studentId={}", studentId);
+        log.info("recordSearchDto={}", recordSearchDto);
 
-        RecordSearchDto recordSearchDto = new RecordSearchDto();
-        recordSearchDto.setStudentName(studentRespDto.getName());
-
-        model.addAttribute("recordSearchDto", recordSearchDto);
-        model.addAttribute("recordList", recordList);
+        Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto);
+        model.addAttribute("pagingResult", pagingResult);
 
         return "record/record_list";
     }
 
-    @PostMapping("/record/{studentId}")
-    public String filterRecords(@Validated @ModelAttribute RecordSearchDto recordSearchDto, BindingResult result, @PathVariable("studentId") Long studentId, HttpServletRequest request, Model model) {
+    @GetMapping("/record/detail/{id}")
+    public String showRecordDetail(@PathVariable("id") Long recordId,
+                                   @RequestParam("studentId") Long studentId,
+                                   Model model) {
 
-        HttpSession session = request.getSession(false);
-        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        RecordRespDto record = recordService.getRecord(recordId);
 
-        if (session == null || loginSession == null) {
-            return "redirect:/login";
-        }
-
-        // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher teacher)) {
-            return "redirect:/";
-        }
-
-        if (result.hasErrors()) {
-            log.info("errors={}", result);
-            List<RecordRespDto> recordList = recordService.getStudentList(studentId);
-            model.addAttribute("recordList", recordList);
-            model.addAttribute("recordSearchDto", recordSearchDto);
-            return "record/record_list";
-        }
-
-        recordSearchDto.setTeacherId(teacher.getId());
-
-        StudentRespDto studentRespDto = studentService.getStudentInfo(studentId);
-        List<RecordRespDto> recordList = recordService.getFilteredResults(recordSearchDto);
-
-        model.addAttribute("recordList", recordList);
-        model.addAttribute("studentName", studentRespDto.getName());
-        model.addAttribute("recordSearchDto", recordSearchDto);
-
-        return "record/record_list";
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("record", record);
+        return "record/record_detail";
     }
 
     @GetMapping("/record/create")
