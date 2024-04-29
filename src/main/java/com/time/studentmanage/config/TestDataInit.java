@@ -29,7 +29,7 @@ public class TestDataInit {
         String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
                 .name("박영진")
-                .userId("drm@time.com").password(encodePassword)
+                .userId("pyjs2291").password(encodePassword)
                 .email("pyjs2291@naver.com")
                 .phoneNumber("010-1111-3311").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(2)
@@ -39,7 +39,7 @@ public class TestDataInit {
                 .build();
 
         Teacher teacher1 = Teacher.builder()
-                .name("고길동").email("kkd@time.com").password(encodePassword)
+                .name("고길동").email("kkd1234").password(encodePassword)
                 .email("ggd@time.com").phoneNumber("010-1212-3332")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.MALE)
                 .build();
@@ -179,7 +179,7 @@ public class TestDataInit {
 
         Student student5 = Student.builder()
                 .name("뚱이")
-                .userId("star@time.com").password(encodePassword)
+                .userId("star1234").password(encodePassword)
                 .email("test5@naver.com")
                 .parentName("뚱이어머니").parentPhoneNumber("010-2342-3344")
                 .phoneNumber("010-1111-2222").schoolName("용호고등학교")
