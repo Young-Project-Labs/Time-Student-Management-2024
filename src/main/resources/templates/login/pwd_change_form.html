@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<body>
+<div class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
+    <div><h2>비밀번호 찾기</h2></div>
+    <div id="findPwdHelp" class="form-text">이메일 인증 후 비밀번호 재설정을 할 수 있도록 합니다.<br> 아이디와 이메일을 입력한 후 인증을 시작하세요.</div>
+        <input type="hidden" id="searchType" value="PASSWORD">
+        <div class="d-flex flex-column justify-content-center mb-3">
+            <label for="userId" class="form-check-label mb-1">아이디</label>
+            <input type="text" class="form-control" id="userId" placeholder="아이디 입력하세요." >
+            <div><span id="userId_error"></span></div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-center mb-3">
+            <label for="email" class="form-check-label mb-1">이메일</label>
+            <div class="input-group">
+                <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요." >
+                <button class="btn btn-outline-primary ml-2" id="checkEmail" type="button">이메일 전송</button>
+            </div>
+            <div id="emailHelp" class="form-text">회원가입 때 작성했던 이메일을 작성해주세요. <br>아이디와 이메일이 일치하지 않으면 전송되지 않습니다.</div>
+            <div><span id="result_emailSend"></span></div>
+        </div>
+
+        <div id="verificationSection" style="display: none;">
+            <label for="authCode" class="form-check-label mb-1">인증번호</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="authCode" placeholder="인증번호를 입력하세요.">
+                <button class="btn btn-outline-success ml-2" id="verifyCode" type="button">인증 확인</button>
+            </div>
+            <div><span id="result_authCode"></span></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="pwdbtn">비밀번호 재설정</button>
+    </form>
+    <hr>
+    <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
+    <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findId'">아이디 찾기</button>
+</div>
+<!-- 패스워드 변경 모달 -->
+<div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePwdModalLabel">패스워드 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="password">패스워드</label>
+                        <input type="password" class="form-control" id="password" maxlength="20">
+                        <div id="passwordHelp" class="form-text">패스워드는 소문자,특수문자,숫자 조합으로 8~20자 내로 작성해주세요.</div>
+                        <div><span id="result_checkPassword"></span></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="password">패스워드 확인</label>
+                        <input type="password" class="form-control" id="checkPassword" maxlength="20">
+                        <div><span id="result_checkRePassword"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="changePwdBtn">변경하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+<!-- 이메일 전송 ajax -->
+<script>
+    $("#checkEmail").click(function () {
+        var button = this;
+        button.disabled = true; // 버튼을 비활성화시킵니다.
+        button.innerText = '전송 중'; // 사용자에게 상태를 알립니다.
+
+        let userId = $("#userId").val();
+        let userEmail = $("#email").val();
+        let searchType = $("#searchType").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/mailSend",
+            data: {
+                "userId": userId,
+                "email": userEmail,
+                "searchType": searchType
+            },
+            success: function (res) {
+                $("#userId_error").empty();
+                $("#result_emailSend").html('이메일 전송이 완료되었습니다.').css("color", "green");
+                // 메일 발송 성공 후 인증번호 입력 부분을 보여줍니다.
+                button.innerText = '이메일 보내기'; // 버튼 텍스트를 원래대로 돌립니다.
+                $("#verificationSection")
+                    .css("display", "flex")
+                    .addClass("d-flex flex-column justify-content-center mb-3");
+            },error: function(error) {
+                console.log(error)
+                // 영역을 초기화 한 후에 에러 메시지를 출력.
+                $("#userId_error").empty();
+                $("#result_emailSend").empty();
+
+                button.innerText = '이메일 전송'; // 사용자가 다시 시도할 수 있도록 버튼 텍스트를 변경합니다.
+                button.disabled = false; // 처리가 완료되면 버튼을 다시 활성화시킵니다.
+
+                if (error.responseJSON && Array.isArray(error.responseJSON)) {
+                    error.responseJSON.forEach(function(err) {
+                        // 각 오류에 대한 처리
+                        if (err.code == "userId") {
+                            $("#userId_error").html(err.message).css("color", "red");
+                        }
+                        if (err.code == "email") {
+                            // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
+                            $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
+                        }
+                    });
+                } else {
+
+                    if (error.responseJSON.code == "userId"){
+                        $("#userId_error").html(err.message).css("color", "red");
+                    }else if (error.responseJSON.code == "email"){
+                        // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
+                        $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
+                    }else{
+                        $("#result_emailSend").html(error.responseJSON.message).css("color", "red");
+                    }
+                }
+
+                submitCheckId = false;
+            }
+
+        })
+    })
+</script>
+<!-- 인증코드 검증 -->
+<script>
+    var submitAuthCode = false;
+
+    $("#verifyCode").click(function () {
+        let authCode = $("#authCode").val();
+        let userEmail = $("#email").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/mailAuthCheck",
+            data: {
+                "authCode": authCode,
+                "email": userEmail
+            },
+            success: function (res) {
+                $("#result_authCode").html(res).css("color", "green");
+                submitAuthCode = true;
+            },error: function(error){
+               // 인증 실패한 경우 처리
+                $("#result_authCode").html(error.responseJSON.message).css("color", "red");
+                $("#authCode").trigger("focus");
+                if (error.responseJSON && Array.isArray(error.responseJSON)) {
+                    error.responseJSON.forEach(function(err) {
+                        // 각 오류에 대한 처리
+                        if (err.code == "authCode") {
+                            $("#result_authCode").html(err.message).css("color", "red");
+                        }
+                        if (err.code == "email") {
+                            // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
+                            $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
+                        }
+                    });
+                } else {
+                    if (error.responseJSON.code == "authCode"){
+                        $("#result_authCode").html(err.message).css("color", "red");
+                    }else if (error.responseJSON.code == "email"){
+                        // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
+                        $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
+                    }
+                }
+                submitAuthCode = false;
+            }
+        })
+    })
+</script>
+<script>
+
+</script>
+
+<!-- 모달 요청 Listener -->
+<script>
+    document.getElementById('pwdbtn').addEventListener('click', function() {
+        alert("검사");
+        var isValid = true; // 유효성 검사 결과를 저장할 변수
+        if (submitAuthCode == false){
+            alert("이메일 인증이 진행되지 않았습니다. \n이메일 인증을 진행한 후 비밀번호 찾기를 진행 해주세요.");
+            $("#email").trigger("focus");
+            return false;
+        }else{
+            //메일 인증 성공한 경우 모달 창을 띄운다.
+            var myModal = new bootstrap.Modal(document.getElementById('changePwdModal'), {
+                 keyboard: false
+             });
+            myModal.show();
+        }
+    });
+</script>
+
+
+<!-- 비밀번호 변경 관련 JS-->
+<script>
+    let submitCheckPassword = false;
+    let submitCheckRePassword = false;
+    <!-- 패스워드 정규 표현식-->
+    document.getElementById("password").addEventListener("input", function() {
+
+        var passwordInput = this.value;
+        // 정규 표현식
+        var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+        // 길이 검증
+
+
+        // 패스워드 검증
+        if(reg.test(passwordInput)) {
+            $("#result_checkPassword").html("패스워드가 유효합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckPassword = true;
+        } else {
+             if (passwordInput.length < 8){
+                $("#result_checkPassword").html("패스워드 길이가 8자 미만입니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            }else{
+                $("#result_checkPassword").html("패스워드가 유효하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            }
+        }
+
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+        if(checkPasswordInput != ''){
+            // 패스워드 검증
+            if(passwordInput == checkPasswordInput) {
+                $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+                this.style.borderColor = "green";
+                submitCheckRePassword = true;
+            } else {
+                $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckRePassword = false;
+            }
+        }
+
+    });
+
+    <!-- 패스워드 재입력 확인 -->
+    document.getElementById("checkPassword").addEventListener("input", function() {
+        var passwordInput = document.getElementById("password").value;;
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+    ;
+        // 패스워드 검증
+        if(passwordInput == checkPasswordInput) {
+            $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckRePassword = true;
+        } else {
+            $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+            this.style.borderColor = "red";
+            submitCheckRePassword = false;
+        }
+    });
+
+    $(document).ready(function() {
+      $("#changePwdBtn").click(function() {
+          var isValid = true; // 유효성 검사 결과를 저장할 변수
+
+          if(submitCheckPassword == false){
+            alert('패스워드가 유효하지 않습니다.');
+            $("#password").focus();
+            isValid = false; // 유효하지 않으므로 false로 설정
+            return isValid;
+          }
+
+          if(submitCheckRePassword == false){
+            alert('패스워드 확인이 필요합니다.');
+            $("#checkPassword").focus();
+            isValid = false; // 유효하지 않으므로 false로 설정
+            return isValid;
+          }
+          // 유효성 검증 후 Ajax
+           $.ajax({
+            url: '/student/password',
+            type: 'PUT',
+            contentType: 'application/json',
+            data : JSON.stringify({
+                userId: $('#userId').val(),
+                password: $('#password').val()
+            }),
+            success: function(response){
+                alert(response);
+                // 메인 페이지로 리다이렉트
+                window.location.href = '/';
+
+            },error: function(error){
+                //비밀번호 변경에 실패
+                alert("비밀번호 변경에 실패했습니다.")
+                location.reload();
+            }
+        });
+      });
+    });
+</script>

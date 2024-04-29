@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 public class StudentUpdatePwdReqDto {
     @NotNull
-    private Long studentId;
+    private String userId;
     @NotBlank(message = "패스워드를 입력해주세요.")
     private String password;
 

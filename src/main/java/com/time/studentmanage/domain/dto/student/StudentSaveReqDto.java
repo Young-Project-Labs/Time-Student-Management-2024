@@ -33,6 +33,8 @@ public class StudentSaveReqDto {
     @NotBlank
     @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
+    @NotBlank
+    private String email;
     @NotNull
     @Min(1) @Max(6)
     private Integer grade;

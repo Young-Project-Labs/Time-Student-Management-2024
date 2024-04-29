@@ -28,8 +28,9 @@ public class TestDataInit {
         String password = "1234";
         String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
-                .name("도라미")
-                .userId("drm@time.com").password(encodePassword)
+                .name("박영진")
+                .userId("pyjs2291").password(encodePassword)
+                .email("pyjs2291@naver.com")
                 .phoneNumber("010-1111-3311").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(2)
                 .memberType(MemberType.STUDENT).gender(GenderType.FEMALE)
@@ -38,7 +39,7 @@ public class TestDataInit {
                 .build();
 
         Teacher teacher1 = Teacher.builder()
-                .name("고길동").email("kkd@time.com").password(encodePassword)
+                .name("고길동").email("kkd1234").password(encodePassword)
                 .email("ggd@time.com").phoneNumber("010-1212-3332")
                 .memberType(MemberType.TEACHER).position(Position.TEACHER).gender(GenderType.MALE)
                 .build();
@@ -128,6 +129,7 @@ public class TestDataInit {
         Student student1 = Student.builder()
                 .name("철수")
                 .userId("cs123456").password(encodePassword)
+                .email("test@naver.com")
                 .parentName("철수어머니").parentPhoneNumber("010-2222-3333")
                 .phoneNumber("010-1111-2222").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(1)
@@ -139,6 +141,7 @@ public class TestDataInit {
         Student student2 = Student.builder()
                 .name("진진진")
                 .userId("jjj123123").password(encodePassword)
+                .email("test2@naver.com")
                 .parentName("진진진아버님").parentPhoneNumber("010-2222-3344")
                 .phoneNumber("010-2222-3333")
                 .schoolName("용호초등학교")
@@ -153,6 +156,7 @@ public class TestDataInit {
         Student student3 = Student.builder()
                 .name("노진구")
                 .userId("njk1234").password(encodePassword)
+                .email("test3@naver.com")
                 .parentName("노진구어머니").parentPhoneNumber("010-3322-3344")
                 .phoneNumber("010-4444-5555").schoolName("용호중학교")
                 .classType(ClassType.MIDDLE).grade(3)
@@ -164,6 +168,7 @@ public class TestDataInit {
         Student student4 = Student.builder()
                 .name("짱구")
                 .userId("jg1234").password(encodePassword)
+                .email("test4@naver.com")
                 .parentName("짱구어머니").parentPhoneNumber("010-1111-3344")
                 .phoneNumber("010-1111-2222").schoolName("반림중학교")
                 .classType(ClassType.MIDDLE).grade(2)
@@ -174,7 +179,8 @@ public class TestDataInit {
 
         Student student5 = Student.builder()
                 .name("뚱이")
-                .userId("star@time.com").password(encodePassword)
+                .userId("star1234").password(encodePassword)
+                .email("test5@naver.com")
                 .parentName("뚱이어머니").parentPhoneNumber("010-2342-3344")
                 .phoneNumber("010-1111-2222").schoolName("용호고등학교")
                 .classType(ClassType.HIGH).grade(3)

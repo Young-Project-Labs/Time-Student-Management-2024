@@ -80,6 +80,15 @@
                 </div>
             </div>
 
+        <div class="row">
+            <div class="col-md-12 mb-3 form-check">
+                <label class="form-check-label mb-2" for="password">이메일</label>
+                <input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="field-error" maxlength="20">
+                <div id="emailHelp" class="form-text">이메일은 아이디/패스워드를 찾을 때 사용됩니다. 정확하게 입력해주세요.</div>
+                <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
+            </div>
+        </div>
+
             <div class="row">
                 <div class="col-md-6 mb-3 form-check">
                     <label class="form-check-label mb-2" for="classType">학교 단계</label>
@@ -252,7 +261,6 @@
                 $("#userId").trigger("focus");
                 submitCheckId = true;
             },error: function(error){
-                // 이미 존재하는 아이디
                 $("#result_checkId").html(error.responseJSON.message).css("color", "red");
                 $("#userId").trigger("focus");
                 submitCheckId = false;

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+</head>
+<body class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
+    <h2>조회 결과</h2>
+    <div class="d-flex flex-column justify-content-center mb-3">
+        <span th:text="*{resultId}"></span>
+    </div>
+    <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findId'">아이디 다시 찾기</button>
+<hr>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findPwd'">비밀번호 찾기</button>
+</body>
+</html>
