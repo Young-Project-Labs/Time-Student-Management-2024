@@ -195,8 +195,8 @@ public class StudentService {
     }
 
     //학생 패스워드 변경
-    public void updatePwd(Long studentId, String password) {
-        Student student = studentRepository.findById(studentId)
+    public void updatePwd(String userId, String password) {
+        Student student = studentRepository.findByUserId(userId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 ID입니다."));
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));

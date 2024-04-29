@@ -28,12 +28,12 @@ public class StudentApiController {
         return ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
 
-    //패스워드 변경
+    //패스워드 변경(학생 정보 창에서 변경)
     @PutMapping("/student/password")
     public ResponseEntity<String> changePassword(@RequestBody @Validated StudentUpdatePwdReqDto updatePwdReqDto, HttpSession session) {
         log.info("updatePwdReqDto={}", updatePwdReqDto);
 
-        studentService.updatePwd(updatePwdReqDto.getStudentId(), updatePwdReqDto.getPassword());
+        studentService.updatePwd(updatePwdReqDto.getUserId(), updatePwdReqDto.getPassword());
 
         //비밀번호 변경이 성공적으로 처리 되면 세션을 제거
         session.invalidate();
