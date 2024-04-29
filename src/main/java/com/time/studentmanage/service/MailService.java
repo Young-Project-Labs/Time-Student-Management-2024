@@ -1,6 +1,8 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.config.RedisUtil;
+import com.time.studentmanage.domain.dto.student.MailSendReqDto;
+import com.time.studentmanage.domain.enums.MailSearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
@@ -61,25 +63,33 @@ public class MailService {
     }
 
     //메일 전송
-    public void sendCodeToMail(String name, String toEmail) {
-        //이메일 전송 전 DB에 등록된 이메일인지 검증한다. (학생, 선생 구별)
-        if (toEmail.contains("@time.com")) {
-            Optional<Teacher> teacherOP = teacherRepository.findByNameAndEmail(name, toEmail);
-            if (!teacherOP.isPresent()) {
-                throw new DataNotFoundException("존재하지 않는 이메일입니다.<br> 이름과 이메일을 확인해주세요.");
-            }
-        } else {
-            Optional<Student> studentOP = studentRepository.findByNameAndEmail(name, toEmail);
-            if (!studentOP.isPresent()) {
-                throw new DataNotFoundException("존재하지 않는 이메일입니다.<br> 이름과 이메일을 확인해주세요.");
-            }
+    public void sendCodeToMail(MailSendReqDto mailSendReqDto) {
+        String email = mailSendReqDto.getEmail();
+        String userId = mailSendReqDto.getUserId();
+        String name = mailSendReqDto.getName();
+        //빈 Optional로 선언
+        Optional<Student> studentOP = Optional.empty();
+
+        /**
+         *  메일 전송 전 DB 확인 (2가지 분기문으로 파라미터에 들어가는 값이 다름.)
+         *  MailSearchType.USERID -> findByNameAndEmail
+         *  MailSearchType.PASSWORD -> findByUserIdAndEmail
+         */
+        if (mailSendReqDto.getSearchType().equals(MailSearchType.USERID)) {
+            studentOP = studentRepository.findByNameAndEmail(name, email);
+        } else if (mailSendReqDto.getSearchType().equals(MailSearchType.PASSWORD)) {
+            studentOP = studentRepository.findByUserIdAndEmail(userId, email);
+        }
+
+        if (!studentOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 이메일입니다. <br> 아이디와 이메일을 확인해주세요.");
         }
 
         String title = "TIME 영어학원 이메일 인증 번호입니다.";
         //인증 코드 생성
         String authCode = this.createCode();
         //이메일 전송
-        sendEmail(toEmail, title, authCode);
+        sendEmail(email, title, authCode);
     }
 
     //난수 생성
