@@ -47,6 +47,6 @@ public class HomeController {
         }
 
         // 세션이 없거나, 학생 및 선생님이 없는 경우 로그인 페이지로
-        return "redirect:/login";
+        return "home_student";
     }
 }

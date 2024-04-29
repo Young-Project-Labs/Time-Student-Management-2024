@@ -1,10 +1,10 @@
 package com.time.studentmanage.config;
 
-import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.*;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
@@ -20,7 +20,6 @@ public class TestDataInit {
     private final TeacherRepository teacherRepository;
     private final RecordRepository recordRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
 
 
     @PostConstruct
@@ -104,6 +103,22 @@ public class TestDataInit {
         recordRepository.save(record4);
         recordRepository.save(record5);
 
+        createDummyRecordData(student1, teacher1);
+    }
+
+    public void createDummyRecordData(Student student, Teacher teacher) {
+        for (int i = 0; i < 300; i++) {
+            Record record = Record.builder()
+                    .student(student)
+                    .teacher(teacher)
+                    .content((i + 1) + "번 테스트 피드백 입니다.")
+                    .status(RecordStatus.PUBLISHED)
+                    .build();
+            record.addStudent(student);
+            record.addTeacher(teacher);
+
+            recordRepository.save(record);
+        }
     }
 
     @PostConstruct

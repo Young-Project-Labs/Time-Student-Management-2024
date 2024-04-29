@@ -1,5 +1,6 @@
 package com.time.studentmanage.domain.dto.record;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class RecordRespDto {
     private LocalDateTime createDate;
     private LocalDateTime lastModifiedDate;
 
+    @QueryProjection
     public RecordRespDto(Long recordId, String content, String teacherName, String studentName, RecordStatus status, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
         this.recordId = recordId;
         this.content = content;

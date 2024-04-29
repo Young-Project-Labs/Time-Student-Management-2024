@@ -8,6 +8,19 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <style>
+        #carouselExampleIndicators {
+            width: 100%; /* 캐러셀의 너비를 고정값이나 비율로 설정합니다. */
+            height: 300px; /* 캐러셀의 높이를 원하는 대로 설정합니다. */
+            overflow: hidden; /* 캐러셀 크기 밖의 이미지가 보이지 않도록 설정합니다. */
+        }
+
+        .carousel-item img {
+            max-width: 100%; /* 이미지의 최대 너비를 100%로 설정 */
+            max-height: 300px; /* 이미지의 최대 높이를 500px로 설정 */
+            object-fit: cover; /* 이미지가 div에 맞게 조절되면서 비율을 유지 */
+        }
+    </style>
     <title>Document</title>
 </head>
 <body>
@@ -76,10 +89,11 @@
                             <a href="/" class="nav-link active" aria-current="page">홈</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link">공지사항</a>
+                            <a th:href="@{/}" class="nav-link">공지사항</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link">학습 피드백</a>
+                            <a href="/login" th:if="|${session.isEmpty()}|" class="nav-link">학습 피드백</a>
+                            <a th:if="|${!session.isEmpty()}|" th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link">학습 피드백</a>
                         </li>
                         <li>
                             <a href="#" class="nav-link">문의하기</a>
@@ -90,6 +104,37 @@
 
             <!-- 메인 컨텐츠 영역 (공지사항) -->
             <div class="col-md-9">
+
+                <!-- 메인 페이지 사진 시작 -->
+                <div id="carouselExampleIndicators" class="carousel carousel-dark slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/img/time_logo.jpg" class="d-block mx-auto" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/img/time_logo2.jpg" class="d-block mx-auto" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/img/logo_image.jpg" class="d-block mx-auto" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <!-- 메인 페이지 사진 끝 -->
+
+
                 <div class="p-4">
                     <h2>공지사항</h2>
                     <div class="list-group">
