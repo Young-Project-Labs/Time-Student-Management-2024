@@ -51,36 +51,36 @@ public class StudentApiController {
         return ResponseEntity.ok(new StudentSearchResult(studentList, null));
     }
 
-
-    @GetMapping("/search")
-    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "searchType", required = false) String searchType, @RequestParam(value = "content") String content) {
-
-        if (content.trim().equals("") || content == null) {
-            throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
-        }
-        //searchType 있는 경우 -> 학생 목록에서의 검색 로직
-        if (searchType != null) {
-            /**
-             * 학생 전체 목록(/student)에서 검색바 조회
-             * @param searchType -> name, parentName, schoolName
-             * @param keyword
-             * @return
-             */
-            log.info("searchStudent 메서드 searchType={}", searchType);
-            log.info("searchStudent 메서드 content={}", content);
-            if (content.trim().equals("") || content == null) {
-                throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
-            }
-
-            List<StudentRespDto> studentRespDtoList = studentService.getSearchedStudentBySearchType(searchType, content);
-            return ResponseEntity.ok(new StudentSearchResult(studentRespDtoList, null));
-        }
-
-        //searchType 없는 경우 -> 피드백 목록에서의 검색 로직
-        List<SearchStudentRespDto> studentList = studentService.getSearchedStudent(content);
-
-        return ResponseEntity.ok(new StudentSearchResult(studentList, null));
-    }
+// TODO: 컴파일 오류 떄문에 주석 처리 해놓음
+//    @GetMapping("/search")
+//    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "searchType", required = false) String searchType, @RequestParam(value = "content") String content) {
+//
+//        if (content.trim().equals("") || content == null) {
+//            throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
+//        }
+//        //searchType 있는 경우 -> 학생 목록에서의 검색 로직
+//        if (searchType != null) {
+//            /**
+//             * 학생 전체 목록(/student)에서 검색바 조회
+//             * @param searchType -> name, parentName, schoolName
+//             * @param keyword
+//             * @return
+//             */
+//            log.info("searchStudent 메서드 searchType={}", searchType);
+//            log.info("searchStudent 메서드 content={}", content);
+//            if (content.trim().equals("") || content == null) {
+//                throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
+//            }
+//
+//            List<StudentRespDto> studentRespDtoList = studentService.getSearchedStudentBySearchType(searchType, content);
+//            return ResponseEntity.ok(new StudentSearchResult(studentRespDtoList, null));
+//        }
+//
+//        //searchType 없는 경우 -> 피드백 목록에서의 검색 로직
+//        List<StudentSearchRespDto> studentList = studentService.getSearchedStudent(content);
+//
+//        return ResponseEntity.ok(new StudentSearchResult(studentList, null));
+//    }
 
     @GetMapping("/class/student/search")
     public ResponseEntity<StudentSearchResult> searchStudentNotIncludeClassRoom(@RequestParam(value = "content") String content) {

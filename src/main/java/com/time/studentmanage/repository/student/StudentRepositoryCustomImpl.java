@@ -34,6 +34,7 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         return result;
     }
 
+    // TODO: 학생 검색 통합 예정
     public List<Student> findAllBySearchEngine(String schoolName, String studentName) {
 
         QStudent student = QStudent.student;
@@ -61,6 +62,7 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         return result;
     }
 
+    // TODO: 학생 검색 통합 예정
     public List<Student> findAllBySearch(String searchType, String content) {
         QStudent student = QStudent.student;
         return query.selectFrom(student)

@@ -8,6 +8,9 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,36 +139,36 @@ public class StudentService {
         return resultDto;
     }
 
-    @Transactional(readOnly = true)
-    public List<SearchStudentRespDto> getSearchedStudent(String content) {
-
-        if (content.contains("+")) {
-            String[] contentBits = content.split("\\+");
-
-            String schoolName = contentBits[0].trim();
-            String studentName = contentBits[1].trim();
-
-            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
-                    studentName);
-
-            List<SearchStudentRespDto> resultDto = createRespDtoList(searchedBySchoolNameAndStudentNameList);
-
-            if (resultDto == null || resultDto.size() == 0) {
-                throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-            }
-
-            return resultDto;
-        }
-
-        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
-        List<SearchStudentRespDto> resultDto = createRespDtoList(searchedByStudentNameList);
-
-        if (resultDto == null || resultDto.size() == 0) {
-            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-        }
-
-        return resultDto;
-    }
+//    @Transactional(readOnly = true)
+//    public List<StudentSearchRespDto> getSearchedStudent(String content) {
+//
+//        if (content.contains("+")) {
+//            String[] contentBits = content.split("\\+");
+//
+//            String schoolName = contentBits[0].trim();
+//            String studentName = contentBits[1].trim();
+//
+//            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
+//                    studentName);
+//
+//            List<StudentSearchRespDto> resultDto = createRespDtoList(searchedBySchoolNameAndStudentNameList);
+//
+//            if (resultDto == null || resultDto.size() == 0) {
+//                throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+//            }
+//
+//            return resultDto;
+//        }
+//
+//        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
+//        List<StudentSearchRespDto> resultDto = createRespDtoList(searchedByStudentNameList);
+//
+//        if (resultDto == null || resultDto.size() == 0) {
+//            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+//        }
+//
+//        return resultDto;
+//    }
 
     /**
      * 학생 전체 목록(/student)에서 검색바 조회
@@ -187,12 +190,20 @@ public class StudentService {
 
     }
 
-    private List<SearchStudentRespDto> createRespDtoList(List<Student> targetList) {
-        List<SearchStudentRespDto> resultDto = targetList.stream()
-                .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
-                .collect(Collectors.toList());
-        return resultDto;
+    public Page<StudentSearchRespDto> getSearchedResult(StudentSearchReqDto studentSearchReqDto) {
+        Pageable pageable = PageRequest.of(studentSearchReqDto.getPage(), 10);
+
+        Page<StudentSearchRespDto> pagingResult = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
+
+        return pagingResult;
     }
+
+//    private List<StudentSearchRespDto> createRespDtoList(List<Student> targetList) {
+//        List<StudentSearchRespDto> resultDto = targetList.stream()
+//                .map(s -> new StudentSearchRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
+//                .collect(Collectors.toList());
+//        return resultDto;
+//    }
 
     //학생 패스워드 변경
     public void updatePwd(String userId, String password) {
