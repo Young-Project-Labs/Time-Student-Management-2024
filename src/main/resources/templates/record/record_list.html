@@ -45,7 +45,7 @@
           th:object="${recordSearchDto}" method="get">
 
         <input type="hidden" name="studentId" th:value="${studentId}">
-        <input type="hidden" name="page" th:value="${pagingResult.number}" />
+        <input type="hidden" name="page" th:value="${pagingResult.number}"/>
 
         <!--점보트론 시작-->
         <div class="h-70 p-3 bg-body-tertiary border rounded-3">
@@ -116,6 +116,7 @@
                            th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')} 작성 피드백|"></a>
                     </td>
                     <td th:text="|${record.teacherName}|">작성자</td>
+                <tr>
                 </tr>
                 </tbody>
             </table>
@@ -124,7 +125,7 @@
             <!--페이지네이션 시작-->
             <nav th:if="${!pagingResult.isEmpty()}" aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li  class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
                         <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
                     </li>
                     <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
