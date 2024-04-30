@@ -39,7 +39,7 @@
     </form>
     <hr>
     <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
-    <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findId'">아이디 찾기</button>
+    <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findid'">아이디 찾기</button>
 </div>
 <!-- 패스워드 변경 모달 -->
 <div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
@@ -197,7 +197,6 @@
 <!-- 모달 요청 Listener -->
 <script>
     document.getElementById('pwdbtn').addEventListener('click', function() {
-        alert("검사");
         var isValid = true; // 유효성 검사 결과를 저장할 변수
         if (submitAuthCode == false){
             alert("이메일 인증이 진행되지 않았습니다. \n이메일 인증을 진행한 후 비밀번호 찾기를 진행 해주세요.");

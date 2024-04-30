@@ -105,13 +105,26 @@ public class StudentController {
         return "redirect:/";
     }
 
-    @GetMapping("/student/findId")
-    public String idAuthRequestForm(@ModelAttribute("findIdDto") FindIdDto findIdDto) {
+    @GetMapping("/student/findid")
+    public String idAuthRequestForm(@ModelAttribute("findIdDto") FindIdDto findIdDto, HttpSession session) {
+        //세션이 있는 경우 접근 X
+        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        if (sessionObject != null) {
+            //홈으로 리턴.
+            return "redirect:/";
+        }
         return "/login/find_id_form";
     }
 
-    @GetMapping("/student/findId-result")
-    public String findId(@Validated @ModelAttribute("findIdDto") FindIdDto findIdDto, BindingResult bindingResult, Model model) {
+    @GetMapping("/student/findid/result")
+    public String findId(@Validated @ModelAttribute("findIdDto") FindIdDto findIdDto, BindingResult bindingResult, Model model, HttpSession session) {
+        //세션이 있는 경우 접근 X
+        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        if (sessionObject != null) {
+            //홈으로 리턴.
+            return "redirect:/";
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("findIdDto", findIdDto);
             return "/login/find_id_form";
@@ -127,8 +140,14 @@ public class StudentController {
         return "/login/find_id_result";
     }
 
-    @GetMapping("/student/findPwd")
-    public String pwdAuthRequestForm() {
+    @GetMapping("/student/findpwd")
+    public String pwdAuthRequestForm(HttpSession session) {
+        //세션이 있는 경우 접근 X
+        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        if (sessionObject != null) {
+            //홈으로 리턴.
+            return "redirect:/";
+        }
         return "/login/pwd_change_form";
     }
 }

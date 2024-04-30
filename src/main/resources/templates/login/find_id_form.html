@@ -7,7 +7,7 @@
 </head>
 <body class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
 <div><h2>아이디 찾기</h2></div>
-<form action="/student/findId-result" th:object="${findIdDto}" method="get" onsubmit="return valid()">
+<form action="/student/findid/result" th:object="${findIdDto}" method="get" onsubmit="return valid()">
     <input type="hidden" id="searchType" value="USERID">
     <div class="d-flex flex-column justify-content-center mb-3">
         <label for="name" class="form-check-label mb-1">이름</label>
@@ -39,7 +39,7 @@
 </form>
 <hr>
 <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
-<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findPwd'">비밀번호 찾기</button>
+<button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findpwd'">비밀번호 찾기</button>
 </body>
 </html>
 
@@ -65,6 +65,7 @@
                 "searchType": searchType
             },
             success: function (res) {
+                $("#name_error").empty();
                 $("#result_emailSend").html('이메일 전송이 완료되었습니다.').css("color", "green");
                 // 메일 발송 성공 후 인증번호 입력 부분을 보여줍니다.
                 button.innerText = '이메일 보내기'; // 버튼 텍스트를 원래대로 돌립니다.
