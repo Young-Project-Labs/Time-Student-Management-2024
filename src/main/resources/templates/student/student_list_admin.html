@@ -22,6 +22,8 @@
     </div>
 
   <form action="#" id="searchForm" th:action="@{/student/list}" method="get" th:object="${studentSearchReqDto}">
+    <input type="hidden" name="page" th:value="${pagingResult.number}"/>
+
     <div class="container">
       <div class="row justify-content-end">
           <div class="col-auto">
@@ -33,7 +35,7 @@
             <div class="input-group">
               <input type="text" class="form-control" id="content" th:field="*{content}" placeholder="검색">
               <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">검색</button>
+                <button type="submit" class="btn btn-primary" onclick="resetPage()">검색</button>
                 <button type="button" onclick="location.href = location.href;" class="btn btn-primary">초기화</button>
               </div>
             </div>
@@ -166,6 +168,22 @@
       //               $("#studentList").html(errorHtml);
       //           }
       //       });
+
+      document.addEventListener("DOMContentLoaded", function() {
+        // 페이지네이션 링크에 클릭 이벤트 리스너 추가
+        document.querySelectorAll('.pagination .page-link').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault(); // 기본 이벤트를 차단
+            var page = this.getAttribute('data-page'); // 클릭된 링크에서 페이지 번호를 가져옴
+            document.querySelector('input[name="page"]').value = page; // hidden input 필드에 페이지 번호를 설정
+            document.querySelector('form').submit(); // 폼 제출
+          });
+        });
+      });
+
+      function resetPage() {
+        document.querySelector('input[name="page"]').value = 0;
+      }
     </script>
 
 
