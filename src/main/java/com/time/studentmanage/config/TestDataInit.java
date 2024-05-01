@@ -124,7 +124,7 @@ public class TestDataInit {
 
     @PostConstruct
     public void initStudent() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             Student studentA = Student.builder()
                     .name("A초등학교 학생" + (i + 1))
                     .attendanceStatus(AttendanceStatus.Y)
