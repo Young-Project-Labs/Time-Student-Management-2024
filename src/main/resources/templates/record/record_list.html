@@ -30,7 +30,6 @@
                     class="btn btn-outline-info btn-sm"
                     th:onclick="|location.href='@{/edit/{id}(id=${session.loginMember.id})}'|">
                 <i class="fa-regular fa-user"></i>
-                <!--                <span th:text="|${recordSearchDto.studentName}님 정보수정|">정보수정</span>-->
             </button>
 
         </div>
@@ -52,10 +51,8 @@
             <!--검색 타입 라디오 버튼 시작-->
             <div class="d-flex flex-row">
                 <div th:each="type : ${searchTypes}" class="form-check form-check-inline">
-                    <input type="radio" th:value="${type.name()}" th:field="*{searchType}" th:errorclass="field-error"
-                           class="form-check-input">
-                    <label th:for="${#ids.prev('searchType')}" th:text="${type.description}"
-                           class="form-check-label">조건</label>
+                    <input type="radio" th:value="${type.name()}" th:field="*{searchType}" th:errorclass="field-error" class="form-check-input">
+                    <label th:for="${#ids.prev('searchType')}" th:text="${type.description}" class="form-check-label">조건</label>
                 </div>
 
                 <div th:class="field-error" th:errors="*{searchType}">타입 선택 오류</div>

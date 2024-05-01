@@ -38,16 +38,24 @@ public class StudentController {
         return filteredSearchTypes;
     }
 
-    /**
-     * 학생 목록
-     * - 선생 타입인 경우에만 접근할 수 있음.
-     * - 학생 정보 수정 및 삭제가 필요할 때
-     * - 학생 현황 파악에도 사용
-     * - 페이징 처리 필요
-     *
-     */
+    @GetMapping("/student")
+    public String goStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
+                                      HttpSession session, Model model) {
+        //학생이거나 혹은 세션이 없는 경우 접근 X
+        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
+            return "redirect:/";
+        }
+
+        Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);
+
+        model.addAttribute("studentSearchReqDto", studentSearchReqDto);
+        model.addAttribute("pagingResult", pagingResult);
+
+        return "student/student_list_admin";
+    }
+
     @GetMapping("/student/list")
-    public String goStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, BindingResult bindingResult,
+    public String updateStudentManagePage(@Validated({SearchCheck.class}) @ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, BindingResult bindingResult,
                                         HttpSession session, Model model) {
         //학생이거나 혹은 세션이 없는 경우 접근 X
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
@@ -59,6 +67,8 @@ public class StudentController {
         }
 
         Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);
+
+        model.addAttribute("studentSearchReqDto", studentSearchReqDto);
         model.addAttribute("pagingResult", pagingResult);
 
         return "student/student_list_admin";
