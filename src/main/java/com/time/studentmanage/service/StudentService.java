@@ -139,57 +139,7 @@ public class StudentService {
         return resultDto;
     }
 
-//    @Transactional(readOnly = true)
-//    public List<StudentSearchRespDto> getSearchedStudent(String content) {
-//
-//        if (content.contains("+")) {
-//            String[] contentBits = content.split("\\+");
-//
-//            String schoolName = contentBits[0].trim();
-//            String studentName = contentBits[1].trim();
-//
-//            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
-//                    studentName);
-//
-//            List<StudentSearchRespDto> resultDto = createRespDtoList(searchedBySchoolNameAndStudentNameList);
-//
-//            if (resultDto == null || resultDto.size() == 0) {
-//                throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-//            }
-//
-//            return resultDto;
-//        }
-//
-//        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
-//        List<StudentSearchRespDto> resultDto = createRespDtoList(searchedByStudentNameList);
-//
-//        if (resultDto == null || resultDto.size() == 0) {
-//            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-//        }
-//
-//        return resultDto;
-//    }
-
-    /**
-     * 학생 전체 목록(/student)에서 검색바 조회
-     * @param searchType -> name, parentName, schoolName
-     * @param content
-     * @return
-     */
-    public List<StudentRespDto> getSearchedStudentBySearchType(String searchType, String content) {
-        List<Student> searchedStudents = studentRepository.findAllBySearch(searchType, content);
-
-        List<StudentRespDto> resultDto = searchedStudents.stream()
-                .map(student -> new StudentRespDto(student))
-                .collect(Collectors.toList());
-
-        if (resultDto.isEmpty() || resultDto.size() == 0) {
-            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-        }
-        return resultDto;
-
-    }
-
+    @Transactional(readOnly = true)
     public Page<StudentSearchRespDto> getSearchedResult(StudentSearchReqDto studentSearchReqDto) {
         Pageable pageable = PageRequest.of(studentSearchReqDto.getPage(), 10);
 
@@ -198,13 +148,6 @@ public class StudentService {
         return pagingResult;
     }
 
-//    private List<StudentSearchRespDto> createRespDtoList(List<Student> targetList) {
-//        List<StudentSearchRespDto> resultDto = targetList.stream()
-//                .map(s -> new StudentSearchRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
-//                .collect(Collectors.toList());
-//        return resultDto;
-//    }
-
     //학생 패스워드 변경
     public void updatePwd(String userId, String password) {
         Student student = studentRepository.findByUserId(userId)
@@ -212,18 +155,6 @@ public class StudentService {
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));
     }
-
-    //학생 전체목록
-    public List<StudentRespDto> getAllStudent() {
-        List<Student> studentList = studentRepository.findAll();
-
-        List<StudentRespDto> studentRespDtoList = studentList.stream()
-                .map(student -> new StudentRespDto(student))
-                .collect(Collectors.toList());
-
-        return studentRespDtoList;
-    }
-
 
     public List<ClassStudentRespDto> getSearchedStudentNotIncludeClassRoom(String content) {
         List<Student> studentList = studentRepository.findAllBySearchEngineWithNameNotIncludeClass(content);

@@ -46,23 +46,14 @@ public class StudentController {
      * - 페이징 처리 필요
      *
      */
-    @GetMapping("/student")
-    public String student_list_admin(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
-                                     HttpSession session, Model model) {
+    @GetMapping("/student/list")
+    public String goStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, BindingResult bindingResult,
+                                        HttpSession session, Model model) {
         //학생이거나 혹은 세션이 없는 경우 접근 X
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
             return "redirect:/";
         }
 
-        List<StudentRespDto> studentList = studentService.getAllStudent();
-        model.addAttribute("studentList", studentList);
-
-        return "/student/student_list_admin";
-    }
-
-    @GetMapping("/student/list")
-    public String updatePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, BindingResult bindingResult,
-                             Model model) {
         if (bindingResult.hasErrors()) {
             return "student/student_list_admin";
         }
@@ -72,6 +63,7 @@ public class StudentController {
 
         return "student/student_list_admin";
     }
+
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("studentSaveReqDto") StudentSaveReqDto studentSaveReqDto, Model model) {
         return "/student/join_form";
