@@ -33,41 +33,17 @@ public class StudentController {
                         type == SearchType.SCHOOL_NAME ||
                         type == SearchType.PARENT_NAME)
                 .collect(Collectors.toList())
-                .toArray(new SearchType[0]);
+                .toArray(new SearchType[0]); // 배열 타입을 알려주기 위함
 
         return filteredSearchTypes;
     }
 
-    @GetMapping("/student")
-    public String goStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
-                                      HttpSession session, Model model) {
-        //학생이거나 혹은 세션이 없는 경우 접근 X
-        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
-            return "redirect:/";
-        }
-
-        Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);
-
-        model.addAttribute("studentSearchReqDto", studentSearchReqDto);
-        model.addAttribute("pagingResult", pagingResult);
-
-        return "student/student_list_admin";
-    }
-
     @GetMapping("/student/list")
-    public String updateStudentManagePage(@Validated({SearchCheck.class}) @ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, BindingResult bindingResult,
+    public String updateStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
                                         HttpSession session, Model model) {
         //학생이거나 혹은 세션이 없는 경우 접근 X
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
             return "redirect:/";
-        }
-
-        if (studentSearchReqDto.getPage() < 0) {
-            throw new IllegalArgumentException("잘못된 페이지 요청 입니다.");
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "student/student_list_admin";
         }
 
         Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);

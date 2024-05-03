@@ -15,7 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,6 +143,10 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public Page<StudentSearchRespDto> getSearchedResult(StudentSearchReqDto studentSearchReqDto) {
+        if (studentSearchReqDto.getPage() < 0) {
+            throw new IllegalArgumentException("잘못된 페이지 요청 입니다.");
+        }
+
         Pageable pageable = PageRequest.of(studentSearchReqDto.getPage(), 10);
 
         Page<StudentSearchRespDto> pagingResult = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
@@ -151,7 +157,7 @@ public class StudentService {
     //학생 패스워드 변경
     public void updatePwd(String userId, String password) {
         Student student = studentRepository.findByUserId(userId)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 ID입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다."));
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));
     }
@@ -204,5 +210,5 @@ public class StudentService {
         Optional<Student> studentOP = studentRepository.findByNameAndEmail(findIdDto.getName(), findIdDto.getEmail());
         return studentOP;
     }
-    
+
 }
