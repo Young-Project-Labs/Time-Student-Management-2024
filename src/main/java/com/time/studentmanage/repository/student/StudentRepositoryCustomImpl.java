@@ -80,20 +80,18 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
     }
 
     private BooleanExpression likeSearchTypeAndContent(SearchType searchType, String content) {
-        if (!StringUtils.hasText(content) || searchType == null) {
-            return null;
+        if (StringUtils.hasText(content) || searchType != null) {
+            switch (searchType) {
+                case STUDENT_NAME:
+                    return QStudent.student.name.like("%" + content + "%");
+                case SCHOOL_NAME:
+                    return QStudent.student.schoolName.like("%" + content + "%");
+                case PARENT_NAME:
+                    return QStudent.student.parentName.like("%" + content + "%");
+            }
         }
 
-        switch (searchType) {
-            case STUDENT_NAME:
-                break;
-            case SCHOOL_NAME:
-                return QStudent.student.schoolName.like("%" + content + "%");
-            case PARENT_NAME:
-                return QStudent.student.parentName.like("%" + content + "%");
-        }
-
-        return QStudent.student.name.like("%" + content + "%");
+        return null;
     }
 
     public List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName) {
