@@ -62,6 +62,10 @@ public class StudentController {
             return "redirect:/";
         }
 
+        if (studentSearchReqDto.getPage() < 0) {
+            throw new IllegalArgumentException("잘못된 페이지 요청 입니다.");
+        }
+
         if (bindingResult.hasErrors()) {
             return "student/student_list_admin";
         }
