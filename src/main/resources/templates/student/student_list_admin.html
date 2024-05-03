@@ -96,7 +96,35 @@
 </div>
 
 <!--페이지네이션 시작-->
-<nav th:if="${pagingResult != null && !pagingResult.isEmpty()}" aria-label="Page navigation">
+<nav th:if="${pagingResult != null && !pagingResult.isEmpty() && studentSearchReqDto.searchType != null && studentSearchReqDto.content != null}" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+            <a class="page-link" data-page="0" th:href="@{|?page=0&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">&laquo;</a>
+        </li>
+        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+            <a class="page-link" th:data-page="${pagingResult.number - 1}"
+               th:href="@{|?page=${pagingResult.number - 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">Previous</a>
+        </li>
+        <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+            th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+            th:classappend="${page == pagingResult.number} ? 'active'">
+            <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">페이지
+                표시</a>
+        </li>
+        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+            <a class="page-link" th:data-page="${pagingResult.number + 1}"
+               th:href="@{|?page=${pagingResult.number + 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">Next</a>
+        </li>
+        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+            <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+               th:href="@{|?page=${pagingResult.totalPages - 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+<!--페이지네이션 끝-->
+
+<!--페이지네이션 시작-->
+<nav th:if="${pagingResult != null && !pagingResult.isEmpty() && studentSearchReqDto.searchType == null && studentSearchReqDto.content == null}" aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
             <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
@@ -124,85 +152,18 @@
 <!--페이지네이션 끝-->
 
 <script>
-    // $("#searchForm").submit(function (event) {
-    //           event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
-    //           var searchType = $("#searchType").val();
-    //           var content = $("#content").val();
-    //           var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
-    //           $.ajax({
-    //               url: url,
-    //               type: 'GET',
-    //               data: {
-    //                 searchType: searchType,
-    //                 content: content
-    //               },
-    //               dataType: 'json',
-    //               success: function (response) {
-    //                   $("#studentList").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
-    //
-    //
-    //                   if (response.errorResult !== null) {
-    //                       var errorMessage = response.errorResult.message;
-    //                       displayErrorMessage(errorMessage);
-    //                   } else {
-    //                       $(".container .table").remove(); // 기존 테이블 제거
-    //
-    //                       // 새로운 테이블 생성
-    //                       var newTable = $('<table class="table"></table>');
-    //                       var thead = $('<thead></thead>');
-    //                       thead.append('<tr><th scope="col">학생번호</th><th scope="col">학생 이름</th><th scope="col">학생 연락처</th><th scope="col">학교</th><th scope="col">부모님 성함</th><th scope="col">부모님 연락처</th><th scope="col">재원 여부</th><th scope="col">수정</th><th scope="col">삭제</th></tr>');
-    //                       newTable.append(thead);
-    //
-    //                       var tbody = $('<tbody id="main-content"></tbody>');
-    //
-    //                       $.each(response.data, function(index, student) {
-    //                           var row = $("<tr></tr>");
-    //                           row.append($("<th scope='row'></th>").text(student.id));
-    //                           row.append($("<td></td>").text(student.name));
-    //                           row.append($("<td></td>").text(student.phoneNumber));
-    //                           row.append($("<td></td>").text(student.schoolName));
-    //                           row.append($("<td></td>").text(student.parentName));
-    //                           row.append($("<td></td>").text(student.parentPhoneNumber));
-    //                           row.append($("<td></td>").text(student.attendanceStatus));
-    //
-    //                           row.append($("<td></td>").append($("<button type='button' class='btn btn-primary btn mb-3 me-3'>수정</button>").click(function() {
-    //                               location.href = '/edit/' + student.id;
-    //                           })));
-    //                           row.append($("<td></td>").append($("<button type='button' class='btn btn-danger btn mb-3 me-3'>삭제</button>").click(function() {
-    //                               location.href = '/delete/' + student.id;
-    //                           })));
-    //
-    //                           tbody.append(row);
-    //                       });
-    //
-    //                       newTable.append(tbody);
-    //                       console.log(newTable);
-    //                       $("#studentList").append(newTable); // 새로운 테이블을 .container에 추가
-    //                   }
-    //
-    //               },
-    //               error: function (xhr, status, error) {
-    //                   alert("검색어가 입력되지 않았습니다.");
-    //                   $("#content").focus()
-    //               }
-    //           });
-    //           function displayErrorMessage(message) {
-    //               var errorHtml = '<div class="alert alert-danger text-center mt-3">' + message + '</div>';
-    //               $("#studentList").html(errorHtml);
-    //           }
-    //       });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // 페이지네이션 링크에 클릭 이벤트 리스너 추가
-        document.querySelectorAll('.pagination .page-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault(); // 기본 이벤트를 차단
-                var page = this.getAttribute('data-page'); // 클릭된 링크에서 페이지 번호를 가져옴
-                document.querySelector('input[name="page"]').value = page; // hidden input 필드에 페이지 번호를 설정
-                document.querySelector('form').submit(); // 폼 제출
-            });
-        });
-    });
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // 페이지네이션 링크에 클릭 이벤트 리스너 추가
+    //     document.querySelectorAll('.pagination .page-link').forEach(link => {
+    //         link.addEventListener('click', function (e) {
+    //             e.preventDefault(); // 기본 이벤트를 차단
+    //             var page = this.getAttribute('data-page'); // 클릭된 링크에서 페이지 번호를 가져옴
+    //             document.querySelector('input[name="page"]').value = page; // hidden input 필드에 페이지 번호를 설정
+    //             document.querySelector('form').submit(); // 폼 제출
+    //         });
+    //     });
+    // });
 
     function resetPage() {
         document.querySelector('input[name="page"]').value = 0;

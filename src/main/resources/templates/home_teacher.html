@@ -29,7 +29,7 @@
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <button th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="|location.href='/teacher'|">
                     선생 관리 페이지</button>
-                <button th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="|location.href='/student'|">
+                <button th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="|location.href='/student/list'|">
                     학생 관리 페이지</button>
 
                 <div class="btn-group" role="group">
