@@ -1,5 +1,6 @@
 package com.time.studentmanage.domain.dto.teacher;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
@@ -19,7 +20,8 @@ public class TeacherRespDto {
     private Position position;
     private MemberType memberType;
     private GenderType gender;
-
+    
+    @QueryProjection
     public TeacherRespDto(Teacher teacher) {
         this.id = teacher.getId();
         this.name = teacher.getName();

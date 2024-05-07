@@ -1,5 +1,6 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.domain.dto.student.SearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
@@ -7,6 +8,10 @@ import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -58,15 +64,20 @@ public class TeacherService {
 
     //선생_목록(관리자 페이지)
     @Transactional(readOnly = true)
-    public List<TeacherRespDto> getTeacherAllList() {
-        List<Teacher> teacherList = teacherRepository.findAll();
+    public Page<TeacherRespDto> getTeacherList(SearchReqDto searchReqDto) {
+
+
+        Pageable pageable = PageRequest.of(searchReqDto.getPage(), 10);
+        Page<TeacherRespDto> teacherList = teacherRepository.findSearchDtoPaging(searchReqDto,pageable);
+        log.info("page확인={}",teacherList.toString());
+
 
         //Teacher -> TeacherRespDto
-        List<TeacherRespDto> teacherRespDtoList = teacherList.stream()
-                .map(teacher -> new TeacherRespDto(teacher.getId(),teacher.getName(), teacher.getPhoneNumber(), teacher.getEmail(), teacher.getPosition(), teacher.getMemberType(), teacher.getGender()))
-                .collect(Collectors.toList());
+//        List<TeacherRespDto> teacherRespDtoList = teacherList.stream()
+//                .map(teacher -> new TeacherRespDto(teacher.getId(),teacher.getName(), teacher.getPhoneNumber(), teacher.getEmail(), teacher.getPosition(), teacher.getMemberType(), teacher.getGender()))
+//                .collect(Collectors.toList());
 
-        return teacherRespDtoList;
+        return teacherList;
     }
 
     //선생_등록(관리자 페이지)
