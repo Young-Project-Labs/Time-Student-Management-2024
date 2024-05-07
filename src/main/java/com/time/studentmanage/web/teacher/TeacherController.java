@@ -105,7 +105,7 @@ public class TeacherController {
     @PostMapping("/teacher/edit/{id}")
     public String editTeacher(@PathVariable(value = "id") Long id, @Validated TeacherUpdateReqDto teacherUpdateReqDto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors() || session == null) {
-            return "/teacher/teacher_edit_form";
+            return "teacher/teacher_edit_form";
         }
         Teacher teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
         //수정 후 세션에 저장된 값 변경
