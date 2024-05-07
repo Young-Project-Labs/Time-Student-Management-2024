@@ -38,18 +38,6 @@ public class RecordService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
 
-    private RecordRespDto createRecordRespDTO(Record r) {
-        RecordRespDto recordRespDTO = new RecordRespDto();
-        recordRespDTO.setRecordId(r.getId());
-        recordRespDTO.setContent(r.getContent());
-        recordRespDTO.setTeacherName(r.getTeacher().getName());
-        recordRespDTO.setCreateDate(r.getCreateDate());
-        recordRespDTO.setLastModifiedDate(r.getModifiedDate());
-        recordRespDTO.setStatus(r.getStatus());
-        recordRespDTO.setStudentName(r.getStudent().getName());
-        return recordRespDTO;
-    }
-
     public Long saveRecord(RecordSaveReqDto recordSaveReqDTO) {
 
         Student studentPS = null;
@@ -125,28 +113,6 @@ public class RecordService {
         return recordRespDTO;
     }
 
-
-    @Transactional(readOnly = true)
-    public List<RecordRespDto> getStudentList(Long studentId) {
-        Optional<Student> studentOP = studentRepository.findById(studentId);
-
-        if (!studentOP.isPresent()) {
-            throw new DataNotFoundException("존재하지 않는 학생 정보입니다.");
-        }
-
-        Student studentPS = studentOP.get();
-
-        List<Record> recordList = recordRepository.findAllByStatusAndStudent(RecordStatus.PUBLISHED, studentPS);
-
-        List<RecordRespDto> respList = new ArrayList<>();
-        for (Record r : recordList) {
-            RecordRespDto recordRespDTO = createRecordRespDTO(r);
-            respList.add(recordRespDTO);
-        }
-
-        return respList;
-    }
-
     /**
      * 기존 페이징 처리가 되지 않고 학생의 모든 피드백을 조회하던 메서드를
      * queryDSL, PageImpl을 사용하여 페이징 처리
@@ -165,26 +131,6 @@ public class RecordService {
         Page<RecordRespDto> pageList = recordRepository.findAllPaging(studentPS, pageable);
 
         return pageList;
-    }
-
-    @Transactional(readOnly = true)
-    public List<RecordRespDto> getAllWrittenList(Long teacherId) {
-        Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
-        if (!teacherOP.isPresent()) {
-            throw new DataNotFoundException("존재하지 않는 선생님 정보입니다.");
-        }
-
-        Teacher teacher = teacherOP.get();
-
-        List<Record> recordList = recordRepository.findAllByTeacher(teacher);
-
-        List<RecordRespDto> respList = new ArrayList<>();
-        for (Record r : recordList) {
-            RecordRespDto recordRespDTO = createRecordRespDTO(r);
-            respList.add(recordRespDTO);
-        }
-
-        return respList;
     }
 
     @Transactional(readOnly = true)
@@ -248,9 +194,9 @@ public class RecordService {
 
             return convertedDate;
         } catch (IllegalArgumentException e) {
-            throw new DateConvertException("날짜 형식이 잘 못 입력 되었습니다.");
+            throw new DateConvertException("날짜 형식이 잘 못 입력되었습니다.");
         } catch (IndexOutOfBoundsException e) {
-            throw new DateConvertException("날짜 형식이 잘 못 입력 되었습니다.");
+            throw new DateConvertException("날짜 형식이 잘 못 입력되었습니다.");
         }
     }
 }

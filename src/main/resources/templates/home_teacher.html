@@ -75,7 +75,6 @@
         <li class="breadcrumb-item">
             <a class="link-body-emphasis text-dark" href="/">
                 <i class="fa-solid fa-house"></i>
-                <!--                <span class="visually-hidden">Home</span>-->
             </a>
         </li>
         <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">Home</li>
@@ -96,9 +95,9 @@
                         <span th:text="초등"></span>
                     </li>
 
-                    <div th:if="${elementarySchools != null}" class="collapse" id="collapse__elementary__school">
+                    <div th:if="${schools.elementarySchools != null}" class="collapse" id="collapse__elementary__school">
                         <!--학교 목록 시작-->
-                        <div th:each="name: ${elementarySchools}" class="list-group">
+                        <div th:each="name: ${schools.elementarySchools}" class="list-group">
                             <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름
@@ -114,9 +113,9 @@
                         <span th:text="중등"></span>
                     </li>
 
-                    <div th:if="${middleSchools != null}" class="collapse" id="collapse__middle__school">
+                    <div th:if="${schools.middleSchools != null}" class="collapse" id="collapse__middle__school">
                         <!--학교 목록 시작-->
-                        <div th:each="name: ${middleSchools}" class="list-group">
+                        <div th:each="name: ${schools.middleSchools}" class="list-group">
                             <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름
@@ -132,9 +131,9 @@
                         <span th:text="고등"></span>
                     </li>
 
-                    <div th:if="${highSchools != null}" class="collapse" id="collapse__high__school">
+                    <div th:if="${schools.highSchools != null}" class="collapse" id="collapse__high__school">
                         <!--학교 목록 시작-->
-                        <div th:each="name: ${highSchools}" class="list-group">
+                        <div th:each="name: ${schools.highSchools}" class="list-group">
                             <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름

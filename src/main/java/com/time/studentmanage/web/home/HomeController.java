@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -20,8 +23,14 @@ public class HomeController {
 
     private final StudentService studentService;
 
+    @ModelAttribute("schools")
+    public StudentSchoolListRespDto elementarySchoolList() {
+        StudentSchoolListRespDto schoolNameRespDto = studentService.getAllSchoolName();
+        return schoolNameRespDto;
+    }
+
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
+    public String home(HttpServletRequest request) {
         HttpSession session = request.getSession();
             /**
              * 로그인한 사용자가 학생
@@ -38,11 +47,6 @@ public class HomeController {
             Long id = ((Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION)).getId();
             log.info("teacher id ={}", id);
 
-            StudentSchoolListRespDto schoolNameRespDto = studentService.getAllSchoolName();
-
-            model.addAttribute("elementarySchools", schoolNameRespDto.getElementarySchools());
-            model.addAttribute("middleSchools", schoolNameRespDto.getMiddleSchools());
-            model.addAttribute("highSchools", schoolNameRespDto.getHighSchools());
             return "home_teacher";
         }
 
