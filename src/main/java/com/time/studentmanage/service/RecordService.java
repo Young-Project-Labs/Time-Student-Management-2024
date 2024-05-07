@@ -1,16 +1,18 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchReqCondition;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.exception.DataNotFoundException;
+import com.time.studentmanage.exception.DateConvertException;
+import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
-import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -148,10 +150,6 @@ public class RecordService {
     /**
      * 기존 페이징 처리가 되지 않고 학생의 모든 피드백을 조회하던 메서드를
      * queryDSL, PageImpl을 사용하여 페이징 처리
-     *
-     * @param studentId
-     * @param page 페이징 시작 number
-     * @return
      */
     @Transactional(readOnly = true)
     public Page<RecordRespDto> getAllStudentRecord(Long studentId, int page) {
@@ -190,7 +188,7 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecordRespDto> getPaginationResultWithSearchCondition(RecordSearchDto recordSearchDTO) {
+    public Page<RecordRespDto> getPaginationResultWithSearchCondition(RecordSearchDto recordSearchDTO, Long studentId) {
         LocalDateTime[] convDate = new LocalDateTime[2];
 
         if (recordSearchDTO.getSearchType() == null) {
@@ -198,29 +196,33 @@ public class RecordService {
         }
 
         if (recordSearchDTO.getDates() == null || recordSearchDTO.getDates().equals("")) {
-            throw new IllegalArgumentException("날짜 조건이 선택되지 않았습니다.");
+            throw new DateConvertException("날짜 조건이 선택되지 않았습니다.");
         }
 
-        Student studentPS = validateStudentInfo(recordSearchDTO.getStudentId());
+        Student studentPS = validateStudentInfo(studentId);
 
-        // "-"로 문자열을 나누고 양 옆 공백을 제거한 후 문자 배열로 변환
-        String[] dates = Arrays.stream(recordSearchDTO.getDates().split("-"))
-                .map(String::trim)
-                .toArray(String[]::new);
+        try {
+            // "-"로 문자열을 나누고 양 옆 공백을 제거한 후 문자 배열로 변환
+            String[] dates = Arrays.stream(recordSearchDTO.getDates().split("-"))
+                    .map(String::trim)
+                    .toArray(String[]::new);
 
-        if (dates[0].equals(dates[1])) {
-            convDate[0] = convDate[1] = null;
-        } else {
-            convDate[0] = convertLocalDateTime(dates[0]);
-            convDate[1] = convertLocalDateTime(dates[1]);
+            if (dates[0].equals(dates[1])) {
+                convDate[0] = convDate[1] = null;
+            } else {
+                convDate[0] = convertLocalDateTime(dates[0]);
+                convDate[1] = convertLocalDateTime(dates[1]);
+            }
+
+        } catch (IndexOutOfBoundsException e) {
+            throw new DateConvertException("날짜 형식이 올바르게 입력되지 않았습니다.");
         }
 
         Pageable pageable = PageRequest.of(recordSearchDTO.getPage(), 10);
 
+        RecordSearchReqCondition searchCondition = new RecordSearchReqCondition(studentPS, recordSearchDTO.getSearchType(), recordSearchDTO.getContent(), convDate[0], convDate[1], pageable);
 
-        Page<RecordRespDto> pagingResult = recordRepository.findAllBySearchEngine(
-                studentPS, recordSearchDTO.getSearchType(), recordSearchDTO.getContent(),
-                convDate[0], convDate[1], pageable);
+        Page<RecordRespDto> pagingResult = recordRepository.findAllBySearchEngine(searchCondition);
 
         return pagingResult;
     }
@@ -236,11 +238,19 @@ public class RecordService {
 
     private LocalDateTime convertLocalDateTime(String date) {
         // "/"로 문자열을 나누고 숫자로 변환한 후 LocalDateTime으로 변환
-        return Arrays.stream(date.split("/"))
-                .map(Integer::parseInt)
-                .collect(Collectors.collectingAndThen(
-                        Collectors.toList(),
-                        list -> LocalDateTime.of(list.get(0), list.get(1), list.get(2), 0, 0)
-                ));
+        try {
+            LocalDateTime convertedDate = Arrays.stream(date.split("/"))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.collectingAndThen(
+                            Collectors.toList(),
+                            list -> LocalDateTime.of(list.get(0), list.get(1), list.get(2), 0, 0)
+                    ));
+
+            return convertedDate;
+        } catch (IllegalArgumentException e) {
+            throw new DateConvertException("날짜 형식이 잘 못 입력 되었습니다.");
+        } catch (IndexOutOfBoundsException e) {
+            throw new DateConvertException("날짜 형식이 잘 못 입력 되었습니다.");
+        }
     }
 }
