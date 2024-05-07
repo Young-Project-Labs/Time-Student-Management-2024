@@ -1,28 +1,25 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
 </head>
 <body>
-<h1>ERROR!!! 알 수 없는 오류가 발생했습니다.</h1>
 
-<a th:href="@{/}" class="btn btn-danger btn-sm" role="button">홈으로</a>
-<ul>
-    <li>오류 정보(임의로 넣음)</li>
-    <ul>
-        <li th:text="|timestamp: ${timestamp}|"></li>
-        <li th:text="|path: ${path}|"></li>
-        <li th:text="|status: ${status}|"></li>
-        <li th:text="|message: ${message}|"></li>
-        <li th:text="|error: ${error}|"></li>
-        <li th:text="|exception: ${exception}|"></li>
-        <li th:text="|errors: ${errors}|"></li>
-        <li th:text="|trace: ${trace}|"></li>
-    </ul>
-</ul>
+<!--점보트론 시작-->
+<div class="p-5 text-center rounded-3">
+    <i class="fas fa-regular fa-triangle-exclamation fa-4x" style="color: #d62b1f;"></i>
+    <h1 class="display-5 fw-bold">처리할 수 없는 요청입니다.</h1>
+    <h2 class="display-5 fw-bold">Q&A에 문의주세요.</h2>
+
+    <div class="d-inline-flex gap-2 mb-5">
+        <button class="btn btn-outline-secondary btn-lg px-4 rounded-pill" type="button"  th:onclick="|location.href='/'|">
+            홈으로
+        </button>
+    </div>
+</div>
+
+<!--점보트론 끝-->
+
 </body>
 </html>
