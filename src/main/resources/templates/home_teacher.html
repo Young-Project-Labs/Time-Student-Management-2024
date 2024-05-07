@@ -14,62 +14,8 @@
 
 <div class="p-2">
     <!-- 헤더 시작 -->
-    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
-        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-
-        <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
-        <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
-            <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
-            <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
-        </div>
-        <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
-
-        <!--로그인이 되었을 때 보여줄 버튼 시작-->
-        <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <button th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/teacher'">
-                    선생 관리 페이지</button>
-                <button th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}" type="button" class="btn btn-primary" th:onclick="location.href='/student'">
-                    학생 관리 페이지</button>
-
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <i class="fa-solid fa-user"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <div class="dropdown-item">
-                                <i class="fa-solid fa-heart"></i>
-                                <span th:text="|${session.loginMember.name}님|"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown-item">
-                                <i class="fa-solid fa-user-gear"></i>
-                                <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
-                                   class="link-dark text-decoration-none">내 정보 수정</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown-item">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                <form method="post" action="/logout" class="d-inline">
-                                    <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
-                                        로그아웃
-                                    </button>
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-        <!--로그인이 되었을 때 보여줄 버튼 끝-->
-    </header>
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
-
     <!--브레드 크럼 시작-->
     <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
         <li class="breadcrumb-item">
@@ -84,73 +30,75 @@
 
     <div class="container-fluid ">
         <div class="row">
+            <!-- 사이드바 시작 -->
+            <div class="col-md-2 bg-light">
+                <div class="d-flex flex-column flex-shrink-0 p-3">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link fs-5 fw-semibold" aria-current="page">홈</a>
+                        </li>
+                        <hr class="dropdown-divider">
 
-            <!--사이드 바 시작-->
-            <div class="col-3 text-center border border-2 rounded-3 ">
+                        <li>
+                            <!-- 초등학교 클릭 시 하위 목록 토글 -->
+                            <a href="#collapse__elementary__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">초등학교</a>
+                            <div th:if="${elementarySchools != null}" class="collapse show" id="collapse__elementary__school">
+                                <!--학교 목록 시작-->
+                                <div class="list-group">
+                                    <a th:each="name : ${elementarySchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                    </a>
+                                </div>
+                                <!--학교 목록 끝-->
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#collapse__middle__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">중학교</a>
+                            <div th:if="${middleSchools != null}" class="collapse show" id="collapse__middle__school">
+                                <!--학교 목록 시작-->
+                                <div class="list-group">
+                                    <a th:each="name : ${middleSchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                    </a>
+                                </div>
+                                <!--학교 목록 끝-->
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#collapse__high__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">고등학교</a>
+                            <div th:if="${highSchools != null}" class="collapse show" id="collapse__high__school">
+                                <!--학교 목록 시작-->
+                                <div class="list-group">
+                                    <a th:each="name : ${highSchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                    </a>
+                                </div>
+                                <!--학교 목록 끝-->
+                            </div>
+                        </li>
 
-                <ul class="list-group list-group-flush">
-                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
-                        href="#collapse__elementary__school" role="button" aria-expanded="false"
-                        aria-controls="collapse__elementary__school">
-                        <i class="fa-solid fa-chevron-right"></i>
-                        <span th:text="초등"></span>
-                    </li>
+                        <hr class="dropdown-divider mt-3">
 
-                    <div th:if="${elementarySchools != null}" class="collapse" id="collapse__elementary__school">
-                        <!--학교 목록 시작-->
-                        <div th:each="name: ${elementarySchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
-                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                학교 이름
-                            </a>
-                        </div>
-                        <!--학교 목록 끝-->
-                    </div>
+                        <li>
+                            <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                        </li>
 
-                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
-                        href="#collapse__middle__school" role="button" aria-expanded="false"
-                        aria-controls="collapse__middle__school">
-                        <i class="fa-solid fa-chevron-right"></i>
-                        <span th:text="중등"></span>
-                    </li>
+                        <li th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                            <a href="/student" class="nav-link fs-5 fw-semibold" >학생 관리 페이지</a>
+                        </li>
 
-                    <div th:if="${middleSchools != null}" class="collapse" id="collapse__middle__school">
-                        <!--학교 목록 시작-->
-                        <div th:each="name: ${middleSchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
-                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                학교 이름
-                            </a>
-                        </div>
-                        <!--학교 목록 끝-->
-                    </div>
-
-                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
-                        href="#collapse__high__school" role="button" aria-expanded="false"
-                        aria-controls="collapse__high__school">
-                        <i class="fa-solid fa-chevron-right"></i>
-                        <span th:text="고등"></span>
-                    </li>
-
-                    <div th:if="${highSchools != null}" class="collapse" id="collapse__high__school">
-                        <!--학교 목록 시작-->
-                        <div th:each="name: ${highSchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
-                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                학교 이름
-                            </a>
-                        </div>
-                        <!--학교 목록 끝-->
-                    </div>
-                </ul>
-
+                        <li th:if ="${!#strings.equals(session.loginMember.position, 'TEACHER')}">
+                            <a href="/teacher" class="nav-link fs-5 fw-semibold" >선생 관리 페이지</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <!--사이드 바 끝-->
+            <!-- 사이드바 끝-->
 
-            <div class="col-9 ">
+            <div class="col-10 ">
                 <div class="row">
 
-                    <div class="col ">
+                    <div class="col">
                         <!--검색 바 시작-->
                         <form id="searchForm" th:action="@{/search}" method="get">
                             <div class="input-group mb-3">
@@ -316,6 +264,22 @@
     });
 
 </script>
+<script>
+
+document.querySelectorAll('.nav-link').forEach(item => {
+    item.addEventListener('click', function() {
+        // 모든 nav-link에서 active 클래스 제거
+        document.querySelectorAll('.nav-link').forEach(nav => {
+            nav.classList.remove('active');
+        });
+
+        // 클릭된 항목에 active 클래스 추가
+        this.classList.add('active');
+    });
+});
+
+</script>
+
 
 </body>
 </html>

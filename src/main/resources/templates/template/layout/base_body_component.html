@@ -2,15 +2,89 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<th:block th:fragment="common-body-header-home-logo">
+<th:block th:fragment="common-body-header">
+    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
+            <span class="fs-4">타임 영어 전문 학원</span>
+        </a>
+        <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+            <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+            <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
+        </div>
+        <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
 
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
-        <span class="fs-4">타임 영어 전문 학원</span>
-    </a>
+        <!--로그인이 되었을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+            <div class="btn-group">
+                    <div class="dropdown-item">
+                        <i class="fa-solid fa-heart"></i>
+                        <span th:text="|${session.loginMember.name}님|"></span>
+                    </div>
+                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
+                           class="link-dark text-decoration-none">내 정보 수정</a>
+                    </div>
+                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'STUDENT')}">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                           class="link-dark text-decoration-none">내 정보 수정</a>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <form method="post" action="/logout" class="d-inline">
+                            <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                로그아웃
+                            </button>
+                        </form>
+                    </div>
+            </div>
+        </div>
+        <!--로그인이 되었을 때 보여줄 버튼 끝-->
+    </header>
 
 </th:block>
 
+<th:block th:fragment="common-body-sidebar">
+    <!-- 사이드바 시작 -->
+    <div class="col-md-2 bg-light">
+        <div class="d-flex flex-column flex-shrink-0 p-3">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link fs-5 fw-semibold" aria-current="page">홈</a>
+                </li>
 
+                <hr class="dropdown-divider">
+
+                <li th:if="|${!session.isEmpty()}|">
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'TEACHER')}|" th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                </li>
+
+                <li th:if="|${!session.isEmpty()}|">
+                    <a href="/login" th:if="|${session.isEmpty()}|" class="nav-link fs-5 fw-semibold">학습 피드백</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold">학습 피드백</a>
+                </li>
+
+                <li>
+                    <a href="#" th:if="|${session.isEmpty() or #strings.equals(session.loginMember.memberType, 'STUDENT')}|" class="nav-link fs-5 fw-semibold">문의하기</a>
+                </li>
+                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                    <hr class="dropdown-divider">
+                    <a href="/student" class="nav-link fs-5 fw-semibold" >학생 관리 페이지</a>
+                </li>
+
+                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and !#strings.equals(session.loginMember.position, 'TEACHER')}">
+                    <hr class="dropdown-divider">
+                    <a href="/teacher" class="nav-link fs-5 fw-semibold" >선생 관리 페이지</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <!-- 사이드바 끝-->
+</th:block>
 </body>
 </html>

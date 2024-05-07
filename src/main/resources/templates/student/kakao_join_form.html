@@ -4,15 +4,12 @@
     <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
 </head>
 <body>
 <div class="">
     <!-- 헤더 시작 -->
-    <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-        </header>
-    </div>
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
 </div>
 

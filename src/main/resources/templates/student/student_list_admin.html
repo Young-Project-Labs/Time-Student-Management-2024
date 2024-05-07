@@ -4,78 +4,87 @@
   <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
   <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
   <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+  <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+
 </head>
 <title>학생 목록</title>
 <body>
-    <div class="">
-      <!-- 헤더 시작 -->
-      <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-          <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-        </header>
-      </div>
-      <!-- 헤더 끝 -->
-    </div>
+<div class="p-2">
+  <!-- 헤더 시작 -->
+  <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
+  <!-- 헤더 끝 -->
 
-    <div class="container md-6">
-      <h1>학생 목록</h1>
-    </div>
+  <!--브레드 크럼 시작-->
+  <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+    <li class="breadcrumb-item">
+      <a class="link-body-emphasis text-dark" href="/">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">학생 목록</li>
+  </ol>
+  <!--브레드 크럼 끝-->
+  <div class="container-fluid ">
+    <div class="row">
+      <!-- 사이드바 -->
+      <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
 
-  <form action="#" id="searchForm" th:action="@{/search}" method="get">
-    <div class="container">
-      <div class="row justify-content-end">
-          <div class="col-auto">
-            <select class="form-select" id="searchType" name="searchType">
-              <option value="name">학생이름</option>
-              <option value="parentName">부모님성함</option>
-              <option value="schoolName">학교명</option>
-            </select>
-          </div>
-          <div class="col-auto">
-            <div class="input-group">
-              <input type="text" class="form-control" id="content" placeholder="검색">
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">검색</button>
-                <button type="button" onclick="location.href = location.href;" class="btn btn-primary">초기화</button>
+        <!-- 학생 목록 테이블-->
+        <div class="col-md-10 container" id="studentList">
+          <h3 class="col-md-6 mb-3">학생 목록</h3>
+          <!-- 폼 검색 바-->
+          <form action="#" id="searchForm" th:action="@{/search}" method="get">
+              <div class="row justify-content-end">
+                <div class="col-auto">
+                  <select class="form-select" id="searchType" name="searchType">
+                    <option value="name">학생이름</option>
+                    <option value="parentName">부모님성함</option>
+                    <option value="schoolName">학교명</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="content" placeholder="검색">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-primary">검색</button>
+                      <button type="button" th:onclick="|location.href='@{/student}'|" class="btn btn-primary">초기화</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-      </div>
+          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">학생번호</th>
+                <th scope="col">학생 이름</th>
+                <th scope="col">학생 연락처</th>
+                <th scope="col">학교</th>
+                <th scope="col">부모님 성함</th>
+                <th scope="col">부모님 연락처</th>
+                <th scope="col">재원 여부</th>
+                <th scope="col">수정</th>
+                <th scope="col">삭제</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="student : ${studentList}">
+                <th scope="row" th:text="${student.id}"></th>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.phoneNumber}"></td>
+                <td th:text="${student.schoolName}"></td>
+                <td th:text="${student.parentName}"></td>
+                <td th:text="${student.parentPhoneNumber}"></td>
+                <td th:text="${student.attendanceStatus}"></td>
+                <td><button type="submit" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/edit/{id}(id=${student.id})}'|">수정</button></td>
+                <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/delete/{id}(id=${student.id})}'|">삭제</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
-  </form>
-
-    <!-- 학생 목록 테이블-->
-    <div class="container" id="studentList">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">학생번호</th>
-            <th scope="col">학생 이름</th>
-            <th scope="col">학생 연락처</th>
-            <th scope="col">학교</th>
-            <th scope="col">부모님 성함</th>
-            <th scope="col">부모님 연락처</th>
-            <th scope="col">재원 여부</th>
-            <th scope="col">수정</th>
-            <th scope="col">삭제</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="student : ${studentList}">
-            <th scope="row" th:text="${student.id}"></th>
-            <td th:text="${student.name}"></td>
-            <td th:text="${student.phoneNumber}"></td>
-            <td th:text="${student.schoolName}"></td>
-            <td th:text="${student.parentName}"></td>
-            <td th:text="${student.parentPhoneNumber}"></td>
-            <td th:text="${student.attendanceStatus}"></td>
-            <td><button type="submit" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/edit/{id}(id=${student.id})}'|">수정</button></td>
-            <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/delete/{id}(id=${student.id})}'|">삭제</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
+  </div>
+</div>
     <script>
       $("#searchForm").submit(function (event) {
                 event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
