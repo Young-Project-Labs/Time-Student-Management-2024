@@ -4,12 +4,10 @@ import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.dto.record.RecordUpdateReqDto;
-import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
-import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +20,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -31,9 +30,15 @@ public class RecordController {
 
     private final RecordService recordService;
 
-    @ModelAttribute("searchTypes")
+    @ModelAttribute("searchTypeOptions")
     public SearchType[] searchType() {
-        return SearchType.values();
+        SearchType[] filteredSearchTypes = Arrays.stream(SearchType.values())
+                .filter(type -> type == SearchType.CONTENT ||
+                        type == SearchType.TEACHER_NAME)
+                .collect(Collectors.toList())
+                .toArray(new SearchType[0]); // 배열 타입을 알려주기 위함
+
+        return filteredSearchTypes;
     }
 
     @GetMapping("/record/{studentId}")
@@ -59,16 +64,9 @@ public class RecordController {
     @GetMapping("/record/list/{studentId}")
     public String showSearchedRecordResult(@PathVariable("studentId") Long studentId, // recordSearchDto의 studentId와 필드명이 같으면 스프링에서 자동으로 바인딩 해줌
                                            @Validated @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
-                                           BindingResult bindingResult, Model model) {
+                                           Model model) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}",bindingResult.getFieldErrors());
-        }
-
-        log.info("studentId={}", studentId);
-        log.info("recordSearchDto={}", recordSearchDto);
-
-        Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto);
+        Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto, studentId);
         model.addAttribute("pagingResult", pagingResult);
 
         return "record/record_list";
