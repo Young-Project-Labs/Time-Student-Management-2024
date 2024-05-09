@@ -40,7 +40,10 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         return result;
     }
 
-    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, Pageable pageable) {
+    /**
+     * 홈페이지에서 학생 정보를 검색할 때 동작하는 검색 메서드
+     */
+    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, String studentName, Pageable pageable) {
         QStudent student = QStudent.student;
 
         List<SelectedSchoolRespDto> fetch = query.select(
@@ -51,9 +54,10 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
                         )
                 ).from(student)
                 .where(student.attendanceStatus.eq(AttendanceStatus.Y)
-                        .and(student.schoolName.eq(schoolName))
+                        .and(student.schoolName.eq(schoolName)),
+                        likeStudentName(studentName)
                 )
-                .orderBy(student.grade.asc())
+                .orderBy(student.grade.asc(), student.name.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -61,12 +65,16 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         JPAQuery<Long> count = query.select(student.count())
                 .from(student)
                 .where(student.attendanceStatus.eq(AttendanceStatus.Y)
-                        .and(student.schoolName.eq(schoolName))
+                        .and(student.schoolName.eq(schoolName)),
+                        likeStudentName(studentName)
                 );
 
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
+    /**
+     * 학생 목록에서 동작하는 검색 메서드
+     */
     public Page<StudentSearchRespDto> findAllBySearchEngine(StudentSearchReqDto studentSearchReqDto, Pageable pageable) {
 
         QStudent student = QStudent.student;

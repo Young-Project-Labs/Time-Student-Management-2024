@@ -17,5 +17,5 @@ public interface StudentRepositoryCustom {
 
     Page<StudentSearchRespDto> findAllBySearchEngine(StudentSearchReqDto studentSearchReqDto, Pageable pageable);
 
-    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, Pageable pageable);
+    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, String studentName, Pageable pageable);
 }
