@@ -4,103 +4,110 @@
     <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+
+
 </head>
 <body>
-<div class="">
+<div>
     <!-- 헤더 시작 -->
-    <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-            </header>
-    </div>
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
-</div>
 
-<h1 class="d-flex justify-content-center m-5" th:text="*{teacherRespDto.name+' 정보'}">선생님</h1>
+    <!--브레드 크럼 시작-->
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis text-dark" href="/">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">정보 수정</li>
+    </ol>
+    <!--브레드 크럼 끝-->
 
-<div class="container d-flex justify-content-center">
-    <form action="#" th:action="@{/teacher/edit/{id}(id=${teacherRespDto.id})}" method="post" th:object="${teacherRespDto}" class="border border-primary-subtle border-3 rounded p-3" id="teacherUpdateForm" onsubmit="return confirmSubmit()">
-        <input type="hidden" name="memberType" value="TEACHER">
-        <input type="hidden" id="teacherId" th:value="${teacherRespDto.id}">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6 mb-3 form-check">
-                <label class="form-check-label mb-2" for="name">선생님 성함</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="선생님 성함" th:errorclass="field-error">
-                <div th:class="field-error" th:errors="*{name}">선생님 성함 오류 메시지</div>
-            </div>
+            <!-- 사이드바 -->
+            <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
 
-            <div class="col-md-6 mb-3 form-check">
-                <label class="form-check-label mb-2" for="phoneNumber">선생님 연락처</label>
-                <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber" th:field="*{phoneNumber}" placeholder="선생님 연락처" th:errorclass="field-error"/>
-                <div th:class="field-error" th:errors="*{phoneNumber}">선생님 연락처 오류 메시지</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 mb-3 form-check">
-                <label class="form-check-label mb-2" for="email-readonly">이메일</label>
-                <div class="input-group">
-                    <input type="email" class="form-control" id="email-readonly" th:field="*{email}" th:errorclass="field-error" maxlength="20" readonly>
-                </div>
-                <div id="userEmailHelp" class="form-text">이메일은 관리자, 원장님만 수정 가능합니다.</div>
-                <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
-            </div>
-
-        </div>
-
-        <!-- 원장, 관리자 및 자신의 계정만 비밀번호 변경 가능 -->
-        <div class="row" th:if="${session.loginMember.id == id or !#strings.equals(session.loginMember.position, 'TEACHER')}">
-            <div class="col-md-6 mb-3 form-check">
-                <label class="form-check-label mb-2" for="pwdbtn">패스워드</label>
-                <button type="button" id="pwdbtn" class="btn btn-outline-primary">패스워드 변경</button>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-md-6 mb-3 form-check">
-                <label class="form-check-label mb-2" for="position">직급</label>
-                    <!-- 직급 변경 불가능(disabled) -->
-                    <select class="form-select" id="position" th:field="*{position}" th:errorclass="field-error" disabled>
-                        <option selected value="">직급을 선택하세요.</option>
-                        <option value="TEACHER">선생님</option>
-                        <option value="CHIEF">원장</option>
-                        <option value="ADMIN">관리자</option>
-                    </select>
-                    <input type="hidden" th:field="*{position}">
-                <div th:class="field-error" th:errors="*{position}">직급 오류 메시지</div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3 form-check" name="gender">
-                <label class="form-check-label mb-2" for="gender">성별</label>
-                <div class="input-group" id="gender">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="male" value="MALE" th:field="*{gender}">
-                        <label class="form-check-label" for="male">남</label>
+            <!-- 폼 -->
+            <div class="col-md-10 container">
+                <h3 class="col-md-6 mb-3" th:text="${teacherRespDto.name} + '님 정보'"></h3>
+                <form action="#" th:action="@{/teacher/edit/{id}(id=${teacherRespDto.id})}" method="post" th:object="${teacherRespDto}" id="teacherUpdateForm" onsubmit="return confirmSubmit()">
+                    <input type="hidden" name="memberType" value="TEACHER">
+                    <input type="hidden" id="teacherId" th:value="${teacherRespDto.id}">
+                    <div class="col-md-6 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="name">선생님 성함</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="선생님 성함" th:errorclass="field-error">
+                        <div th:class="field-error" th:errors="*{name}">선생님 성함 오류 메시지</div>
                     </div>
 
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="female" value="FEMALE" th:field="*{gender}">
-                        <label class="form-check-label" for="female">여</label>
+                    <div class="col-md-6 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="phoneNumber">선생님 연락처</label>
+                        <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber" th:field="*{phoneNumber}" placeholder="선생님 연락처" th:errorclass="field-error"/>
+                        <div th:class="field-error" th:errors="*{phoneNumber}">선생님 연락처 오류 메시지</div>
                     </div>
-                </div>
-                <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
+
+                    <div class="col-md-6 mb-3 form-check">
+                        <label class="form-check-label mb-2" for="email-readonly">이메일</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="email-readonly" th:field="*{email}" th:errorclass="field-error" maxlength="20" readonly>
+                        </div>
+                        <div id="userEmailHelp" class="form-text">이메일은 관리자, 원장님만 수정 가능합니다.</div>
+                        <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
+                    </div>
+
+                    <!-- 원장, 관리자 및 자신의 계정만 비밀번호 변경 가능 -->
+                    <div class="col-md-6 mb-3 form-check" th:if="${session.loginMember.id == id or !#strings.equals(session.loginMember.position, 'TEACHER')}">
+                        <label class="form-check-label mb-2" for="pwdbtn">패스워드</label>
+                        <button type="button" id="pwdbtn" class="btn btn-outline-primary">패스워드 변경</button>
+                    </div>
+
+                    <div class="col-md-6 mb-3 form-check">
+                            <label class="form-check-label mb-2" for="position">직급</label>
+                            <!-- 직급 변경 불가능(disabled) -->
+                            <select class="form-select" id="position" th:field="*{position}" th:errorclass="field-error" disabled>
+                                <option selected value="">직급을 선택하세요.</option>
+                                <option value="TEACHER">선생님</option>
+                                <option value="CHIEF">원장</option>
+                                <option value="ADMIN">관리자</option>
+                            </select>
+                            <input type="hidden" th:field="*{position}">
+                            <div th:class="field-error" th:errors="*{position}">직급 오류 메시지</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3 form-check" name="gender">
+                        <label class="form-check-label mb-2" for="gender">성별</label>
+                        <div class="input-group" id="gender">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="male" value="MALE" th:field="*{gender}">
+                                <label class="form-check-label" for="male">남</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="female" value="FEMALE" th:field="*{gender}">
+                                <label class="form-check-label" for="female">여</label>
+                            </div>
+                        </div>
+                        <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3 form-check">
+                        <button type="submit" class="btn btn-primary btn mb-3 me-3">수정</button>
+                        <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">뒤로 가기</button>
+                    </div>
+
+                </form>
             </div>
-        </div>
 
-        <div class="d-flex justify-content-center mt-5 mb-5">
-            <button type="submit" class="btn btn-primary btn mb-3 me-3">수정</button>
-            <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">뒤로 가기</button>
-        </div>
 
-    </form>
+        </div>
+    </div>
 </div>
-
+<!-- footer 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+<!-- footer 끝 -->
 <!-- 패스워드 변경 모달 -->
 <div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

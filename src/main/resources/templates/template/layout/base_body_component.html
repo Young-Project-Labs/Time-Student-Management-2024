@@ -2,15 +2,141 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<th:block th:fragment="common-body-header-home-logo">
+<!-- header 시작 -->
+<th:block th:fragment="common-body-header">
+    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom" >
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img src="/img/time_logo.jpg" alt="홈으로 가기" width="60" height="60">
+            <span class="fs-4">타임 영어 전문 학원</span>
+        </a>
+        <!--로그인이 되지 않았을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember == null}" class="d-flex justify-content-center align-items-center">
+            <a class="btn btn-outline-secondary btn-sm me-md-1" href="/login" role="button" th:text="로그인">login</a>
+            <a class="btn btn-info btn-sm me-2" href="/join" role="button" th:text="회원가입">join</a>
+        </div>
+        <!--로그인이 되지 않았을 때 보여줄 버튼 끝-->
 
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
-        <span class="fs-4">타임 영어 전문 학원</span>
-    </a>
+        <!--로그인이 되었을 때 보여줄 버튼 시작-->
+        <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
+            <div class="btn-group">
+                    <div class="dropdown-item">
+                        <i class="fa-solid fa-heart"></i>
+                        <span th:text="|${session.loginMember.name}님|"></span>
+                    </div>
+                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
+                           class="link-dark text-decoration-none">내 정보 수정</a>
+                    </div>
+                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'STUDENT')}">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                           class="link-dark text-decoration-none">내 정보 수정</a>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <form method="post" action="/logout" class="d-inline">
+                            <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                                로그아웃
+                            </button>
+                        </form>
+                    </div>
+            </div>
+        </div>
+        <!--로그인이 되었을 때 보여줄 버튼 끝-->
+    </header>
 
 </th:block>
+<!-- header 끝 -->
 
 
+<!-- sidebar 시작 -->
+<th:block th:fragment="common-body-sidebar">
+    <!-- 사이드바 시작 -->
+    <div class="col-md-2">
+        <div class="d-flex flex-column flex-shrink-0 p-3">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link fs-5 fw-semibold" aria-current="page">홈</a>
+                </li>
+
+                <hr class="dropdown-divider">
+
+                <li th:if="|${!session.isEmpty()}|">
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'TEACHER')}|" th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                </li>
+
+                <li th:if="|${!session.isEmpty()}|">
+                    <a href="/login" th:if="|${session.isEmpty()}|" class="nav-link fs-5 fw-semibold">학습 피드백</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold">학습 피드백</a>
+                </li>
+
+                <li>
+                    <a href="#" th:if="|${session.isEmpty() or #strings.equals(session.loginMember.memberType, 'STUDENT')}|" class="nav-link fs-5 fw-semibold" data-bs-toggle="modal" data-bs-target="#inquiryModal">문의하기</a>
+                </li>
+                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                    <hr class="dropdown-divider">
+                    <a href="/student" class="nav-link fs-5 fw-semibold" >학생 관리 페이지</a>
+                </li>
+
+                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and !#strings.equals(session.loginMember.position, 'TEACHER')}">
+                    <hr class="dropdown-divider">
+                    <a href="/teacher" class="nav-link fs-5 fw-semibold" >선생 관리 페이지</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- 문의하기 모달 -->
+    <div class="modal fade" id="inquiryModal" tabindex="-1" aria-labelledby="inquiryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content centered">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title" id="inquiryModalLabel">학원 문의하기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- 카카오톡 링크 -->
+                    <p><a href="https://open.kakao.com/o/somechat" target="_blank"><img src="/img/kakao_button.png"></a></p>
+                    <div id="kakao_help" class="form-text">카카오톡으로 상담을 원하시면 위 버튼을 클릭해주세요.</div>
+                    <!-- 전화번호 -->
+                    <p>
+                        <h5>문의 전화: 0507-1308-4210</h5>
+                        <div id="help" class="form-text">유선 상담을 원하시면 번호로 전화 주시면 안내 드리겠습니다.</div>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 사이드바 끝-->
+</th:block>
+<!-- sidebar -->
+
+<!-- footer -->
+<th:block th:fragment="common-body-footer">
+    <!-- 푸터 시작 -->
+    <footer class="bg-secondary text-white pt-4 pb-4 main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <!-- 학원 명 -->
+                    <img src="/img/time_logo.jpg" style="width: 80px; height: 75px; margin: 20px;" >
+                    <h5>타임 영어 전문학원</h5>
+                    <!-- 학원 위치 -->
+                    <p><i class="fa-solid fa-location-dot"></i> 학원 위치 : 경남 창원시 성산구 반송로 148-9 아이필상가 3층</p>
+                    <!-- 문의 전화 -->
+                    <p><i class="fa-solid fa-phone"></i> 문의 전화: 0507-1308-4210</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- 푸터 끝 -->
+</th:block>
 </body>
 </html>
