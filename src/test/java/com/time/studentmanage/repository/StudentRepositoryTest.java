@@ -1,11 +1,15 @@
 package com.time.studentmanage.repository;
 
-import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.record.Record;
+import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
+import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
+import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
+import com.time.studentmanage.domain.enums.SearchType;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,10 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -276,5 +284,111 @@ class StudentRepositoryTest {
         //then
         assertThat(result.size()).isEqualTo(7);
         assertThat(result.get(result.size() - 1)).isEqualTo(studentZ.getSchoolName());
+    }
+
+    @Test
+    void 검색엔진_조회_테스트_학생이름() {
+        //given
+        makeDummyData();
+
+        //when
+        Pageable pageable = PageRequest.of(0, 8);
+        StudentSearchReqDto studentSearchReqDto = new StudentSearchReqDto();
+        studentSearchReqDto.setSearchType(SearchType.STUDENT_NAME);
+        studentSearchReqDto.setContent("학생3");
+
+        Page<StudentSearchRespDto> result = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
+
+        //then
+        List<StudentSearchRespDto> resultList = result.get().collect(Collectors.toList());
+        assertThat(resultList.size()).isEqualTo(3);
+        assertThat(resultList.get(0).getName()).contains("학생3");
+    }
+
+    @Test
+    void 검색엔진_조회_테스트_부모이름() {
+        //given
+        makeDummyData();
+
+        //when
+        Pageable pageable = PageRequest.of(0, 8);
+        StudentSearchReqDto studentSearchReqDto = new StudentSearchReqDto();
+        studentSearchReqDto.setSearchType(SearchType.PARENT_NAME);
+        studentSearchReqDto.setContent("학생3부모");
+
+        Page<StudentSearchRespDto> result = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
+
+        //then
+        List<StudentSearchRespDto> resultList = result.get().collect(Collectors.toList());
+        assertThat(resultList.size()).isEqualTo(3);
+        assertThat(resultList.get(0).getParentName()).isEqualTo("C고등학교 학생3부모님");
+    }
+
+    @Test
+    void 검색엔진_조회_테스트_학교이름() {
+        //given
+        makeDummyData();
+
+        //when
+        Pageable pageable = PageRequest.of(0, 8);
+        StudentSearchReqDto studentSearchReqDto = new StudentSearchReqDto();
+        studentSearchReqDto.setSearchType(SearchType.SCHOOL_NAME);
+        studentSearchReqDto.setContent("A초등학교");
+
+        Page<StudentSearchRespDto> result = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
+
+        //then
+        List<StudentSearchRespDto> resultList = result.get().collect(Collectors.toList());
+        assertThat(resultList.size()).isEqualTo(8);
+    }
+
+    private void makeDummyData() {
+        for (int i = 0; i < 10; i++) {
+            Student studentA = Student.builder()
+                    .name("A초등학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("A초등학교")
+                    .parentName("A초등학교 학생" + (i + 1) + "부모님")
+                    .build();
+            Student studentB = Student.builder()
+                    .name("B중학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("B중학교")
+                    .parentName("B중학교 학생" + (i + 1) + "부모님")
+                    .build();
+            Student studentC = Student.builder()
+                    .name("C고등학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("C고등학교")
+                    .parentName("C고등학교 학생" + (i + 1) + "부모님")
+                    .build();
+            studentRepository.save(studentA);
+            studentRepository.save(studentB);
+            studentRepository.save(studentC);
+        }
+    }
+
+    @Test
+    void 선택한_학교에_해당하는_학생_전체_조회_테스트() {
+        //given
+        for (int i = 0; i < 30; i++) {
+            Student student = Student.builder()
+                    .name("학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("테스트 학교")
+                    .grade((int) (Math.random() * 6) + 1)
+                    .build();
+            studentRepository.save(student);
+        }
+        //when
+
+        Pageable pageable = PageRequest.of(1, 8);
+        Page<SelectedSchoolRespDto> result = studentRepository.findAllBySelectedSchoolName("테스트 학교", null, pageable);
+
+        log.info("result={}", result);
+
+        //then
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(pageable.getPageSize());
+        assertThat(result.get().collect(Collectors.toList()).get(0).getGrade()).isLessThanOrEqualTo(result.get().collect(Collectors.toList()).get(7).getGrade());
     }
 }

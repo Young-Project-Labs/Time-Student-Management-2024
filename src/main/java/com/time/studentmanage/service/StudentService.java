@@ -8,11 +8,16 @@ import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,82 +142,37 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<SearchStudentRespDto> getSearchedStudent(String content) {
+    public Page<SelectedSchoolRespDto> getHomePageSearchResult(String schoolName, String studentName, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<SelectedSchoolRespDto> pagingResult = studentRepository.findAllBySelectedSchoolName(schoolName, studentName, pageable);
 
-        if (content.contains("+")) {
-            String[] contentBits = content.split("\\+");
-
-            String schoolName = contentBits[0].trim();
-            String studentName = contentBits[1].trim();
-
-            List<Student> searchedBySchoolNameAndStudentNameList = studentRepository.findAllBySearchEngine(schoolName,
-                    studentName);
-
-            List<SearchStudentRespDto> resultDto = createRespDtoList(searchedBySchoolNameAndStudentNameList);
-
-            if (resultDto == null || resultDto.size() == 0) {
-                throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-            }
-
-            return resultDto;
-        }
-
-        List<Student> searchedByStudentNameList = studentRepository.findAllBySearchEngine(null, content.trim());
-        List<SearchStudentRespDto> resultDto = createRespDtoList(searchedByStudentNameList);
-
-        if (resultDto == null || resultDto.size() == 0) {
+        if (pagingResult == null || pagingResult.isEmpty()) {
             throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
         }
 
-        return resultDto;
+        return pagingResult;
     }
 
-    /**
-     * 학생 전체 목록(/student)에서 검색바 조회
-     * @param searchType -> name, parentName, schoolName
-     * @param content
-     * @return
-     */
-    public List<StudentRespDto> getSearchedStudentBySearchType(String searchType, String content) {
-        List<Student> searchedStudents = studentRepository.findAllBySearch(searchType, content);
-
-        List<StudentRespDto> resultDto = searchedStudents.stream()
-                .map(student -> new StudentRespDto(student))
-                .collect(Collectors.toList());
-
-        if (resultDto.isEmpty() || resultDto.size() == 0) {
-            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+    @Transactional(readOnly = true)
+    public Page<StudentSearchRespDto> getSearchedResult(StudentSearchReqDto studentSearchReqDto) {
+        if (studentSearchReqDto.getPage() < 0) {
+            throw new IllegalArgumentException("잘못된 페이지 요청 입니다.");
         }
-        return resultDto;
 
-    }
+        Pageable pageable = PageRequest.of(studentSearchReqDto.getPage(), 10);
 
-    private List<SearchStudentRespDto> createRespDtoList(List<Student> targetList) {
-        List<SearchStudentRespDto> resultDto = targetList.stream()
-                .map(s -> new SearchStudentRespDto(s.getId(), s.getName(), s.getSchoolName(), s.getGrade()))
-                .collect(Collectors.toList());
-        return resultDto;
+        Page<StudentSearchRespDto> pagingResult = studentRepository.findAllBySearchEngine(studentSearchReqDto, pageable);
+
+        return pagingResult;
     }
 
     //학생 패스워드 변경
     public void updatePwd(String userId, String password) {
         Student student = studentRepository.findByUserId(userId)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 ID입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다."));
         //비밀번호 업데이트 (트랜잭션 종료 시 더티 체킹)
         student.changePassword(bCryptPasswordEncoder.encode(password));
     }
-
-    //학생 전체목록
-    public List<StudentRespDto> getAllStudent() {
-        List<Student> studentList = studentRepository.findAll();
-
-        List<StudentRespDto> studentRespDtoList = studentList.stream()
-                .map(student -> new StudentRespDto(student))
-                .collect(Collectors.toList());
-
-        return studentRespDtoList;
-    }
-
 
     public List<ClassStudentRespDto> getSearchedStudentNotIncludeClassRoom(String content) {
         List<Student> studentList = studentRepository.findAllBySearchEngineWithNameNotIncludeClass(content);
@@ -262,5 +222,5 @@ public class StudentService {
         Optional<Student> studentOP = studentRepository.findByNameAndEmail(findIdDto.getName(), findIdDto.getEmail());
         return studentOP;
     }
-    
+
 }

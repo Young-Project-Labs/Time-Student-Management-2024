@@ -22,7 +22,6 @@
         <li class="breadcrumb-item">
             <a class="link-body-emphasis text-dark" href="/">
                 <i class="fa-solid fa-house"></i>
-                <!--                <span class="visually-hidden">Home</span>-->
             </a>
         </li>
         <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">Home</li>
@@ -40,49 +39,66 @@
                         </li>
                         <hr class="dropdown-divider">
 
-                        <li>
-                            <!-- 초등학교 클릭 시 하위 목록 토글 -->
-                            <a href="#collapse__elementary__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">초등학교</a>
-                            <div th:if="${elementarySchools != null}" class="collapse show" id="collapse__elementary__school">
-                                <!--학교 목록 시작-->
-                                <div class="list-group">
-                                    <a th:each="name : ${elementarySchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                    </a>
-                                </div>
-                                <!--학교 목록 끝-->
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#collapse__middle__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">중학교</a>
-                            <div th:if="${middleSchools != null}" class="collapse show" id="collapse__middle__school">
-                                <!--학교 목록 시작-->
-                                <div class="list-group">
-                                    <a th:each="name : ${middleSchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                    </a>
-                                </div>
-                                <!--학교 목록 끝-->
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#collapse__high__school" class="nav-link fs-5 fw-semibold" data-bs-toggle="collapse">고등학교</a>
-                            <div th:if="${highSchools != null}" class="collapse show" id="collapse__high__school">
-                                <!--학교 목록 시작-->
-                                <div class="list-group">
-                                    <a th:each="name : ${highSchools}" th:href="@{/school(schoolName=${name})}" class="list-group-item list-group-item-action school-name-link" aria-current="true">
-                                        <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                    </a>
-                                </div>
-                                <!--학교 목록 끝-->
-                            </div>
-                        </li>
 
-                        <hr class="dropdown-divider mt-3">
+            <!--사이드 바 시작-->
+            <div class="col-3 text-center border border-2 rounded-3 ">
 
-                        <li>
-                            <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
-                        </li>
+                <ul class="list-group list-group-flush">
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__elementary__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__elementary__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="초등"></span>
+                    </li>
+
+                    <div th:if="${schools.elementarySchools != null}" class="collapse"
+                         id="collapse__elementary__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${schools.elementarySchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__middle__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__middle__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="중등"></span>
+                    </li>
+
+                    <div th:if="${schools.middleSchools != null}" class="collapse" id="collapse__middle__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${schools.middleSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+
+                    <li class="school__name__type list-group-item list-group-item-action" data-bs-toggle="collapse"
+                        href="#collapse__high__school" role="button" aria-expanded="false"
+                        aria-controls="collapse__high__school">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span th:text="고등"></span>
+                    </li>
+
+                    <div th:if="${schools.highSchools != null}" class="collapse" id="collapse__high__school">
+                        <!--학교 목록 시작-->
+                        <div th:each="name: ${schools.highSchools}" class="list-group">
+                            <a th:text="${name}" th:href="@{/school}" href="#"
+                               class="list-group-item list-group-item-action school-name-link" aria-current="true">
+                                학교 이름
+                            </a>
+                        </div>
+                        <!--학교 목록 끝-->
+                    </div>
+                </ul>
 
                         <li th:if ="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
                             <a href="/student" class="nav-link fs-5 fw-semibold" >학생 관리 페이지</a>
@@ -113,6 +129,7 @@
                     </div>
                 </div>
 
+                <!--페이지 결과가 렌더링 될 부분 시작-->
                 <div class="main-content">
                     <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center">
                         데이터가 선택되지 않았습니다.
@@ -121,6 +138,10 @@
                     <a th:href="@{/class/list}">학급 페이지 바로가기</a>
 
                 </div>
+
+                <div class="pagingNation-control">
+                </div>
+                <!--페이지 결과가 렌더링 될 부분 끝-->
             </div>
 
         </div>
@@ -133,6 +154,8 @@
     $(document).ready(function () {
         $(".school-name-link").click(function (event) {
             event.preventDefault(); // 기본 이벤트를 방지합니다.
+            $("#searchForm").find("input[name='content']").val('');
+
             var href = $(this).attr('href'); // 클릭된 링크의 href 값을 가져옵니다.
             var schoolName = $(this).text().trim();
 
@@ -141,39 +164,17 @@
             $.ajax({
                 url: href, // 서버로 요청을 보낼 URL
                 type: 'GET', // HTTP 요청 방식
+                data: {
+                    schoolName: schoolName,
+                    // studentName: studentName,
+                },
                 success: function (response) {
                     $(".main-content").empty()
                     if (response.errorResult !== null) {
                         var errorMessage = response.errorResult.message;
                         displayErrorMessage(errorMessage);
                     } else {
-                        var resultHtml =
-                            '<table class="table table-hover">' +
-                            '<thead>' +
-                            '    <tr>' +
-                            '        <th scope="col">학년</th>' +
-                            '        <th scope="col">이름</th>' +
-                            '    </tr>' +
-                            '</thead>' +
-                            '<tbody>';
-
-                        // 각 학생 정보에 대한 행을 추가
-                        $.each(response.data, function (index, student) {
-                            resultHtml +=
-                                '<tr>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
-                                '    </td>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
-                                '    </td>' +
-                                '</tr>';
-                        });
-
-                        resultHtml += '</tbody></table>';
-
-                        // 결과 HTML을 ".main-content"에 추가
-                        $(".main-content").empty().append(resultHtml);
+                        draw(response); // 페이지 렌더링
                     }
 
                 },
@@ -184,58 +185,141 @@
             });
         });
 
+        function draw (response) {
+            var resultHtml =
+                '<table class="table table-hover">' +
+                '<thead>' +
+                '    <tr>' +
+                '        <th scope="col">학년</th>' +
+                '        <th scope="col">이름</th>' +
+                '    </tr>' +
+                '</thead>' +
+                '<tbody>';
+
+            // 각 학생 정보에 대한 행을 추가
+            $.each(response.data.content, function (index, student) {
+                resultHtml +=
+                    '<tr>' +
+                    '    <td>' +
+                    '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
+                    '    </td>' +
+                    '    <td>' +
+                    '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
+                    '    </td>' +
+                    '</tr>';
+            });
+
+            resultHtml += '</tbody></table>';
+
+            // 결과 HTML을 ".main-content"에 추가
+            $(".main-content").empty().append(resultHtml);
+
+            // 페이지네이션 데이터
+            $(".pagingNation-control").empty();
+
+            var totalPages = response.data.totalPages;
+            var currentPage = response.data.number;
+
+            // 페이지네이션 HTML 초기화
+            var paginationHtml = '<nav aria-label="Page navigation">\n' +
+                '    <ul class="pagination justify-content-center">\n';
+
+            // 이전 페이지 버튼
+            if (currentPage > 0) { // 현재 페이지가 0보다 크면 이전 페이지가 존재
+                paginationHtml += '<li class="page-item">\n' +
+                    '    <a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Previous</a>\n' +
+                    '</li>\n';
+            } else {
+                paginationHtml += '<li class="page-item disabled">\n' +
+                    '    <a class="page-link" href="#">Previous</a>\n' +
+                    '</li>\n';
+            }
+
+            // 페이지 번호 버튼
+            for (let i = 0; i < totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHtml += '<li class="page-item active"><a class="page-link" href="#" data-page="' + i + '">' + (i + 1) + '</a></li>\n';
+                } else {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + (i + 1) + '</a></li>\n';
+                }
+            }
+
+            // 다음 페이지 버튼
+            if (currentPage < totalPages - 1) { // 현재 페이지가 마지막 페이지보다 작으면 다음 페이지가 존재
+                paginationHtml += '<li class="page-item">\n' +
+                    '    <a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Next</a>\n' +
+                    '</li>\n';
+            } else {
+                paginationHtml += '<li class="page-item disabled">\n' +
+                    '    <a class="page-link" href="#">Next</a>\n' +
+                    '</li>\n';
+            }
+
+            paginationHtml += '    </ul>\n' +
+                '</nav>';
+
+            // 페이지네이션 HTML을 페이지에 추가
+            $(".pagingNation-control").append(paginationHtml);
+
+            // 페이지네이션 링크에 클릭 이벤트 추가
+            $(".pagination").on("click", "a.page-link", function (event) {
+                event.preventDefault(); // 기본 이벤트 방지
+                var page = $(this).data("page"); // 클릭된 페이지 번호 가져오기
+                console.log(page);
+                // 페이지 번호를 사용하여 새로운 데이터 요청
+                // 예: 새 페이지 데이터 로드 함수를 호출
+                var schoolName = $("#breadcrumb-school").text().trim(); // Breadcrumb에서 학교 이름 가져오기
+                var studentName = $("#searchForm").find("input[name='content']").val();
+
+                // AJAX 요청을 날립니다.
+                $.ajax({
+                    url: "/school", // 요청을 보낼 서버의 URL 주소
+                    type: "GET", // HTTP 요청 방법 (GET, POST 등)
+                    data: {
+                        schoolName: schoolName,
+                        studentName: studentName,
+                        page: page
+                    }, // 서버로 보낼 데이터
+                    dataType: "json", // 서버에서 보내줄 데이터의 타입 (xml, json, script, html)
+                    success: function(response) {
+                        // 요청이 성공하면 이 부분이 실행됩니다.
+                        // response는 서버에서 보낸 데이터입니다.
+                        // 여기에서 화면을 업데이트하는 함수를 호출할 수 있습니다.
+                        // 예: updateContent(response);
+                        console.log("Data loaded successfully");
+                        draw(response);
+                    },
+                    error: function(xhr, status, error) {
+                        // 요청이 실패하면 이 부분이 실행됩니다.
+                        console.error("Error: " + error);
+                    }
+                });
+            });
+        }
+
+
         $("#searchForm").submit(function (event) {
             event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
-
-            var formData = $(this).serialize(); // 폼 데이터를 가져옵니다.
+            var schoolName = $("#breadcrumb-school").text().trim(); // Breadcrumb에서 학교 이름 가져오기
+            var studentName = $("#searchForm").find("input[name='content']").val();
             var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
 
             $.ajax({
                 url: url,
                 type: 'GET',
-                data: formData,
+                data: {
+                    schoolName: schoolName,
+                    studentName: studentName
+                },
                 dataType: 'json',
                 success: function (response) {
-
-                    $(".main-content").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
-
                     if (response.errorResult !== null) {
+                        $(".pagingNation-control").empty();
                         var errorMessage = response.errorResult.message;
                         displayErrorMessage(errorMessage);
                     } else {
-                        var resultHtml =
-                            '<table class="table table-hover">' +
-                            '<thead>' +
-                            '    <tr>' +
-                            '        <th scope="col">학교명</th>' +
-                            '        <th scope="col">학년</th>' +
-                            '        <th scope="col">이름</th>' +
-                            '    </tr>' +
-                            '</thead>' +
-                            '<tbody>';
-
-                        // 각 학생 정보에 대한 행을 추가
-                        $.each(response.data, function (index, student) {
-                            resultHtml +=
-                                '<tr>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.schoolName + '</a>' +
-                                '    </td>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
-                                '    </td>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
-                                '    </td>' +
-                                '</tr>';
-                        });
-
-                        resultHtml += '</tbody></table>';
-
-                        // 결과 HTML을 ".main-content"에 추가
-                        $(".main-content").empty().append(resultHtml);
+                        draw(response);
                     }
-
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "검색어를 입력하지 않습니다.";

@@ -124,12 +124,37 @@ public class TestDataInit {
 
     @PostConstruct
     public void initStudent() {
+        for (int i = 0; i < 30; i++) {
+            Student studentA = Student.builder()
+                    .name("A초등학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("A초등학교")
+                    .parentName("A초등학교 학생" + (i + 1) + "부모님")
+                    .build();
+            Student studentB = Student.builder()
+                    .name("B중학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("B중학교")
+                    .parentName("B중학교 학생" + (i + 1) + "부모님")
+                    .build();
+            Student studentC = Student.builder()
+                    .name("C고등학교 학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("C고등학교")
+                    .parentName("C고등학교 학생" + (i + 1) + "부모님")
+                    .build();
+            studentRepository.save(studentA);
+            studentRepository.save(studentB);
+            studentRepository.save(studentC);
+        }
+
+
         String password = "1234";
         String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
-                .name("철수")
+                .name("김영재")
                 .userId("cs123456").password(encodePassword)
-                .email("test@naver.com")
+                .email("youngjae459@naver.com")
                 .parentName("철수어머니").parentPhoneNumber("010-2222-3333")
                 .phoneNumber("010-1111-2222").schoolName("용호초등학교")
                 .classType(ClassType.ELEMENTARY).grade(1)

@@ -16,13 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class RecordSearchDto {
 
-    @NotNull
     private SearchType searchType; // 검색 타입: [CONTENT, TEACHER_NAME]
-    @NotBlank
     private String content;
-    @NotNull
-    private Long studentId;
-    @NotBlank
     private String dates;
     @Min(0)
     private int page;

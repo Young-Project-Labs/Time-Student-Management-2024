@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.time.studentmanage.domain.dto.record.QRecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchReqCondition;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
@@ -33,10 +34,7 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
         this.query = new JPAQueryFactory(em);
     }
 
-    public Page<RecordRespDto> findAllBySearchEngine(Student student,
-                                                     SearchType searchType, String content,
-                                                     LocalDateTime fromDate, LocalDateTime toDate,
-                                                     Pageable pageable) {
+    public Page<RecordRespDto> findAllBySearchEngine(RecordSearchReqCondition searchCondition) {
         QRecord record = QRecord.record;
 
         List<RecordRespDto> fetch = query.select(
@@ -51,23 +49,24 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
                 )
                 .from(record)
                 .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeSearchTypeAndContent(searchType, content)
+                                .and(record.student.eq(searchCondition.getStudent())),
+                        likeSearchTypeAndContent(searchCondition.getSearchType(), searchCondition.getContent()),
+                        betweenDateRange(searchCondition.getFromDate(), searchCondition.getToDate())
                 )
                 .orderBy(record.createDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .offset(searchCondition.getPageable().getOffset())
+                .limit(searchCondition.getPageable().getPageSize())
                 .fetch();
 
         JPAQuery<Long> count = query.select(record.count())
                 .from(record)
                 .where(record.status.eq(RecordStatus.PUBLISHED)
-                                .and(record.student.eq(student)),
-                        likeSearchTypeAndContent(searchType, content),
-                        betweenDateRange(fromDate, toDate)
+                                .and(record.student.eq(searchCondition.getStudent())),
+                        likeSearchTypeAndContent(searchCondition.getSearchType(), searchCondition.getContent()),
+                        betweenDateRange(searchCondition.getFromDate(), searchCondition.getToDate())
                 );
 
-        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
+        return PageableExecutionUtils.getPage(fetch, searchCondition.getPageable(), count::fetchOne);
     }
 
     public Page<RecordRespDto> findAllPaging(Student student, Pageable pageable) {

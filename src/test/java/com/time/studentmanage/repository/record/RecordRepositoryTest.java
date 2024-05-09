@@ -2,6 +2,7 @@ package com.time.studentmanage.repository.record;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
+import com.time.studentmanage.domain.dto.record.RecordSearchReqCondition;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
@@ -176,13 +177,15 @@ class RecordRepositoryTest {
         //when
 
         Pageable pageable = PageRequest.of(0, 8);
-        Page<RecordRespDto> pageResult = recordRepository.findAllBySearchEngine(s, SearchType.CONTENT, "줄리아피드백", null, null, pageable);
+        RecordSearchReqCondition searchCondition = new RecordSearchReqCondition(s, SearchType.CONTENT, "줄리아피드백", null, null, pageable);
+
+        Page<RecordRespDto> pageResult = recordRepository.findAllBySearchEngine(searchCondition);
 
         //then
         log.info("pageResult={}", pageResult);
         assertThat(pageResult.get().collect(Collectors.toList()).size()).isEqualTo(8);
 
-        Page<RecordRespDto> pagingResultNameSearch = recordRepository.findAllBySearchEngine(s, SearchType.TEACHER_NAME, "안샘", null, null, PageRequest.of(2,8));
+        Page<RecordRespDto> pagingResultNameSearch = recordRepository.findAllBySearchEngine(new RecordSearchReqCondition(s, SearchType.TEACHER_NAME, "안샘", null, null, PageRequest.of(2,8)));
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).size()).isEqualTo(4);
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).get(3).getTeacherName()).isEqualTo("안샘");
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).get(0).getCreateDate()).isAfter(pagingResultNameSearch.get().collect(Collectors.toList()).get(3).getCreateDate());

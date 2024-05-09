@@ -9,10 +9,15 @@
 <!--점보트론 시작-->
 <div class="p-5 text-center rounded-3">
     <i class="fas fa-regular fa-triangle-exclamation fa-4x" style="color: #d62b1f;"></i>
-    <h1 class="display-5 fw-bold">처리할 수 없는 요청입니다.</h1>
-    <h2 class="display-5 fw-bold">Q&A에 문의주세요.</h2>
-
+    <h1 class="display-5 fw-bold">오류! 잘못된 요청입니다.</h1>
+    <p class="col-lg-8 mx-auto fs-5 text-muted" th:text="${errorMessage}">
+        Error Details
+    </p>
     <div class="d-inline-flex gap-2 mb-5">
+        <button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill mr-1" type="button" th:onclick="'window.location.href=\'' + @{${backLink}} + '\''">
+            [[${buttonName}]]
+            <i class="fa-solid fa-arrow-right fa-beat"></i>
+        </button>
         <button class="btn btn-outline-secondary btn-lg px-4 rounded-pill" type="button"  th:onclick="|location.href='/'|">
             홈으로
         </button>

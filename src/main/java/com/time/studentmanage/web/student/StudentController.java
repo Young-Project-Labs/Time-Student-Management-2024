@@ -1,20 +1,24 @@
 package com.time.studentmanage.web.student;
 
 import com.time.studentmanage.domain.dto.student.*;
+import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -22,23 +26,30 @@ import java.util.Optional;
 public class StudentController {
     private final StudentService studentService;
 
-    /**
-     * 학생 목록
-     * - 선생 타입인 경우에만 접근할 수 있음.
-     * - 학생 정보 수정 및 삭제가 필요할 때
-     * - 학생 현황 파악에도 사용
-     * - 페이징 처리 필요
-     *
-     */
-    @GetMapping("/student")
-    public String student_list_admin(HttpSession session, Model model) {
+    @ModelAttribute("searchTypeOptions")
+    public SearchType[] searchType() {
+        SearchType[] filteredSearchTypes = Arrays.stream(SearchType.values())
+                .filter(type -> type == SearchType.STUDENT_NAME ||
+                        type == SearchType.SCHOOL_NAME ||
+                        type == SearchType.PARENT_NAME)
+                .collect(Collectors.toList())
+                .toArray(new SearchType[0]); // 배열 타입을 알려주기 위함
+
+        return filteredSearchTypes;
+    }
+
+    @GetMapping("/student/list")
+    public String updateStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
+                                        HttpSession session, Model model) {
         //학생이거나 혹은 세션이 없는 경우 접근 X
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
             return "redirect:/";
         }
 
-        List<StudentRespDto> studentList = studentService.getAllStudent();
-        model.addAttribute("studentList", studentList);
+        Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);
+
+        model.addAttribute("studentSearchReqDto", studentSearchReqDto);
+        model.addAttribute("pagingResult", pagingResult);
 
         return "student/student_list_admin";
     }

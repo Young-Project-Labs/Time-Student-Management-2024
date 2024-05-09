@@ -2,10 +2,13 @@ package com.time.studentmanage.web.student;
 
 import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
 import com.time.studentmanage.domain.dto.student.*;
+import com.time.studentmanage.domain.enums.SearchType;
+import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.StudentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,45 +44,36 @@ public class StudentApiController {
     }
 
     @GetMapping("/school")
-    public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName) {
+    public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName,
+                                                               @RequestParam(value = "studentName", required = false) String studentName,
+                                                               @RequestParam(value = "page", defaultValue = "0") int page) {
 
         if (schoolName == null || schoolName.equals("")) {
             throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");
         }
 
-        List<SelectedSchoolRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
-        return ResponseEntity.ok(new StudentSearchResult(studentList, null));
+        Page<SelectedSchoolRespDto> respDto = studentService.getHomePageSearchResult(schoolName, studentName, page);
+
+        return ResponseEntity.ok(new StudentSearchResult(respDto, null));
     }
 
 
     @GetMapping("/search")
-    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "searchType", required = false) String searchType, @RequestParam(value = "content") String content) {
+    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "schoolName") String schoolName,
+                                                             @RequestParam(value = "studentName") String studentName,
+                                                             @RequestParam(value = "page", defaultValue = "0") int page) {
 
-        if (content.trim().equals("") || content == null) {
+        if (studentName.trim().equals("") || studentName == null) {
             throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
         }
-        //searchType 있는 경우 -> 학생 목록에서의 검색 로직
-        if (searchType != null) {
-            /**
-             * 학생 전체 목록(/student)에서 검색바 조회
-             * @param searchType -> name, parentName, schoolName
-             * @param keyword
-             * @return
-             */
-            log.info("searchStudent 메서드 searchType={}", searchType);
-            log.info("searchStudent 메서드 content={}", content);
-            if (content.trim().equals("") || content == null) {
-                throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
-            }
 
-            List<StudentRespDto> studentRespDtoList = studentService.getSearchedStudentBySearchType(searchType, content);
-            return ResponseEntity.ok(new StudentSearchResult(studentRespDtoList, null));
+        Page<SelectedSchoolRespDto> searchedResult = studentService.getHomePageSearchResult(schoolName, studentName, page);
+
+        if (searchedResult.isEmpty() || searchedResult == null) {
+            throw new DataNotFoundException("결과가 없습니다.");
         }
 
-        //searchType 없는 경우 -> 피드백 목록에서의 검색 로직
-        List<SearchStudentRespDto> studentList = studentService.getSearchedStudent(content);
-
-        return ResponseEntity.ok(new StudentSearchResult(studentList, null));
+        return ResponseEntity.ok(new StudentSearchResult(searchedResult, null));
     }
 
     @GetMapping("/class/student/search")
