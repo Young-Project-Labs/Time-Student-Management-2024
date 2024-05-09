@@ -5,9 +5,11 @@
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+
 </head>
 <body>
-<div class="p-2">
+<div>
     <!-- 헤더 시작 -->
     <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
@@ -99,8 +101,16 @@
                     <button type="submit" class="btn btn-primary btn mb-3 me-3">수정</button>
                     <button type="button" class="btn btn-danger btn mb-3" onclick="history.back()">뒤로 가기</button>
                 </form>
-                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- footer 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+<!-- footer 끝 -->
+
+
 <!-- 패스워드 변경 모달 -->
 <div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

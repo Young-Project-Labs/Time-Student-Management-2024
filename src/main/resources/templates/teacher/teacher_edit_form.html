@@ -5,10 +5,12 @@
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+
 
 </head>
 <body>
-<div class="p-2">
+<div>
     <!-- 헤더 시작 -->
     <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
@@ -24,7 +26,7 @@
     </ol>
     <!--브레드 크럼 끝-->
 
-    <div class="container-fluid ">
+    <div class="container-fluid">
         <div class="row">
             <!-- 사이드바 -->
             <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
@@ -103,7 +105,9 @@
         </div>
     </div>
 </div>
-
+<!-- footer 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+<!-- footer 끝 -->
 <!-- 패스워드 변경 모달 -->
 <div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

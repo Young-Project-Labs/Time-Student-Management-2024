@@ -4,6 +4,8 @@
     <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+
 </head>
 <body>
 <div class="">
@@ -97,6 +99,9 @@
 
     </form>
 </div>
+<!-- footer 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+<!-- footer 끝 -->
     <!-- 하이픈 자동 추가 -->
     <script>
     const autoHyphen = (target) => {

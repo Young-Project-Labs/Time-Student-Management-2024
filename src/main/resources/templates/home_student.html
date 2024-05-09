@@ -5,6 +5,8 @@
     <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -21,11 +23,11 @@
             object-fit: cover; /* 이미지가 div에 맞게 조절되면서 비율을 유지 */
         }
     </style>
-    <title>Document</title>
+    <title>TIME</title>
 </head>
 <body>
 
-<div class="p-2">
+<div>
     <!-- 헤더 시작 -->
     <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝-->
@@ -39,7 +41,9 @@
         <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">HOME</li>
     </ol>
     <!--브레드 크럼 끝-->
-    <div class="container-fluid ">
+
+    <!-- 메인 시작 -->
+    <div class="container-fluid">
         <div class="row">
             <!-- 사이드바 -->
             <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
@@ -88,12 +92,25 @@
                             <p class="mb-1">공지사항 내용 요약 1...</p>
                         </a>
                         <!-- 추가 공지사항 항목이 여기에 들어갑니다. -->
+                        <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">공지사항 제목 2</h5>
+                                <small>3일 전</small>
+                            </div>
+                            <p class="mb-1">공지사항 내용 요약 1...</p>
+                        </a>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+    <!-- 메인 끝 -->
 </div>
+
+<!-- footer 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+<!-- footer 끝 -->
 
 <script>
     $(document).ready(function () {
