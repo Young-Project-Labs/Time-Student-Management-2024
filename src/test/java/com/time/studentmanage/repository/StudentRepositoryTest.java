@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository;
 
+import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
@@ -365,5 +367,29 @@ class StudentRepositoryTest {
             studentRepository.save(studentB);
             studentRepository.save(studentC);
         }
+    }
+
+    @Test
+    void 선택한_학교에_해당하는_학생_전체_조회_테스트() {
+        //given
+        for (int i = 0; i < 30; i++) {
+            Student student = Student.builder()
+                    .name("학생" + (i + 1))
+                    .attendanceStatus(AttendanceStatus.Y)
+                    .schoolName("테스트 학교")
+                    .grade((int)(Math.random() * 6) + 1)
+                    .build();
+            studentRepository.save(student);
+        }
+        //when
+
+        Pageable pageable = PageRequest.of(1, 8);
+        Page<SelectedSchoolRespDto> result = studentRepository.findAllBySelectedSchoolName("테스트 학교", pageable);
+
+        log.info("result={}", result);
+
+        //then
+        assertThat(result.get().collect(Collectors.toList()).size()).isEqualTo(pageable.getPageSize());
+        assertThat(result.get().collect(Collectors.toList()).get(0).getGrade()).isLessThanOrEqualTo(result.get().collect(Collectors.toList()).get(7).getGrade());
     }
 }
