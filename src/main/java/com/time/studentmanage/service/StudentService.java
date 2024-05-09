@@ -142,6 +142,18 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
+    public Page<SelectedSchoolRespDto> testService(String schoolName, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<SelectedSchoolRespDto> pagingResult = studentRepository.findAllBySelectedSchoolName(schoolName, pageable);
+
+        if (pagingResult == null || pagingResult.isEmpty()) {
+            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
+        }
+
+        return pagingResult;
+    }
+
+    @Transactional(readOnly = true)
     public Page<StudentSearchRespDto> getSearchedResult(StudentSearchReqDto studentSearchReqDto) {
         if (studentSearchReqDto.getPage() < 0) {
             throw new IllegalArgumentException("잘못된 페이지 요청 입니다.");
