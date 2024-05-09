@@ -339,46 +339,13 @@
                 data: formData,
                 dataType: 'json',
                 success: function (response) {
-
-                    $(".main-content").empty(); // ".main-content" 내용을 비우기. 새로운 내용으로 채우기 위함
-
                     if (response.errorResult !== null) {
+                        $(".pagingNation-control").empty();
                         var errorMessage = response.errorResult.message;
                         displayErrorMessage(errorMessage);
                     } else {
-                        var resultHtml =
-                            '<table class="table table-hover">' +
-                            '<thead>' +
-                            '    <tr>' +
-                            '        <th scope="col">학교명</th>' +
-                            '        <th scope="col">학년</th>' +
-                            '        <th scope="col">이름</th>' +
-                            '    </tr>' +
-                            '</thead>' +
-                            '<tbody>';
-
-                        // 각 학생 정보에 대한 행을 추가
-                        $.each(response.data, function (index, student) {
-                            resultHtml +=
-                                '<tr>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.schoolName + '</a>' +
-                                '    </td>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
-                                '    </td>' +
-                                '    <td>' +
-                                '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
-                                '    </td>' +
-                                '</tr>';
-                        });
-
-                        resultHtml += '</tbody></table>';
-
-                        // 결과 HTML을 ".main-content"에 추가
-                        $(".main-content").empty().append(resultHtml);
+                        draw(response);
                     }
-
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "검색어를 입력하지 않습니다.";
