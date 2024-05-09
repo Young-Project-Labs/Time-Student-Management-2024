@@ -3,9 +3,7 @@ package com.time.studentmanage.repository.student;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.time.studentmanage.domain.dto.student.QStudentSearchRespDto;
-import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
-import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
+import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.QStudent;
@@ -40,6 +38,33 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
                 .fetch();
 
         return result;
+    }
+
+    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, Pageable pageable) {
+        QStudent student = QStudent.student;
+
+        List<SelectedSchoolRespDto> fetch = query.select(
+                        new QSelectedSchoolRespDto(
+                                student.id,
+                                student.name,
+                                student.grade
+                        )
+                ).from(student)
+                .where(student.attendanceStatus.eq(AttendanceStatus.Y)
+                        .and(student.schoolName.eq(schoolName))
+                )
+                .orderBy(student.grade.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> count = query.select(student.count())
+                .from(student)
+                .where(student.attendanceStatus.eq(AttendanceStatus.Y)
+                        .and(student.schoolName.eq(schoolName))
+                );
+
+        return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
     public Page<StudentSearchRespDto> findAllBySearchEngine(StudentSearchReqDto studentSearchReqDto, Pageable pageable) {
