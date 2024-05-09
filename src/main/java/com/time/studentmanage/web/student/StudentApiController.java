@@ -6,6 +6,7 @@ import com.time.studentmanage.service.StudentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +42,17 @@ public class StudentApiController {
     }
 
     @GetMapping("/school")
-    public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName) {
+    public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName,
+                                                               @RequestParam(value = "page", defaultValue = "0") int page) {
 
         if (schoolName == null || schoolName.equals("")) {
             throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");
         }
 
-        List<SelectedSchoolRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
-        return ResponseEntity.ok(new StudentSearchResult(studentList, null));
+//        List<SelectedSchoolRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
+        Page<SelectedSchoolRespDto> respDto = studentService.testService(schoolName, page);
+
+        return ResponseEntity.ok(new StudentSearchResult(respDto, null));
     }
 
 // TODO: 컴파일 오류 떄문에 주석 처리 해놓음
