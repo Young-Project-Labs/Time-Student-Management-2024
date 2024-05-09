@@ -36,7 +36,7 @@ public class MailService {
                           String authNumber) {
         SimpleMailMessage emailForm = createEmailForm(toEmail, title, authNumber);
         //redis에 인증코드 저장(key : value) + 만료 시간 설정(300초)
-        redisUtil.setDataExpire(authNumber,toEmail,60*5L);
+        redisUtil.setDataExpire(toEmail,authNumber,60*5L);
         try {
             emailSender.send(emailForm);
         } catch (RuntimeException e) {
@@ -111,11 +111,11 @@ public class MailService {
     // 인증번호 체크
     public boolean checkAuthNum(String email,String authNum){
         log.info("checkAuthNum 인증번호 검증");
-        if(redisUtil.getData(authNum)==null){
+        if(redisUtil.getData(email)==null){
             // authCode가 틀리거나, null인 경우 발생하는 예외처리
             throw new EmailAuthException("인증번호가 일치하지 않습니다. 다시 입력해주세요.");
         }
-        else if(redisUtil.getData(authNum).equals(email)){
+        else if(redisUtil.getData(email).equals(authNum)){
             return true;
         }
         else{
