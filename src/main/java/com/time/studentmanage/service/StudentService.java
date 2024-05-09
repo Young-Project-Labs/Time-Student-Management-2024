@@ -142,9 +142,9 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SelectedSchoolRespDto> testService(String schoolName, int page) {
+    public Page<SelectedSchoolRespDto> getHomePageSearchResult(String schoolName, String studentName, int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<SelectedSchoolRespDto> pagingResult = studentRepository.findAllBySelectedSchoolName(schoolName, pageable);
+        Page<SelectedSchoolRespDto> pagingResult = studentRepository.findAllBySelectedSchoolName(schoolName, studentName, pageable);
 
         if (pagingResult == null || pagingResult.isEmpty()) {
             throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
