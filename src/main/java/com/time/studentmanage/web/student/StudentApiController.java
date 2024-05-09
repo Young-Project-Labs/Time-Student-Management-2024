@@ -45,32 +45,29 @@ public class StudentApiController {
 
     @GetMapping("/school")
     public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName,
+                                                               @RequestParam(value = "studentName", required = false) String studentName,
                                                                @RequestParam(value = "page", defaultValue = "0") int page) {
 
         if (schoolName == null || schoolName.equals("")) {
             throw new IllegalArgumentException("선택된 학교 정보가 없습니다.");
         }
 
-//        List<SelectedSchoolRespDto> studentList = studentService.getAllStudentsBySchoolName(schoolName);
-        Page<SelectedSchoolRespDto> respDto = studentService.testService(schoolName, page);
+        Page<SelectedSchoolRespDto> respDto = studentService.getHomePageSearchResult(schoolName, studentName, page);
 
         return ResponseEntity.ok(new StudentSearchResult(respDto, null));
     }
 
 
     @GetMapping("/search")
-    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "content") String content) {
+    public ResponseEntity<StudentSearchResult> searchStudent(@RequestParam(value = "schoolName") String schoolName,
+                                                             @RequestParam(value = "studentName") String studentName,
+                                                             @RequestParam(value = "page", defaultValue = "0") int page) {
 
-        if (content.trim().equals("") || content == null) {
+        if (studentName.trim().equals("") || studentName == null) {
             throw new IllegalArgumentException("검색어가 입력되지 않았습니다.");
         }
 
-        StudentSearchReqDto studentSearchReqDto = new StudentSearchReqDto();
-        studentSearchReqDto.setSearchType(SearchType.STUDENT_NAME);
-        studentSearchReqDto.setContent(content);
-        studentSearchReqDto.setPage(0);
-
-        Page<StudentSearchRespDto> searchedResult = studentService.getSearchedResult(studentSearchReqDto);
+        Page<SelectedSchoolRespDto> searchedResult = studentService.getHomePageSearchResult(schoolName, studentName, page);
 
         if (searchedResult.isEmpty() || searchedResult == null) {
             throw new DataNotFoundException("결과가 없습니다.");
