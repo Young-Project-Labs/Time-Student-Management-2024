@@ -103,7 +103,7 @@
                          id="collapse__elementary__school">
                         <!--학교 목록 시작-->
                         <div th:each="name: ${schools.elementarySchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                            <a th:text="${name}" th:href="@{/school}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름
                             </a>
@@ -121,7 +121,7 @@
                     <div th:if="${schools.middleSchools != null}" class="collapse" id="collapse__middle__school">
                         <!--학교 목록 시작-->
                         <div th:each="name: ${schools.middleSchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                            <a th:text="${name}" th:href="@{/school}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름
                             </a>
@@ -139,7 +139,7 @@
                     <div th:if="${schools.highSchools != null}" class="collapse" id="collapse__high__school">
                         <!--학교 목록 시작-->
                         <div th:each="name: ${schools.highSchools}" class="list-group">
-                            <a th:text="${name}" th:href="@{/school(schoolName=${name})}" href="#"
+                            <a th:text="${name}" th:href="@{/school}" href="#"
                                class="list-group-item list-group-item-action school-name-link" aria-current="true">
                                 학교 이름
                             </a>
@@ -191,6 +191,8 @@
     $(document).ready(function () {
         $(".school-name-link").click(function (event) {
             event.preventDefault(); // 기본 이벤트를 방지합니다.
+            $("#searchForm").find("input[name='content']").val('');
+
             var href = $(this).attr('href'); // 클릭된 링크의 href 값을 가져옵니다.
             var schoolName = $(this).text().trim();
 
@@ -199,6 +201,10 @@
             $.ajax({
                 url: href, // 서버로 요청을 보낼 URL
                 type: 'GET', // HTTP 요청 방식
+                data: {
+                    schoolName: schoolName,
+                    // studentName: studentName,
+                },
                 success: function (response) {
                     $(".main-content").empty()
                     if (response.errorResult !== null) {
@@ -300,6 +306,7 @@
                 // 페이지 번호를 사용하여 새로운 데이터 요청
                 // 예: 새 페이지 데이터 로드 함수를 호출
                 var schoolName = $("#breadcrumb-school").text().trim(); // Breadcrumb에서 학교 이름 가져오기
+                var studentName = $("#searchForm").find("input[name='content']").val();
 
                 // AJAX 요청을 날립니다.
                 $.ajax({
@@ -307,6 +314,7 @@
                     type: "GET", // HTTP 요청 방법 (GET, POST 등)
                     data: {
                         schoolName: schoolName,
+                        studentName: studentName,
                         page: page
                     }, // 서버로 보낼 데이터
                     dataType: "json", // 서버에서 보내줄 데이터의 타입 (xml, json, script, html)
@@ -316,7 +324,7 @@
                         // 여기에서 화면을 업데이트하는 함수를 호출할 수 있습니다.
                         // 예: updateContent(response);
                         console.log("Data loaded successfully");
-                        draw(response); // 이 함수는 직접 구현해야 합니다.
+                        draw(response);
                     },
                     error: function(xhr, status, error) {
                         // 요청이 실패하면 이 부분이 실행됩니다.
@@ -329,14 +337,17 @@
 
         $("#searchForm").submit(function (event) {
             event.preventDefault(); // 폼 제출 기본 동작을 중지합니다.
-
-            var formData = $(this).serialize(); // 폼 데이터를 가져옵니다.
+            var schoolName = $("#breadcrumb-school").text().trim(); // Breadcrumb에서 학교 이름 가져오기
+            var studentName = $("#searchForm").find("input[name='content']").val();
             var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
 
             $.ajax({
                 url: url,
                 type: 'GET',
-                data: formData,
+                data: {
+                    schoolName: schoolName,
+                    studentName: studentName
+                },
                 dataType: 'json',
                 success: function (response) {
                     if (response.errorResult !== null) {
