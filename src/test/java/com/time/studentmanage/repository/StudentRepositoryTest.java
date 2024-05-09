@@ -3,13 +3,13 @@ package com.time.studentmanage.repository;
 import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
-import com.time.studentmanage.domain.enums.SearchType;
-import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
+import com.time.studentmanage.domain.enums.SearchType;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
@@ -286,7 +285,7 @@ class StudentRepositoryTest {
         assertThat(result.size()).isEqualTo(7);
         assertThat(result.get(result.size() - 1)).isEqualTo(studentZ.getSchoolName());
     }
-    
+
     @Test
     void 검색엔진_조회_테스트_학생이름() {
         //given
@@ -377,14 +376,14 @@ class StudentRepositoryTest {
                     .name("학생" + (i + 1))
                     .attendanceStatus(AttendanceStatus.Y)
                     .schoolName("테스트 학교")
-                    .grade((int)(Math.random() * 6) + 1)
+                    .grade((int) (Math.random() * 6) + 1)
                     .build();
             studentRepository.save(student);
         }
         //when
 
         Pageable pageable = PageRequest.of(1, 8);
-        Page<SelectedSchoolRespDto> result = studentRepository.findAllBySelectedSchoolName("테스트 학교", pageable);
+        Page<SelectedSchoolRespDto> result = studentRepository.findAllBySelectedSchoolName("테스트 학교", null, pageable);
 
         log.info("result={}", result);
 
