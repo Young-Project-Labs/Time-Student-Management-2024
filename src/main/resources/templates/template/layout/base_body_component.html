@@ -63,28 +63,93 @@
                 <hr class="dropdown-divider">
 
                 <li th:if="|${!session.isEmpty()}|">
-                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
-                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'TEACHER')}|" th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" aria-current="page">내 정보 관리</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|"
+                       th:href="@{/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold"
+                       aria-current="page">내 정보 관리</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'TEACHER')}|"
+                       th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold"
+                       aria-current="page">내 정보 관리</a>
                 </li>
 
                 <li th:if="|${!session.isEmpty()}|">
                     <a href="/login" th:if="|${session.isEmpty()}|" class="nav-link fs-5 fw-semibold">학습 피드백</a>
-                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|" th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold">학습 피드백</a>
+                    <a th:if="|${#strings.equals(session.loginMember.memberType, 'STUDENT')}|"
+                       th:href="@{/record/{id}(id=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold">학습
+                        피드백</a>
                 </li>
 
                 <li>
-                    <a href="#" th:if="|${session.isEmpty() or #strings.equals(session.loginMember.memberType, 'STUDENT')}|" class="nav-link fs-5 fw-semibold" data-bs-toggle="modal" data-bs-target="#inquiryModal">문의하기</a>
-                </li>
-                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
-                    <hr class="dropdown-divider">
-                    <a href="/student" class="nav-link fs-5 fw-semibold" >학생 관리 페이지</a>
+                    <a href="#"
+                       th:if="|${session.isEmpty() or #strings.equals(session.loginMember.memberType, 'STUDENT')}|"
+                       class="nav-link fs-5 fw-semibold" data-bs-toggle="modal" data-bs-target="#inquiryModal">문의하기</a>
                 </li>
 
-                <li th:if ="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and !#strings.equals(session.loginMember.position, 'TEACHER')}">
+                <li th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
                     <hr class="dropdown-divider">
-                    <a href="/teacher" class="nav-link fs-5 fw-semibold" >선생 관리 페이지</a>
+                    <a href="/student/list" class="nav-link fs-5 fw-semibold">학생 관리 페이지</a>
                 </li>
 
+                <li th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and !#strings.equals(session.loginMember.position, 'TEACHER')}">
+                    <hr class="dropdown-divider">
+                    <a href="/teacher" class="nav-link fs-5 fw-semibold">선생 관리 페이지</a>
+                </li>
+
+
+
+                <!-- 학교 목록 시작 -->
+                <div th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and schools != null}">
+                    <hr class="dropdown-divider">
+                    <!--초등 학교 목록-->
+                    <li>
+                        <!-- 초등학교 클릭 시 하위 목록 토글 -->
+                        <a href="#collapse__elementary__school" class="nav-link fs-5 fw-semibold"
+                           data-bs-toggle="collapse">초등학교</a>
+                        <div th:if="${schools.elementarySchools != null}" class="collapse show"
+                             id="collapse__elementary__school">
+                            <div class="list-group">
+                                <a th:each="name : ${schools.elementarySchools}" th:href="@{/school}"
+                                   class="list-group-item list-group-item-action school-name-link"
+                                   aria-current="true">
+                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--초등 학교 목록 끝-->
+
+                    <!--중학교 목록-->
+                    <li>
+                        <a href="#collapse__middle__school" class="nav-link fs-5 fw-semibold"
+                           data-bs-toggle="collapse">중학교</a>
+                        <div th:if="${schools.middleSchools != null}" class="collapse show"
+                             id="collapse__middle__school">
+                            <div class="list-group">
+                                <a th:each="name : ${schools.middleSchools}" th:href="@{/school}"
+                                   class="list-group-item list-group-item-action school-name-link"
+                                   aria-current="true">
+                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--중학교 목록 끝-->
+
+                    <!--고등학교 목록-->
+                    <li>
+                        <a href="#collapse__high__school" class="nav-link fs-5 fw-semibold"
+                           data-bs-toggle="collapse">고등학교</a>
+                        <div th:if="${schools.highSchools != null}" class="collapse show" id="collapse__high__school">
+                            <div class="list-group">
+                                <a th:each="name : ${schools.highSchools}" th:href="@{/school}"
+                                   class="list-group-item list-group-item-action school-name-link"
+                                   aria-current="true">
+                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <!--고등학교 목록 끝-->
+                </div>
             </ul>
         </div>
     </div>
@@ -99,12 +164,13 @@
                 </div>
                 <div class="modal-body text-center">
                     <!-- 카카오톡 링크 -->
-                    <p><a href="https://open.kakao.com/o/somechat" target="_blank"><img src="/img/kakao_button.png"></a></p>
+                    <p><a href="https://open.kakao.com/o/somechat" target="_blank"><img src="/img/kakao_button.png"></a>
+                    </p>
                     <div id="kakao_help" class="form-text">카카오톡으로 상담을 원하시면 위 버튼을 클릭해주세요.</div>
                     <!-- 전화번호 -->
                     <p>
-                        <h5>문의 전화: 0507-1308-4210</h5>
-                        <div id="help" class="form-text">유선 상담을 원하시면 번호로 전화 주시면 안내 드리겠습니다.</div>
+                    <h5>문의 전화: 0507-1308-4210</h5>
+                    <div id="help" class="form-text">유선 상담을 원하시면 번호로 전화 주시면 안내 드리겠습니다.</div>
                     </p>
                 </div>
                 <div class="modal-footer">

@@ -246,6 +246,23 @@ public class TestDataInit {
         teacherRepository.save(teacher4);
 
     }
+@PostConstruct
+public void createDummyTeacher() {
+    String password = "1234";
+    String encodePassword = passwordEncoder.encode(password);
+    for (int i = 0; i < 100; i++) {
+        Teacher teacher = Teacher.builder()
+                        .name("테스트선생" + i)
+                .password(encodePassword)
+                .phoneNumber("010-1111-1111")
+                .email("test"+i+"@naver.com")
+                .position(Position.TEACHER)
+                .memberType(MemberType.TEACHER)
+                .gender(GenderType.MALE)
+                .build();
+        teacherRepository.save(teacher);
+    }
+}
 
 
 }

@@ -55,7 +55,7 @@
             min-height: 100vh; /* 뷰포트 높이의 100% */
         }
     </style>
-
+</th:block>
 
 <th:block th:fragment="toast-editor-load">
 
@@ -63,6 +63,18 @@
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <!-- Toast UI Editor 자바스크립트 파일 -->
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+    <style>
+        .toastui-editor-contents p{
+            font-size: 18px;
+        }
+
+        /* 마크다운 모드의 에디터 내용 폰트 크기 조정 */
+        .toastui-editor-defaultUI .toastui-editor-md-container .ProseMirror {
+            font-size: 18px;
+        }
+
+    </style>
 
 </th:block>
 
