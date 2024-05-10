@@ -4,10 +4,13 @@ import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.dto.record.RecordUpdateReqDto;
+import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.enums.SearchType;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.service.RecordService;
+import com.time.studentmanage.service.StudentService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 public class RecordController {
 
     private final RecordService recordService;
+    private final StudentService studentService;
 
     @ModelAttribute("searchTypeOptions")
     public SearchType[] searchType() {
@@ -52,9 +56,12 @@ public class RecordController {
         if (session == null || loginSession == null) {
             return "redirect:/login";
         }
-
+        StudentRespDto studentInfo = studentService.getStudentInfo(id);
+        String studentName = studentInfo.getName();
         Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
+
         model.addAttribute("pagingResult", pagingResult);
+        model.addAttribute("studentName", studentName);
         return "record/record_list";
     }
 

@@ -1,115 +1,185 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
-  <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
-
-
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
 </head>
 <title>학생 목록</title>
 <body>
 <div>
-  <!-- 헤더 시작 -->
-  <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
-  <!-- 헤더 끝 -->
+    <!-- 헤더 시작 -->
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
+    <!-- 헤더 끝 -->
 
-  <!--브레드 크럼 시작-->
-  <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
-    <li class="breadcrumb-item">
-      <a class="link-body-emphasis text-dark" href="/">
-        <i class="fa-solid fa-house"></i>
-      </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">학생 목록</li>
-  </ol>
-  <!--브레드 크럼 끝-->
-  <div class="container-fluid ">
-    <div class="row">
-      <!-- 사이드바 -->
-      <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
-         <div class="container" th:if="${pagingResult == null || pagingResult.isEmpty()}">
-            <div class="text-center my-5">
-                <strong>결과가 존재하지 않습니다.</strong>
+    <!--브레드 크럼 시작-->
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis text-dark" href="/">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">학생 목록</li>
+    </ol>
+    <!--브레드 크럼 끝-->
+    <div class="container-fluid ">
+        <div class="row">
+            <!-- 사이드바 -->
+            <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
+
+            <!-- 학생 목록 테이블-->
+            <div class="col-md-10 container" id="studentList">
+                <h2 class="text-center">학생 목록</h2>
+                <!-- 폼 검색 바-->
+                <form action="#" id="searchForm" th:action="@{/student/list}" method="get"
+                      th:object="${studentSearchReqDto}">
+                    <input type="hidden" name="page" th:value="${pagingResult != null ? pagingResult.number : 0}"/>
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <select class="form-select" id="searchType" name="searchType">
+                                <option th:each="type : ${searchTypeOptions}" th:value="${type.name()}"
+                                        th:field="*{searchType}"
+                                        th:text="${type.description}" th:errorclass="field-error"
+                                        class="field-error"></option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('searchType')}" th:errors="*{searchType}"
+                                 class="field-error"
+                                 role="alert">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="content" th:field="*{content}"
+                                       placeholder="검색">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary" onclick="resetPage()">검색</button>
+                                    <button type="button" th:onclick="|location.href='/student/list'|"
+                                            class="btn btn-primary">초기화
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">학생 이름</th>
+                        <th scope="col">학생 연락처</th>
+                        <th scope="col">학교</th>
+                        <th scope="col">부모님 성함</th>
+                        <th scope="col">부모님 연락처</th>
+                        <th scope="col">재원 여부</th>
+                        <th scope="col">수정</th>
+                        <th scope="col">피드백 목록</th>
+                        <th scope="col">삭제</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="student : ${pagingResult}">
+                        <td th:text="${student.name}"></td>
+                        <td th:text="${student.phoneNumber}"></td>
+                        <td th:text="${student.schoolName}"></td>
+                        <td th:text="${student.parentName}"></td>
+                        <td th:text="${student.parentPhoneNumber}"></td>
+                        <td th:text="${student.attendanceStatus}"></td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn mb-3 me-3"
+                                    th:onclick="|location.href='@{/edit/{id}(id=${student.id})}'|">수정
+                            </button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn mb-3 me-3"
+                                    th:onclick="|location.href='@{/record/{id}(id=${student.id})}'|">피드백
+                            </button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-danger btn mb-3 me-3"
+                                    th:onclick="|location.href='@{/delete/{id}(id=${student.id})}'|">삭제
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <!-- 학생 목록 테이블-->
-        <div class="col-md-10 container" id="studentList">
-          <h3 class="col-md-6 mb-3">학생 목록</h3>
-          <!-- 폼 검색 바-->
-          <form action="#" id="searchForm" th:action="@{/student/list}" method="get" th:object="${studentSearchReqDto}">
-              <input type="hidden" name="page" th:value="${pagingResult != null ? pagingResult.number : 0}"/>
 
-              <div class="container">
-                  <div class="row justify-content-end">
-                      <div class="col-auto">
+            <!--페이지네이션 시작-->
+            <nav th:if="${pagingResult != null && !pagingResult.isEmpty() && studentSearchReqDto.searchType != null && studentSearchReqDto.content != null}"
+                 aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" data-page="0"
+                           th:href="@{|?page=0&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number - 1}"
+                           th:href="@{|?page=${pagingResult.number - 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                        th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                        th:classappend="${page == pagingResult.number} ? 'active'">
+                        <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
+                           th:href="@{|?page=${page}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">페이지
+                            표시</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number + 1}"
+                           th:href="@{|?page=${pagingResult.number + 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">Next</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+                           th:href="@{|?page=${pagingResult.totalPages - 1}&searchType=${studentSearchReqDto.searchType}&content=${studentSearchReqDto.content}|}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+            <!--페이지네이션 끝-->
 
-                          <select class="form-select" id="searchType" name="searchType">
-                              <option th:each="type : ${searchTypeOptions}" th:value="${type.name()}" th:field="*{searchType}"
-                                      th:text="${type.description}" th:errorclass="field-error" class="field-error"></option>
-                          </select>
-                          <div th:if="${#fields.hasErrors('searchType')}" th:errors="*{searchType}" class="field-error"
-                               role="alert">
-                          </div>
-                      </div>
-                      <div class="col-auto">
-                          <div class="input-group">
-                              <input type="text" class="form-control" id="content" th:field="*{content}" placeholder="검색">
-                              <div class="input-group-append">
-                                  <button type="submit" class="btn btn-primary" onclick="resetPage()">검색</button>
-                                  <button type="button" th:onclick="|location.href='/student'|" class="btn btn-primary">초기화
-                                  </button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </form>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">학생번호</th>
-                <th scope="col">학생 이름</th>
-                <th scope="col">학생 연락처</th>
-                <th scope="col">학교</th>
-                <th scope="col">부모님 성함</th>
-                <th scope="col">부모님 연락처</th>
-                <th scope="col">재원 여부</th>
-                <th scope="col">수정</th>
-                <th scope="col">삭제</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="student : ${pagingResult}">
-                <th scope="row" th:text="${student.id}"></th>
-                <td th:text="${student.name}"></td>
-                <td th:text="${student.phoneNumber}"></td>
-                <td th:text="${student.schoolName}"></td>
-                <td th:text="${student.parentName}"></td>
-                <td th:text="${student.parentPhoneNumber}"></td>
-                <td th:text="${student.attendanceStatus}"></td>
-                <td><button type="submit" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/edit/{id}(id=${student.id})}'|">수정</button></td>
-                <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/delete/{id}(id=${student.id})}'|">삭제</button></td>
-              </tr>
-            </tbody>
-          </table>
+            <!--페이지네이션 시작-->
+            <nav th:if="${pagingResult != null && !pagingResult.isEmpty() && studentSearchReqDto.searchType == null && studentSearchReqDto.content == null}"
+                 aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number - 1}"
+                           th:href="@{|?page=${pagingResult.number - 1}|}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                        th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                        th:classappend="${page == pagingResult.number} ? 'active'">
+                        <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}|}">페이지
+                            표시</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.number + 1}"
+                           th:href="@{|?page=${pagingResult.number + 1}|}">Next</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+                           th:href="@{|?page=${pagingResult.totalPages - 1}|}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+            <!--페이지네이션 끝-->
+
         </div>
     </div>
-  </div>
 </div>
+
 <!-- footer 시작 -->
 <th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
 <!-- footer 끝 -->
-    <script>
-          function resetPage() {
+
+<script>
+    function resetPage() {
         document.querySelector('input[name="page"]').value = 0;
     }
-    </script>
+</script>
 
 
-
-    </body>
-    </html>
+</body>
+</html>

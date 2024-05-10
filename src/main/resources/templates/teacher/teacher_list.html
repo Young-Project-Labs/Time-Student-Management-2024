@@ -33,9 +33,10 @@
       <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
 
     <div class="col-md-10 container">
-      <h3 class="col-md-6 mb-3">선생 목록</h3>
+      <h2 class="text-center">선생 목록</h2>
       <!-- 선생 추가 버튼 -->
       <button class="btn btn-outline-primary ml-2 float-start" th:onclick="|location.href='@{/teacher/create}'|">등록하기</button>
+
       <!-- 검색 바 -->
       <form action="#" id="teacherSearch" th:object="${SearchReqDto}" th:action="@{/teacher}" method="get">
         <input type="hidden" id="page" name="page" th:value="${page}">
