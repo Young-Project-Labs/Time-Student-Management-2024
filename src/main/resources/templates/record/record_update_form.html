@@ -16,7 +16,7 @@
 
 <div class="container p-2">
 
-    <form th:action="@{/record/update/{recordId}(recordId=${recordUpdateReqDto.recordId})}" method="post" th:object="${recordUpdateReqDto}">
+    <form id="recordUpdateForm" th:action="@{/record/update/{recordId}(recordId=${recordUpdateReqDto.recordId})}" method="post" th:object="${recordUpdateReqDto}">
 
         <div class="alert alert-warning text-center" th:errors="*{recordId}">피드백 id 오류</div>
         <div class="alert alert-warning text-center" th:errors="*{studentId}">학생 id 오류</div>
@@ -30,7 +30,7 @@
 
         <div id="editor"></div>
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->
-        <textarea style="display: none;" id="hiddenContent" th:errorclass="field-error" th:field="*{content}"></textarea>
+        <textarea style="display: none;" th:errorclass="field-error" th:field="*{content}"></textarea>
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
 
     </form>
@@ -47,13 +47,13 @@
         previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
     });
 
-    const form = document.querySelector('form'); // 폼 선택
+    const form = document.getElementById('recordUpdateForm'); // 폼 선택
 
     form.addEventListener('submit', function() {
         // 토스트 UI 에디터의 현재 내용을 가져옵니다.
         const editorContent = editor.getMarkdown();
         // 숨겨진 textarea의 값으로 설정합니다.
-        document.getElementById('hiddenContent').value = editorContent;
+        document.getElementById('content').value = editorContent;
     });
 </script>
 
