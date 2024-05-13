@@ -1,10 +1,10 @@
 spring:
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/timestudent
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: {input_your_source_db_url}
+    username: {username}
+    password: {user_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   profiles:
     active: local
@@ -39,8 +39,7 @@ spring:
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
 
   redis:
-    host: localhost
-    port: 6379
+    uri: redis://localhost:6379
 
 
 logging:
