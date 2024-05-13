@@ -55,9 +55,6 @@
                     <div th:text="|학교를 선택해 주세요|" class="alert alert-warning text-center">
                         데이터가 선택되지 않았습니다.
                     </div>
-
-                    <a th:href="@{/class/list}">학급 페이지 바로가기</a>
-
                 </div>
 
                 <div class="pagingNation-control">
@@ -205,10 +202,6 @@
                     }, // 서버로 보낼 데이터
                     dataType: "json", // 서버에서 보내줄 데이터의 타입 (xml, json, script, html)
                     success: function (response) {
-                        // 요청이 성공하면 이 부분이 실행됩니다.
-                        // response는 서버에서 보낸 데이터입니다.
-                        // 여기에서 화면을 업데이트하는 함수를 호출할 수 있습니다.
-                        // 예: updateContent(response);
                         console.log("Data loaded successfully");
                         draw(response);
                     },
@@ -226,6 +219,10 @@
             var schoolName = $("#breadcrumb-school").text().trim(); // Breadcrumb에서 학교 이름 가져오기
             var studentName = $("#searchForm").find("input[name='content']").val();
             var url = $(this).attr('action'); // 폼의 액션 URL을 가져옵니다.
+
+            if (!schoolName.includes('학교')) {
+                return;
+            }
 
             $.ajax({
                 url: url,
@@ -252,6 +249,8 @@
         });
 
         function displayErrorMessage(message) {
+            $(".pagingNation-control").empty();
+
             var errorHtml = '<div class="alert alert-danger text-center">' + message + '</div>';
             $(".main-content").html(errorHtml);
         }
