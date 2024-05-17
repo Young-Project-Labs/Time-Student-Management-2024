@@ -48,7 +48,8 @@
 
             <!--검색 폼 시작-->
             <div>
-                <form th:action="@{/record/list/{studentId}(studentId=${studentId})}" th:object="${recordSearchDto}"
+                <form id="recordSearchForm" th:action="@{/record/list/{studentId}(studentId=${studentId})}"
+                      th:object="${recordSearchDto}"
                       method="get">
 
                     <input type="hidden" name="page" th:value="${pagingResult.number}"/>
@@ -125,7 +126,39 @@
                 <!-- 페이징 끝-->
 
                 <!--페이지네이션 시작-->
-                <nav th:if="${!pagingResult.isEmpty()}" aria-label="Page navigation">
+                <nav th:if="${pagingResult != null && !pagingResult.isEmpty() && recordSearchDto.searchType != null && recordSearchDto.content != null && recordSearchDto.dates != null}"
+                     aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" data-page="0"
+                               th:href="@{|?page=0&dates=${recordSearchDto.dates}&searchType=${recordSearchDto.searchType}&content=${recordSearchDto.content}|}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number - 1}"
+                               th:href="@{|?page=${pagingResult.number - 1}&dates=${recordSearchDto.dates}&searchType=${recordSearchDto.searchType}&content=${recordSearchDto.content}|}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                            th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                            th:classappend="${page == pagingResult.number} ? 'active'">
+                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
+                               th:href="@{|?page=${page}&dates=${recordSearchDto.dates}&searchType=${recordSearchDto.searchType}&content=${recordSearchDto.content}|}">페이지
+                                표시</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number + 1}"
+                               th:href="@{|?page=${pagingResult.number + 1}&dates=${recordSearchDto.dates}&searchType=${recordSearchDto.searchType}&content=${recordSearchDto.content}|}">Next</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+                               th:href="@{|?page=${pagingResult.totalPages - 1}&dates=${recordSearchDto.dates}&searchType=${recordSearchDto.searchType}&content=${recordSearchDto.content}|}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--페이지네이션 끝-->
+
+                <!--페이지네이션 시작-->
+                <nav th:if="${pagingResult != null && !pagingResult.isEmpty() && recordSearchDto.searchType == null && recordSearchDto.content == null}"
+                     aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
                             <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
@@ -137,8 +170,7 @@
                         <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
                             th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
                             th:classappend="${page == pagingResult.number} ? 'active'">
-                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
-                               th:href="@{|?page=${page}|}">페이지
+                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}|}">페이지
                                 표시</a>
                         </li>
                         <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
@@ -174,6 +206,8 @@
             }
         });
     });
+
+
 
 </script>
 
