@@ -3,6 +3,7 @@ package com.time.studentmanage.service;
 import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
 import com.time.studentmanage.domain.dto.student.*;
+import com.time.studentmanage.domain.enums.ProviderType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.student.StudentRepository;
@@ -207,8 +208,7 @@ public class StudentService {
 
     //카카오 회원가입 여부 체크
     public Optional<Student> checkJoinKakaoStudent(String userId) {
-        String provider = "KAKAO";
-        Optional<Student> studentOP = studentRepository.findByUserIdAndProvider(userId, provider);
+        Optional<Student> studentOP = studentRepository.findByUserIdAndProvider(userId, ProviderType.KAKAO);
         return studentOP;
     }
 

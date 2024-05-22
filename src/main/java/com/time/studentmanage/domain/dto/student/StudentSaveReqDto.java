@@ -1,10 +1,7 @@
 package com.time.studentmanage.domain.dto.student;
 
+import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.enums.AttendanceStatus;
-import com.time.studentmanage.domain.enums.ClassType;
-import com.time.studentmanage.domain.enums.GenderType;
-import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -64,6 +61,7 @@ public class StudentSaveReqDto {
                 .attendanceStatus(attendanceStatus)
                 .memberType(memberType)
                 .gender(gender)
+                .provider(ProviderType.GENERAL)
                 .classType(classType)
                 .parentName(parentName)
                 .parentPhoneNumber(parentPhoneNumber)

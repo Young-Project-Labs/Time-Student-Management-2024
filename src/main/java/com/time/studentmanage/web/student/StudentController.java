@@ -113,7 +113,7 @@ public class StudentController {
 
         // edit
         studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
-        return "redirect:/";
+        return "redirect:/edit/"+id;
     }
 
     @GetMapping("/student/findid")
