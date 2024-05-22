@@ -48,6 +48,8 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // mysql dependency
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
 }
 

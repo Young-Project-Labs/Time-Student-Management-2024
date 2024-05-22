@@ -70,7 +70,7 @@ public class RecordController {
      */
     @GetMapping("/record/list/{studentId}")
     public String showSearchedRecordResult(@PathVariable("studentId") Long studentId, // recordSearchDto의 studentId와 필드명이 같으면 스프링에서 자동으로 바인딩 해줌
-                                           @Validated @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
+                                           @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
                                            Model model) {
 
         Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto, studentId);

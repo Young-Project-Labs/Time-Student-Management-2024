@@ -6,14 +6,16 @@ spring:
     password: {user_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  profiles:
-    active: local
-    include: secret
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - optional:classpath:application-secret.yml
 
   jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
+    #    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -46,6 +48,17 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+  file:
+    name: logs/timenglish.log # 로그파일의 이름을 설정
+  logback:
+    rollingpolicy:
+      max-history: 30 # 로그파일을 유지할 기간을 설정
+      max-file-size: 100MB # 로그파일 하나의 최대 용량을 설정 기본이 10MB인데 100MB로 설정했다.
+      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}-%i.log # 로그파일 이름 패턴
+  pattern:
+    dateformat: 'yyyy-MM-dd HH:mm:ss.SSS,Asia/Seoul' # 로그 출력 시 출력하는 날짜와 시간의 형식과 타임존(time zone)을 설정한다. 여기서는 Asia/Seoul로 설정했다. 만약 타임존을 설정하지 않을 경우 UTC 시간을 기준으로 출력한다.
+
+
 
 # turn off the error-page option provided by default in spring boot
 server:
