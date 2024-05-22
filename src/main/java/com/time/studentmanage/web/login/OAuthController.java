@@ -81,7 +81,7 @@ public class OAuthController {
             kakaoSaveReqDto.setKakaoAccount(kakaoAccount);
             model.addAttribute("kakaoSaveReqDto", kakaoSaveReqDto);
             log.info("kakaoSaveReqDto={}", kakaoSaveReqDto.toString());
-            return "/student/kakao_join_form";
+            return "student/kakao_join_form";
         }
         return "redirect:/";
     }
@@ -91,7 +91,7 @@ public class OAuthController {
     public String kakaoJoinForm(@Valid @ModelAttribute KakaoSaveReqDto kakaoSaveReqDto, BindingResult bindingResult, Model model, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("kakaoSaveReqDto", kakaoSaveReqDto);
-            return "/student/kakao_join_form";
+            return "student/kakao_join_form";
         }
         // 회원가입 진행
         log.info("카카오 회원가입 : kakaoSaveReqDto={}",kakaoSaveReqDto);
