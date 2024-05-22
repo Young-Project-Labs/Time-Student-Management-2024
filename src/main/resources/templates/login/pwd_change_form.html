@@ -6,6 +6,9 @@
     <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
 </head>
 <body>
+<!-- 헤더 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
+<!-- 헤더 끝 -->
 <div class="w-50 container-sm p-3 border border-primary-subtle border-3 rounded position-absolute top-50 start-50 translate-middle">
     <div><h2>비밀번호 찾기</h2></div>
     <div id="findPwdHelp" class="form-text">이메일 인증 후 비밀번호 재설정을 할 수 있도록 합니다.<br> 아이디와 이메일을 입력한 후 인증을 시작하세요.</div>
