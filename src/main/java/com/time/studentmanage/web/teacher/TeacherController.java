@@ -55,7 +55,7 @@ public class TeacherController {
         Page<TeacherRespDto> teacherList = teacherService.getTeacherList(searchReqDto);
         log.info("확인={}", teacherList);
         model.addAttribute("pagingResult", teacherList);
-        return "/teacher/teacher_list";
+        return "teacher/teacher_list";
     }
     //선생 목록에서 검색
 
@@ -63,14 +63,14 @@ public class TeacherController {
     //선생 등록 페이지
     @GetMapping("/teacher/create")
     public String createForm(@ModelAttribute("teacherSaveReqDto") TeacherSaveReqDto teacherSaveReqDto) {
-        return "/teacher/teacher_create_form";
+        return "teacher/teacher_create_form";
     }
 
     //선생 등록 로직
     @PostMapping("/teacher/create")
     public String createTeacher(@Validated @ModelAttribute TeacherSaveReqDto teacherSaveReqDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/teacher/teacher_create_form";
+            return "teacher/teacher_create_form";
         }
 
         teacherService.createTeacher(teacherSaveReqDto);

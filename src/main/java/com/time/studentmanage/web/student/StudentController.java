@@ -56,7 +56,7 @@ public class StudentController {
 
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("studentSaveReqDto") StudentSaveReqDto studentSaveReqDto, Model model) {
-        return "/student/join_form";
+        return "student/join_form";
     }
 
     @PostMapping("/join")
