@@ -3,6 +3,8 @@ package com.time.studentmanage.service;
 import com.time.studentmanage.domain.classroom.ClassRoom;
 import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
 import com.time.studentmanage.domain.dto.student.*;
+import com.time.studentmanage.domain.enums.AttendanceStatus;
+import com.time.studentmanage.domain.enums.ProviderType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.student.StudentRepository;
@@ -74,9 +76,33 @@ public class StudentService {
         studentOP.get().changeEntity(id, updateReqDto.toEntity());
     }
 
+    //학생_재원여부_변경
+    public void editAttendanceStatus(Long id) {
+        Optional<Student> studentOP = studentRepository.findById(id);
+        if (!studentOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 학생입니다.");
+        }
+
+        Student student = studentOP.get();
+        if (student.getAttendanceStatus().equals(AttendanceStatus.Y)) {
+            //상태 변경
+            student.changeAttendanceStatus(AttendanceStatus.N);
+        } else {
+            //상태 변경
+            student.changeAttendanceStatus(AttendanceStatus.Y);
+        }
+
+    }
+
+
     // 학생_삭제
     public void deleteStudent(Long id) {
-        studentRepository.deleteById(id);
+        Optional<Student> studentOP = studentRepository.findById(id);
+        if (!studentOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 학생입니다.");
+        }
+
+        studentRepository.delete(studentOP.get());
     }
 
     // 학교별_학생_조회(학년별_정렬)
@@ -207,8 +233,7 @@ public class StudentService {
 
     //카카오 회원가입 여부 체크
     public Optional<Student> checkJoinKakaoStudent(String userId) {
-        String provider = "KAKAO";
-        Optional<Student> studentOP = studentRepository.findByUserIdAndProvider(userId, provider);
+        Optional<Student> studentOP = studentRepository.findByUserIdAndProvider(userId, ProviderType.KAKAO);
         return studentOP;
     }
 

@@ -1,11 +1,11 @@
 package com.time.studentmanage.domain.enums;
 
-public enum AttendanceStatus {
-    Y("재원"), N("휴원");
+public enum ProviderType {
+    GENERAL("일반회원"), KAKAO("카카오회원");
 
     private final String description;
 
-    AttendanceStatus(String description) {
+    ProviderType(String description) {
         this.description = description;
     }
 

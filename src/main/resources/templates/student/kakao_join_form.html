@@ -15,10 +15,11 @@
     <!-- 헤더 끝 -->
 </div>
 
-<h1 class="d-flex justify-content-center m-5">회원가입</h1>
+<h1 class="d-flex justify-content-center m-3">카카오 회원가입</h1>
+<div id="passwordHelp" class="d-flex justify-content-center md-3 form-text">카카오 회원가입 시 추가 정보가 필요하여 입력 부탁드립니다.</div>
 
 <div class="container d-flex justify-content-center ">
-    <form action="/oauth/kakao" method="post" th:object="${kakaoSaveReqDto}" onsubmit="return valid()" class="border border-primary-subtle border-3 rounded p-3" id="kakaoSaveForm">
+    <form action="/oauth/kakao" method="post" th:object="${kakaoSaveReqDto}" class="border border-primary-subtle border-3 rounded p-3" id="kakaoSaveForm">
         <input type="hidden" name="attendanceStatus" value="Y">
         <input type="hidden" name="memberType" value="STUDENT">
         <div class="row" >
@@ -192,10 +193,16 @@
 
 <script type="text/javascript">
     window.onload = function() {
+        alert('회원가입 되지 않은 계정으로, 회원가입을 진행합니다. \n추가 정보를 입력해주세요.');
         var form = document.getElementById('kakaoSaveForm');
-        if(form) {
-            form.onsubmit = function() {
-                window.onbeforeunload = null;
+        if (form) {
+            form.onsubmit = function(event) {
+                // 폼 전송 확인
+                if (!confirm("회원가입을 진행 하시겠습니까?")) {
+                    event.preventDefault(); // 폼 전송을 막음
+                    return false;
+                }
+                window.onbeforeunload = null; // 페이지 이탈 경고 제거
             };
         }
 
@@ -204,7 +211,19 @@
         };
     }
 </script>
-
+<!-- 폼 전송 전 확인-->
+<script>
+    function confirmSubmit() {
+        var confirmAction = confirm("회원가입을 진행 하시겠습니까?");
+        if (confirmAction) {
+            // 사용자가 '확인'을 클릭한 경우 전송
+            document.getElementById("kakaoSaveForm").submit();
+        } else {
+            // 사용자가 '취소' 클릭 한 경우 전송 취소
+            return false;
+        }
+    }
+</script>
 
 
 </div>

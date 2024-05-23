@@ -33,7 +33,7 @@
             <!-- 폼 -->
             <div class="col-md-10 container">
                 <h3 class="col-md-6 mb-3" th:text="${studentRespDto.name} + ' 정보'"></h3>
-                <form action ="#" th:action="@{/edit/{id}(id=${studentRespDto.id})}" method="post" th:object="${studentRespDto}" onsubmit="return confirmSubmit()" >
+                <form action ="#" th:action="@{/edit/{id}(id=${studentRespDto.id})}" method="post" onsubmit="return confirmSubmit()" th:object="${studentRespDto}" id="teacherUpdateForm">
                     <input type="hidden" name="id" th:field="*{id}">
                     <input type="hidden" name="attendanceStatus" th:field="*{attendanceStatus}">
                     <input type="hidden" name="memberType" th:field="*{memberType}">

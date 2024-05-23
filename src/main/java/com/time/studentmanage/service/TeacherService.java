@@ -4,6 +4,8 @@ import com.time.studentmanage.domain.dto.student.SearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
+import com.time.studentmanage.domain.enums.Position;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
@@ -108,6 +110,15 @@ public class TeacherService {
 
     }
 
+    //선생 삭제 메서드
+    public void deleteTeacher(Long id) {
+        Optional<Teacher> teacherOP = teacherRepository.findById(id);
+        if (!teacherOP.isPresent()) {
+            throw new DataNotFoundException("존재하지 않는 선생입니다.");
+        } else if (teacherOP.get().getPosition().equals(Position.CHIEF)) {
+            throw new IllegalArgumentException("원장 계정은 삭제할 수 없습니다.");
+        }
 
-
+        teacherRepository.delete(teacherOP.get());
+    }
 }

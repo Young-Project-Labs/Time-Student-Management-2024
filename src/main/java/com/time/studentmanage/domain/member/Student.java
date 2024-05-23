@@ -1,11 +1,8 @@
 package com.time.studentmanage.domain.member;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
+import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.record.Record;
-import com.time.studentmanage.domain.enums.AttendanceStatus;
-import com.time.studentmanage.domain.enums.ClassType;
-import com.time.studentmanage.domain.enums.GenderType;
-import com.time.studentmanage.domain.enums.MemberType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,8 +38,8 @@ public class Student extends BaseMemberEntity {
     @Column(unique = true)
     private String email;
 
-    @Column(length = 100) // provider (oauth login 구분)
-    private String provider;
+    @Enumerated(EnumType.STRING)// provider (oauth login 구분)
+    private ProviderType provider;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
@@ -59,7 +56,7 @@ public class Student extends BaseMemberEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
     private final List<Record> recordList = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
@@ -72,7 +69,7 @@ public class Student extends BaseMemberEntity {
 
 
     @Builder(toBuilder = true)
-    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, String provider, String email) {
+    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, ProviderType provider, String email) {
         this.id = id;
         this.name = name;
         this.userId = userId;

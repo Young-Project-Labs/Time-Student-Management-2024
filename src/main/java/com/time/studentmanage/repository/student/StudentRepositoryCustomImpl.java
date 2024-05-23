@@ -94,8 +94,7 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
                         )
                 )
                 .from(student)
-                .where(student.attendanceStatus.eq(AttendanceStatus.Y),
-                        likeSearchTypeAndContent(studentSearchReqDto.getSearchType(), studentSearchReqDto.getContent())
+                .where(likeSearchTypeAndContent(studentSearchReqDto.getSearchType(), studentSearchReqDto.getContent())
                 )
                 .orderBy(student.createDate.desc(), student.name.asc(), student.grade.asc())
                 .offset(pageable.getOffset())

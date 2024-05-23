@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -111,6 +112,13 @@ public class TeacherController {
         //수정 후 세션에 저장된 값 변경
         session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, teacher);
         return "redirect:/teacher/edit/"+id;
+    }
+
+    @DeleteMapping("/teacher/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteTeacher(@PathVariable(value = "id") Long id) {
+        teacherService.deleteTeacher(id);
+        return ResponseEntity.ok("삭제에 성공했습니다.");
     }
 
 

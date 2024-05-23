@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository.student;
 
+import com.time.studentmanage.domain.enums.ProviderType;
 import com.time.studentmanage.domain.member.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>, Student
 
     List<Student> findAllBySchoolNameOrderByGradeAsc(String schoolName);
 
-    Optional<Student> findByUserIdAndProvider(String email, String provider);
+    Optional<Student> findByUserIdAndProvider(String email, ProviderType provider);
 
     Optional<Student> findByNameAndEmail(String name, String email);
 
