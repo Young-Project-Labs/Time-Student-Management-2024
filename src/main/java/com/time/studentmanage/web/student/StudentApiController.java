@@ -42,6 +42,12 @@ public class StudentApiController {
         session.invalidate();
         return ResponseEntity.ok("패스워드가 변경되었습니다. 다시 로그인 해주세요.");
     }
+    //재원여부 변경
+    @PutMapping("/student/{id}/attendance")
+    public ResponseEntity<?> editAttendance(@PathVariable("id") Long id) {
+        studentService.editAttendanceStatus(id);
+        return ResponseEntity.ok("재원여부 변경에 성공했습니다.");
+    }
 
     @GetMapping("/school")
     public ResponseEntity<StudentSearchResult> showStudentList(@RequestParam(value = "schoolName") String schoolName,
