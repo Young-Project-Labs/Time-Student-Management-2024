@@ -116,12 +116,6 @@ public class StudentController {
         return "redirect:/edit/"+id;
     }
 
-    @GetMapping("/delete/{id}")
-    public void deleteStudent(Long id) {
-        studentService.deleteStudent(id);
-    }
-
-
     @GetMapping("/student/findid")
     public String idAuthRequestForm(@ModelAttribute("findIdDto") FindIdDto findIdDto, HttpSession session) {
         //세션이 있는 경우 접근 X

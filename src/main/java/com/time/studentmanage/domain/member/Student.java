@@ -56,7 +56,7 @@ public class Student extends BaseMemberEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
     private final List<Record> recordList = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
