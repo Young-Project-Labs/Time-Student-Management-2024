@@ -5,7 +5,7 @@
     <th:block th:replace="~{template/layout/base_head_component :: toast-editor-load}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
 
-    <title>Document</title>
+    <title>피드백 생성</title>
 </head>
 
 <body>
@@ -46,11 +46,19 @@
 
 <!-- TOAST UI Editor 생성 JavaScript 코드 -->
 <script>
+    const toolbarOptions = [
+        ['heading', 'bold', 'italic', 'strike'],
+        ['ul', 'ol', 'task'],
+        ['table', 'link'],
+        ['scrollSync'],
+    ];
+
     const editor = new toastui.Editor({
         el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
         height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
         initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
+        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
+        toolbarItems: toolbarOptions,
     });
 
     const form = document.getElementById('recordCreateForm'); // 폼 선택

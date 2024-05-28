@@ -24,6 +24,7 @@ public class Record extends BaseTimeEntity {
     private Long id;
 
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = LAZY) //, cascade = CascadeType.PERSIST
