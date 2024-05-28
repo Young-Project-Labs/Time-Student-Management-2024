@@ -66,14 +66,17 @@ public class StudentService {
     }
 
     // 학생_정보_수정
-    public void updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
+    public StudentRespDto updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
         Optional<Student> studentOP = studentRepository.findById(id);
 
         if (!studentOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
         }
         //더티체킹 발생
-        studentOP.get().changeEntity(id, updateReqDto.toEntity());
+        Student student = studentOP.get();
+        student.changeEntity(id, updateReqDto.toEntity());
+
+        return new StudentRespDto(student);
     }
 
     //학생_재원여부_변경

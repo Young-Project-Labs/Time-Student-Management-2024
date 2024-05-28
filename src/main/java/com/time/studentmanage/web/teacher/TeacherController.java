@@ -108,10 +108,19 @@ public class TeacherController {
         if (bindingResult.hasErrors() || session == null) {
             return "teacher/teacher_edit_form";
         }
-        Teacher teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
-        //수정 후 세션에 저장된 값 변경
-        session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, teacher);
+        //선생 정보 수정
+        TeacherRespDto teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
+
+        //세션에 저장된 선생 정보
+        Teacher loginTeacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+
+        // 본인 정보 수정 시 세션에 저장된 값을 변경.
+        if (loginTeacher.getId() == teacher.getId()) {
+            //수정 후 세션에 저장된 값 변경
+            session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, teacher);
+        }
         return "redirect:/teacher/edit/"+id;
+
     }
 
     @DeleteMapping("/teacher/{id}")

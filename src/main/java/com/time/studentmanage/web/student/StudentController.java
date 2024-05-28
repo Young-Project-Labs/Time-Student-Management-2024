@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -112,7 +113,14 @@ public class StudentController {
         log.info("studentUpdateReqDto 체크={}", studentUpdateReqDto);
 
         // edit
-        studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
+        StudentRespDto updateStudent = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
+
+        //선생이 학생 정보 수정 시 세션 변경X
+        if (sessionObject.getClass().equals(Student.class)) {
+            //본인이 수정 시 세션 변경
+            session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, updateStudent);
+        }
+
         return "redirect:/edit/"+id;
     }
 
