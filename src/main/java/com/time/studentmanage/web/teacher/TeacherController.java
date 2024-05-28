@@ -109,7 +109,7 @@ public class TeacherController {
             return "teacher/teacher_edit_form";
         }
         //선생 정보 수정
-        TeacherRespDto teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
+        Teacher teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
 
         //세션에 저장된 선생 정보
         Teacher loginTeacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);

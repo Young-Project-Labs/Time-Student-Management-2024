@@ -44,7 +44,7 @@ public class TeacherService {
     }
     
     // 선생_정보_수정
-    public TeacherRespDto updateTeacherInfo(Long id, TeacherUpdateReqDto updateReqDto) {
+    public Teacher updateTeacherInfo(Long id, TeacherUpdateReqDto updateReqDto) {
         Optional<Teacher> teacherOP = teacherRepository.findById(id);
         if (!teacherOP.isPresent()) {
             throw new DataNotFoundException("존재하지 않는 ID입니다.");
@@ -54,7 +54,7 @@ public class TeacherService {
         teacher.changeEntity(id, updateReqDto.toEntity());
 
 
-        return new TeacherRespDto(teacher);
+        return teacher;
     }
 
     //선생_비밀번호_수정
