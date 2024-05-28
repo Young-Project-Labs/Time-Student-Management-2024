@@ -113,7 +113,7 @@ public class StudentController {
         log.info("studentUpdateReqDto 체크={}", studentUpdateReqDto);
 
         // edit
-        StudentRespDto updateStudent = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
+        Student updateStudent = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
 
         //선생이 학생 정보 수정 시 세션 변경X
         if (sessionObject.getClass().equals(Student.class)) {

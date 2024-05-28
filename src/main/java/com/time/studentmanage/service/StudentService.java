@@ -66,7 +66,7 @@ public class StudentService {
     }
 
     // 학생_정보_수정
-    public StudentRespDto updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
+    public Student updateStudentInfo(Long id, StudentUpdateReqDto updateReqDto) {
         Optional<Student> studentOP = studentRepository.findById(id);
 
         if (!studentOP.isPresent()) {
@@ -76,7 +76,7 @@ public class StudentService {
         Student student = studentOP.get();
         student.changeEntity(id, updateReqDto.toEntity());
 
-        return new StudentRespDto(student);
+        return student;
     }
 
     //학생_재원여부_변경
