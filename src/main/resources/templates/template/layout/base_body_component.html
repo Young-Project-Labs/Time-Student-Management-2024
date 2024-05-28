@@ -97,59 +97,59 @@
 
 
                 <!-- 학교 목록 시작 -->
-                <div th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and schools != null}">
-                    <hr class="dropdown-divider">
-                    <!--초등 학교 목록-->
-                    <li>
-                        <!-- 초등학교 클릭 시 하위 목록 토글 -->
-                        <a href="#collapse__elementary__school" class="nav-link fs-5 fw-semibold"
-                           data-bs-toggle="collapse">초등학교</a>
-                        <div th:if="${schools.elementarySchools != null}" class="collapse show"
-                             id="collapse__elementary__school">
-                            <div class="list-group">
-                                <a th:each="name : ${schools.elementarySchools}" th:href="@{/school}"
-                                   class="list-group-item list-group-item-action school-name-link"
-                                   aria-current="true">
-                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <!--초등 학교 목록 끝-->
+<!--                <div th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER') and schools != null}">-->
+<!--                    <hr class="dropdown-divider">-->
+<!--                    &lt;!&ndash;초등 학교 목록&ndash;&gt;-->
+<!--                    <li>-->
+<!--                        &lt;!&ndash; 초등학교 클릭 시 하위 목록 토글 &ndash;&gt;-->
+<!--                        <a href="#collapse__elementary__school" class="nav-link fs-5 fw-semibold"-->
+<!--                           data-bs-toggle="collapse">초등학교</a>-->
+<!--                        <div th:if="${schools.elementarySchools != null}" class="collapse show"-->
+<!--                             id="collapse__elementary__school">-->
+<!--                            <div class="list-group">-->
+<!--                                <a th:each="name : ${schools.elementarySchools}" th:href="@{/school}"-->
+<!--                                   class="list-group-item list-group-item-action school-name-link"-->
+<!--                                   aria-current="true">-->
+<!--                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                    &lt;!&ndash;초등 학교 목록 끝&ndash;&gt;-->
 
-                    <!--중학교 목록-->
-                    <li>
-                        <a href="#collapse__middle__school" class="nav-link fs-5 fw-semibold"
-                           data-bs-toggle="collapse">중학교</a>
-                        <div th:if="${schools.middleSchools != null}" class="collapse show"
-                             id="collapse__middle__school">
-                            <div class="list-group">
-                                <a th:each="name : ${schools.middleSchools}" th:href="@{/school}"
-                                   class="list-group-item list-group-item-action school-name-link"
-                                   aria-current="true">
-                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <!--중학교 목록 끝-->
+<!--                    &lt;!&ndash;중학교 목록&ndash;&gt;-->
+<!--                    <li>-->
+<!--                        <a href="#collapse__middle__school" class="nav-link fs-5 fw-semibold"-->
+<!--                           data-bs-toggle="collapse">중학교</a>-->
+<!--                        <div th:if="${schools.middleSchools != null}" class="collapse show"-->
+<!--                             id="collapse__middle__school">-->
+<!--                            <div class="list-group">-->
+<!--                                <a th:each="name : ${schools.middleSchools}" th:href="@{/school}"-->
+<!--                                   class="list-group-item list-group-item-action school-name-link"-->
+<!--                                   aria-current="true">-->
+<!--                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                    &lt;!&ndash;중학교 목록 끝&ndash;&gt;-->
 
-                    <!--고등학교 목록-->
-                    <li>
-                        <a href="#collapse__high__school" class="nav-link fs-5 fw-semibold"
-                           data-bs-toggle="collapse">고등학교</a>
-                        <div th:if="${schools.highSchools != null}" class="collapse show" id="collapse__high__school">
-                            <div class="list-group">
-                                <a th:each="name : ${schools.highSchools}" th:href="@{/school}"
-                                   class="list-group-item list-group-item-action school-name-link"
-                                   aria-current="true">
-                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <!--고등학교 목록 끝-->
-                </div>
+<!--                    &lt;!&ndash;고등학교 목록&ndash;&gt;-->
+<!--                    <li>-->
+<!--                        <a href="#collapse__high__school" class="nav-link fs-5 fw-semibold"-->
+<!--                           data-bs-toggle="collapse">고등학교</a>-->
+<!--                        <div th:if="${schools.highSchools != null}" class="collapse show" id="collapse__high__school">-->
+<!--                            <div class="list-group">-->
+<!--                                <a th:each="name : ${schools.highSchools}" th:href="@{/school}"-->
+<!--                                   class="list-group-item list-group-item-action school-name-link"-->
+<!--                                   aria-current="true">-->
+<!--                                    <i class="fa-solid fa-chevron-right"></i> <span th:text="${name}">학교 이름</span>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                    &lt;!&ndash;고등학교 목록 끝&ndash;&gt;-->
+<!--                </div>-->
             </ul>
         </div>
     </div>

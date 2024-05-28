@@ -1,6 +1,7 @@
 package com.time.studentmanage;
 
 import com.time.studentmanage.config.TestDataInit;
+import com.time.studentmanage.config.dataInit;
 import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
@@ -24,5 +25,11 @@ public class StudentmanageApplication {
     @Profile("local")
     public TestDataInit testDataInit(StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new TestDataInit(studentRepository, teacherRepository, recordRepository, bCryptPasswordEncoder);
+    }
+
+    @Bean
+    @Profile("prod")
+    public dataInit init(TeacherRepository teacherRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        return new dataInit(teacherRepository, bCryptPasswordEncoder);
     }
 }
