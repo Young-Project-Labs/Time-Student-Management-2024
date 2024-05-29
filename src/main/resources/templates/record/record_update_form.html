@@ -50,7 +50,7 @@
         el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
         height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
         initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        initialValue: '[[${recordUpdateReqDto.content}]]',
+        initialValue: `[[${recordUpdateReqDto.content}]]`,
         previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
         toolbarItems: toolbarOptions,
     });
