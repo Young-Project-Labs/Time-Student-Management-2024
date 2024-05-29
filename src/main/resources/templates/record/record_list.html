@@ -75,12 +75,9 @@
                             <div class="col-4">
                                 <div class="input-group mb-3">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text" id="basic-addon1"><i
-                                                class="fas fa-search"></i></span>
-                                        <input type="text" th:field="*{content}" class="form-control" placeholder="검색"
-                                               aria-label="검색"
-                                               aria-describedby="basic-addon1">
-                                        <input type="submit" value="검색" class="btn btn-outline-primary">
+                                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                        <input type="text" th:field="*{content}" class="form-control" placeholder="검색" aria-label="검색" aria-describedby="basic-addon1">
+                                        <input type="submit" value="검색" class="btn btn-outline-primary" onclick="resetPage()">
                                     </div>
                                 </div>
                             </div>
@@ -207,8 +204,9 @@
         });
     });
 
-
-
+    function resetPage() {
+        document.querySelector('input[name="page"]').value = 0;
+    }
 </script>
 
 </body>
