@@ -152,6 +152,7 @@ class RecordServiceTest {
     void 피드백_수정_서비스_로직() {
         //given
         Long fakeId = 1L;
+        String title = "수정된 제목 입니다.";
         String content = "수정된 피드백 입니다.";
 
         Student student = createStudent();
@@ -166,16 +167,19 @@ class RecordServiceTest {
 
         when(recordRepository.findById(anyLong())).thenReturn(Optional.of(record));
 
-        recordService.modifyContent(record.getId(), content);
+        recordService.modifyContent(record.getId(),title, content);
         log.info("after save record={}", record.getContent());
 
         assertThat(record.getContent()).isEqualTo(content);
+        assertThat(record.getTitle()).isEqualTo(title);
+
     }
 
     @Test
     void 피드백_수정_실패_로직() {
         //given
         Long fakeId = 1L;
+        String title = "수정된 제목 입니다.";
         String content = "수정된 피드백 입니다.";
 
         // stub
@@ -186,7 +190,7 @@ class RecordServiceTest {
 
         when(recordRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> recordService.modifyContent(record.getId(), content))
+        assertThatThrownBy(() -> recordService.modifyContent(record.getId(), title, content))
                 .isInstanceOf(DataNotFoundException.class);
     }
 

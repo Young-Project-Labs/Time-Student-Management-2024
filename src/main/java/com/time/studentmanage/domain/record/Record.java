@@ -81,4 +81,8 @@ public class Record extends BaseTimeEntity {
     public void addViewCount(int view) {
         this.view = view + 1;
     }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
 }

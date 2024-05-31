@@ -71,7 +71,7 @@ public class RecordService {
         return result.getId();
     }
 
-    public void modifyContent(Long recordId, String content) {
+    public void modifyContent(Long recordId,String title, String content) {
         Optional<Record> recordOP = recordRepository.findById(recordId);
 
         if (!recordOP.isPresent()) {
@@ -79,6 +79,7 @@ public class RecordService {
         }
 
         Record recordPS = recordOP.get();
+        recordPS.changeTitle(title);
         recordPS.changeContent(content);
     }
 
@@ -99,7 +100,17 @@ public class RecordService {
     }
 
     @Transactional
-    public RecordRespDto getRecord(Long recordId, Object validUser) {
+    public RecordRespDto getRecord(Long recordId, Teacher teacher) {
+        return caching(recordId, "teacher_" + teacher.getId());
+    }
+
+    @Transactional
+    public RecordRespDto getRecord(Long recordId, Student student) {
+        return caching(recordId, "student_" + student.getId());
+    }
+
+    @Transactional
+    public RecordRespDto caching(Long recordId, String redisUserKey) {
         Optional<Record> recordOP = recordRepository.findById(recordId);
 
         if (!recordOP.isPresent()) {
@@ -107,15 +118,6 @@ public class RecordService {
         }
 
         Record r = recordOP.get();
-
-        String redisUserKey = String.valueOf(r.getId());
-
-        if (validUser instanceof Teacher teacher) {
-            redisUserKey = "teacher_" + teacher.getId(); // 유저 key
-        }
-        if (validUser instanceof Student student) {
-            redisUserKey = "student_" + student.getId(); // 유저 key
-        }
 
         String values = redisUtil.getData(redisUserKey); // 유저 이름으로 생성된 키 값들을 조회
 
@@ -147,6 +149,12 @@ public class RecordService {
             }
         }
 
+        RecordRespDto recordRespDTO = createRecordRespDto(r);
+
+        return recordRespDTO;
+    }
+
+    private static RecordRespDto createRecordRespDto(Record r) {
         RecordRespDto recordRespDTO = new RecordRespDto();
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setStudentName(r.getStudent().getName());
@@ -154,6 +162,8 @@ public class RecordService {
         recordRespDTO.setContent(r.getContent());
         recordRespDTO.setView(r.getView());
         recordRespDTO.setTeacherName(r.getTeacher().getName());
+        recordRespDTO.setCreateDate(r.getCreateDate());
+        recordRespDTO.setLastModifiedDate(r.getModifiedDate());
         return recordRespDTO;
     }
 

@@ -3,16 +3,16 @@
 <head>
     <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: toast-editor-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
 
     <title>피드백 수정</title>
 </head>
 <body>
 
-    <!-- 헤더 시작 -->
-    <div class="container">
-        <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
-    </div>
-    <!-- 헤더 끝 -->
+<!-- 헤더 시작 -->
+<th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
+<!-- 헤더 끝 -->
 
 <div class="container p-2">
 
@@ -20,6 +20,7 @@
 
         <div class="alert alert-warning text-center" th:errors="*{recordId}">피드백 id 오류</div>
         <div class="alert alert-warning text-center" th:errors="*{studentId}">학생 id 오류</div>
+        <div class="alert alert-warning text-danger text-center" th:errors="*{title}">제목 오류</div>
         <div class="alert alert-warning text-danger text-center" th:errors="*{content}">내용 오류 입니다.</div>
 
         <div class="mb-3">
@@ -27,6 +28,12 @@
         </div>
 
         <input type="hidden" name="studentId" th:value="*{studentId}"/>
+
+        <h2>
+            <label for="feedback__title" class="form-label">제목</label>
+        </h2>
+        <input type="text" class="form-control mb-3" id="feedback__title" placeholder="제목을 입력 하세요." th:field="*{title}"
+               th:errorclass="field-error">
 
         <div id="editor"></div>
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->

@@ -3,72 +3,166 @@
 <head>
     <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
     <th:block th:replace="~{template/layout/base_head_component :: toast-editor-load}"></th:block>
-
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
     <title>피드백 정보</title>
 </head>
 <body>
+
 <!-- 헤더 시작 -->
-<div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-            <img src="/img/time_logo.jpg" alt="홈으로 가기" width="40" height="40">
-            <span class="fs-4">타임 영어 전문 학원</span>
-        </a>
-
-        <!-- 아코디언 위에 버튼 추가 -->
-        <div class="d-flex justify-content-end mb-3">
-            <button id="toggleAccordion" class="btn btn-secondary btn-sm me-1">모두 펼치기/닫기</button>
-            <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
-               th:href="@{/record/create(studentId=${studentId})} " class="btn btn-primary btn-sm" role="button"
-               aria-disabled="false" th:text="|피드백 작성하기|">피드백 작성하기
-            </a>
-
-        </div>
-    </header>
-</div>
+<th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
 <!-- 헤더 끝 -->
 
-<div class="container">
-    <h3 class="text-center" th:text="|${record.studentName} 피드백|"></h3>
-    <h5 class="d-flex justify-content-end pb-2 mb-2 border-bottom" th:text="|작성자: ${record.teacherName}|">작성자</h5>
+<!--브레드 크럼 시작-->
+<ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+    <li class="breadcrumb-item">
+        <a class="link-body-emphasis text-dark" href="/">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">피드백 목록</li>
+</ol>
+<!--브레드 크럼 끝-->
 
-    <div class="markdown-content pb-2 mb-2 border-bottom" th:text="${record.content}"></div>
+<div class="container-fluid">
 
-    <div class="d-flex justify-content-end">
-        <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
-           th:href="@{/record/update/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
-           class="btn btn-primary btn-sm mx-1" role="button" aria-disabled="false" th:text="수정하기">수정하기</a>
-        <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
-           class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
-           th:text="삭제하기">삭제하기</a>
+    <div class="row">
 
-        <!-- Modal 시작 -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">피드백 삭제</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <strong class="me-auto d-flex justify-content-center">해당 피드백을 삭제 하시겠습니까?</strong>
-                    </div>
-                    <div class="modal-footer d-flex flex-row justify-content-around">
-                        <!--삭제 확인 버튼 시작-->
+        <!-- 사이드바 시작 -->
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
+        <!-- 사이드바 끝 -->
+
+        <div class="col-10">
+            <h3 th:text="|${record.studentName} 학생 피드백|"></h3>
+
+            <!--점보트론 시작-->
+            <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-start align-items-start flex-column">
+                    <!--제목 시작-->
+                    <h4 th:text="|${record.title}|">
+                        제목
+                    </h4>
+                    <!--제목 끝-->
+
+                    <!--게시글 정보 시작-->
+                    <div class="d-flex justify-content-between w-100 p-2 mb-2 border-bottom">
                         <div>
-                            <a th:href="@{/record/delete/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
-                               class="btn btn-danger btn-sm" role="button" aria-disabled="false" th:text="삭제">삭제</a>
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
-                                    th:text="취소"></button>
+                            <!--작성자와 조회수를 세로로 배치 -->
+                            <div class="fw-light" th:text="|피드백 작성자: ${record.teacherName}|">작성자</div>
+                            <span class="fw-lighter"
+                                  th:text="|${#temporals.format(record.createDate, 'yyyy.MM.dd HH:mm')}|">글 작성 일자</span>
+                            <span class=" fw-lighter" th:text="|조회 ${record.view}|">조회수</span>
                         </div>
-                        <!--삭제 확인 버튼 끝-->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal 끝 -->
 
+                        <div>
+                            <div class=" fw-lighter"
+                                 th:text="|수정: ${#temporals.format(record.lastModifiedDate, 'yyyy.MM.dd HH:mm')}|">글
+                                마지막 수정 일자
+                            </div>
+                        </div>
+                    </div>
+                    <!--게시글 정보 끝-->
+
+                    <!--게시글 시작-->
+                    <div class="markdown-content p-2" th:text="${record.content}"></div>
+                    <!--게시글 끝-->
+                </div>
+
+                <!--게시글 수정/삭제 버튼 시작-->
+                <div class="d-flex justify-content-end">
+                    <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
+                       th:href="@{/record/update/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
+                       class="btn btn-primary btn-sm mx-1" role="button" aria-disabled="false" th:text="수정하기">수정하기</a>
+                    <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"
+                       class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                       th:text="삭제하기">삭제하기</a>
+
+                    <!-- Modal 시작 -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">피드백 삭제</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <strong class="me-auto d-flex justify-content-center">해당 피드백을 삭제 하시겠습니까?</strong>
+                                </div>
+                                <div class="modal-footer d-flex flex-row justify-content-around">
+                                    <!--삭제 확인 버튼 시작-->
+                                    <div>
+                                        <a th:href="@{/record/delete/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "
+                                           class="btn btn-danger btn-sm" role="button" aria-disabled="false"
+                                           th:text="삭제">삭제</a>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+                                                th:text="취소"></button>
+                                    </div>
+                                    <!--삭제 확인 버튼 끝-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal 끝 -->
+                </div>
+                <!--게시글 수정/삭제 버튼 끝-->
+
+
+                <!--                <h3 class="text-center" th:text="|${record.studentName} 피드백|"></h3>-->
+                <!--                <h5 class="d-flex justify-content-end pb-2 mb-2 border-bottom" th:text="|작성자: ${record.teacherName}|">-->
+                <!--                    작성자</h5>-->
+
+                <!--                <div class="markdown-content pb-2 mb-2 border-bottom" th:text="${record.content}"></div>-->
+
+                <!--                <div class="d-flex justify-content-end">-->
+                <!--                    <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"-->
+                <!--                       th:href="@{/record/update/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "-->
+                <!--                       class="btn btn-primary btn-sm mx-1" role="button" aria-disabled="false" th:text="수정하기">수정하기</a>-->
+                <!--                    <a th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}"-->
+                <!--                       class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal"-->
+                <!--                       th:text="삭제하기">삭제하기</a>-->
+
+                <!--                    &lt;!&ndash; Modal 시작 &ndash;&gt;-->
+                <!--                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"-->
+                <!--                         aria-hidden="true">-->
+                <!--                        <div class="modal-dialog">-->
+                <!--                            <div class="modal-content">-->
+                <!--                                <div class="modal-header">-->
+                <!--                                    <h1 class="modal-title fs-5" id="exampleModalLabel">피드백 삭제</h1>-->
+                <!--                                    <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+                <!--                                            aria-label="Close"></button>-->
+                <!--                                </div>-->
+                <!--                                <div class="modal-body">-->
+                <!--                                    <strong class="me-auto d-flex justify-content-center">해당 피드백을 삭제 하시겠습니까?</strong>-->
+                <!--                                </div>-->
+                <!--                                <div class="modal-footer d-flex flex-row justify-content-around">-->
+                <!--                                    &lt;!&ndash;삭제 확인 버튼 시작&ndash;&gt;-->
+                <!--                                    <div>-->
+                <!--                                        <a th:href="@{/record/delete/{recordId}(recordId=${record.recordId}, studentId=${studentId})} "-->
+                <!--                                           class="btn btn-danger btn-sm" role="button" aria-disabled="false"-->
+                <!--                                           th:text="삭제">삭제</a>-->
+                <!--                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"-->
+                <!--                                                th:text="취소"></button>-->
+                <!--                                    </div>-->
+                <!--                                    &lt;!&ndash;삭제 확인 버튼 끝&ndash;&gt;-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    &lt;!&ndash; Modal 끝 &ndash;&gt;-->
+                <!--                </div>-->
+
+
+            </div>
+            <!--점보트론 끝-->
+
+        </div>
+
+        <!-- footer 시작 -->
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+        <!-- footer 끝 -->
     </div>
+
 </div>
 
 <script>
