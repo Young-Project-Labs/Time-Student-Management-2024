@@ -1,9 +1,9 @@
 spring:
 
   datasource:
-    url: {input_your_source_db_url}
-    username: {username}
-    password: {user_password}
+    url: jdbc:mysql://127.0.0.1:3306/time_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: root
+    password: root1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   profiles:
@@ -13,7 +13,7 @@ spring:
   jpa:
 #    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create # create-drop
     properties:
       hibernate:
         format_sql: true

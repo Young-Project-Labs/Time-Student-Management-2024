@@ -22,16 +22,22 @@
 
         <div class="alert alert-warning text-red text-center" th:errors="*{studentId}">학생 id 오류</div>
         <div class="alert alert-warning text-center" th:errors="*{teacherId}">선생 id 오류</div>
-        <div class="alert alert-warning text-danger text-center" th:errors="*{content}">내용 오류 입니다.</div>
+        <div class="alert alert-warning text-danger text-center" th:errors="*{title}">제목 오류</div>
+        <div class="alert alert-warning text-danger text-center" th:errors="*{content}">내용 오류</div>
 
         <div class="mb-3">
-            <h3 class="my-3 border-bottom pb-2">피드백 등록</h3>
+            <h3 class="my-3 border-bottom pb-2 text-center">피드백 등록</h3>
         </div>
 
 
         <!-- 학생 & 선생 id -->
         <input type="hidden" name="studentId" th:field="*{studentId}" th:errorclass="field-error" class="form-control"/>
         <input type="hidden" name="teacherId" th:field="*{teacherId}" th:errorclass="field-error" class="form-control"/>
+
+        <h2>
+            <label for="feedback__title" class="form-label">제목</label>
+        </h2>
+        <input type="text" class="form-control mb-3" id="feedback__title" placeholder="제목을 입력 하세요." th:field="*{title}" th:errorclass="field-error">
 
         <div id="editor"></div>
         <!-- 토스트 UI 에디터와 동기화될 숨겨진 textarea 추가 -->

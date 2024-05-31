@@ -27,8 +27,8 @@ public class StudentmanageApplication {
         return new TestDataInit(studentRepository, teacherRepository, recordRepository, bCryptPasswordEncoder);
     }
 
-    @Bean
-    @Profile("prod")
+//    @Bean
+//    @Profile("prod")
     public dataInit init(TeacherRepository teacherRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new dataInit(teacherRepository, bCryptPasswordEncoder);
     }

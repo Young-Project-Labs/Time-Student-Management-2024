@@ -74,7 +74,11 @@ public class RecordController {
                                            Model model) {
 
         Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto, studentId);
+        StudentRespDto studentInfo = studentService.getStudentInfo(studentId);
+        String studentName = studentInfo.getName();
+
         model.addAttribute("pagingResult", pagingResult);
+        model.addAttribute("studentName", studentName);
 
         return "record/record_list";
     }
@@ -82,9 +86,11 @@ public class RecordController {
     @GetMapping("/record/detail/{id}")
     public String showRecordDetail(@PathVariable("id") Long recordId,
                                    @RequestParam("studentId") Long studentId,
-                                   Model model) {
+                                   Model model,
+                                   HttpServletRequest request) {
+        Object validUser = request.getSession().getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        RecordRespDto record = recordService.getRecord(recordId);
+        RecordRespDto record = recordService.getRecord(recordId, validUser);
 
         model.addAttribute("studentId", studentId);
         model.addAttribute("record", record);
@@ -154,11 +160,11 @@ public class RecordController {
         }
 
         // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
 
-        RecordRespDto recordRespDto = recordService.getRecord(recordId);
+        RecordRespDto recordRespDto = recordService.getRecord(recordId, teacher.getId());
 
         RecordUpdateReqDto recordUpdateReqDto = new RecordUpdateReqDto();
         recordUpdateReqDto.setRecordId(recordId);

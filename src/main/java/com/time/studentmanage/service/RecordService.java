@@ -1,5 +1,6 @@
 package com.time.studentmanage.service;
 
+import com.time.studentmanage.config.RedisUtil;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecordService {
 
+    private final RedisUtil redisUtil;
     private final RecordRepository recordRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
@@ -59,7 +61,7 @@ public class RecordService {
             throw new DataNotFoundException("존재하지 않는 선생님 정보입니다.");
         }
 
-        Record record = recordSaveReqDTO.toEntity(teacherPS, studentPS, recordSaveReqDTO.getContent());
+        Record record = recordSaveReqDTO.toEntity(teacherPS, studentPS, recordSaveReqDTO.getTitle(), recordSaveReqDTO.getContent());
 
         record.addStudent(studentPS);
         record.addTeacher(teacherPS);
@@ -96,8 +98,8 @@ public class RecordService {
         recordPS.changeRecordStatus(RecordStatus.DELETED);
     }
 
-    @Transactional(readOnly = true)
-    public RecordRespDto getRecord(Long recordId) {
+    @Transactional
+    public RecordRespDto getRecord(Long recordId, Object validUser) {
         Optional<Record> recordOP = recordRepository.findById(recordId);
 
         if (!recordOP.isPresent()) {
@@ -105,12 +107,60 @@ public class RecordService {
         }
 
         Record r = recordOP.get();
+
+        String redisUserKey = String.valueOf(r.getId());
+
+        if (validUser instanceof Teacher teacher) {
+            redisUserKey = "teacher_" + teacher.getId(); // 유저 key
+        }
+        if (validUser instanceof Student student) {
+            redisUserKey = "student_" + student.getId(); // 유저 key
+        }
+
+        String values = redisUtil.getData(redisUserKey); // 유저 이름으로 생성된 키 값들을 조회
+
+        if (values == null) { // 값이 없다면 새로 key-value 형태로 매핑해주기
+            redisUtil.setDataExpire(redisUserKey, recordId + "_", calculateTimeUntilMidnight());
+            r.addViewCount(r.getView());
+
+        } else {
+            StringBuffer sb = new StringBuffer();
+
+            String[] valueBits = values.split("_");
+
+            List<String> viewedRecordList = Arrays.asList(valueBits);
+
+            boolean isView = false;
+
+            if (!viewedRecordList.isEmpty()) {
+                for (String id : viewedRecordList) {
+                    if (String.valueOf(recordId).equals(id)) {
+                        isView = true;
+                        break;
+                    }
+                }
+                if (!isView) {
+                    sb.append(values).append(recordId).append("_");
+                    redisUtil.setDataExpire(redisUserKey, sb.toString(), calculateTimeUntilMidnight());
+                    r.addViewCount(r.getView());
+                }
+            }
+        }
+
         RecordRespDto recordRespDTO = new RecordRespDto();
         recordRespDTO.setRecordId(r.getId());
         recordRespDTO.setStudentName(r.getStudent().getName());
+        recordRespDTO.setTitle(r.getTitle());
         recordRespDTO.setContent(r.getContent());
+        recordRespDTO.setView(r.getView());
         recordRespDTO.setTeacherName(r.getTeacher().getName());
         return recordRespDTO;
+    }
+
+    public static long calculateTimeUntilMidnight() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+        return ChronoUnit.SECONDS.between(now, midnight);
     }
 
     /**

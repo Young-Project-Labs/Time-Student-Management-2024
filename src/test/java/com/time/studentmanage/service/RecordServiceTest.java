@@ -1,38 +1,29 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.record.Record;
-import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
-import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.enums.RecordStatus;
-import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.exception.DataNotFoundException;
+import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
-import com.time.studentmanage.repository.record.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.time.studentmanage.TestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -53,6 +44,7 @@ class RecordServiceTest {
     void 피드백_저장_서비스_로직() {
         //given
         Long fakeId = 1L;
+        String title = "테스트 제목 입니다.";
         String content = "피드백 내용입니다.";
 
         Student student = createStudent();
@@ -68,6 +60,7 @@ class RecordServiceTest {
         Record record = Record.builder()
                 .teacher(teacher)
                 .student(student)
+                .title(title)
                 .content(content)
                 .build();
         ReflectionTestUtils.setField(record, "id", fakeId);
@@ -75,7 +68,7 @@ class RecordServiceTest {
         when(recordRepository.save(any())).thenReturn(record);
 
         // 1. 저장 요청
-        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, title, content);
 
         //when
         Long recordId = recordService.saveRecord(recordSaveReqDTO);
@@ -90,6 +83,7 @@ class RecordServiceTest {
     void 학생_정보가_없을_때_피드백_저장_실패_테스트() {
         //given
         Long fakeId = 1L;
+        String title = "피드백 제목입니다.";
         String content = "피드백 내용입니다.";
 
         Teacher teacher = createTeacher();
@@ -103,6 +97,7 @@ class RecordServiceTest {
         Record record = Record.builder()
                 .teacher(teacher)
                 .student(null)
+                .title(title)
                 .content(content)
                 .build();
         ReflectionTestUtils.setField(record, "id", fakeId);
@@ -110,7 +105,7 @@ class RecordServiceTest {
 //        when(recordsRepository.save(any())).thenReturn(record); // 테스트에서 사용되지 않는 스텁을 넣으면 테스트 오류 발생함
 
         // 1. 저장 요청
-        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, title, content);
 
 
         //when
@@ -124,6 +119,7 @@ class RecordServiceTest {
     void 선생님_정보가_없을_때_피드백_저장_실패_테스트() {
         //given
         Long fakeId = 1L;
+        String title = "피드백 제목입니다.";
         String content = "피드백 내용입니다.";
 
         Student student = createStudent();
@@ -137,12 +133,13 @@ class RecordServiceTest {
         Record record = Record.builder()
                 .teacher(null)
                 .student(student)
+                .title(title)
                 .content(content)
                 .build();
         ReflectionTestUtils.setField(record, "id", fakeId);
 
         // 1. 저장 요청
-        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, content);
+        RecordSaveReqDto recordSaveReqDTO = new RecordSaveReqDto(fakeId, fakeId, title, content);
 
         //when
         //then
