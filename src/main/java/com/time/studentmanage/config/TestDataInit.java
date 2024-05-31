@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 public class TestDataInit {
 
@@ -28,7 +30,7 @@ public class TestDataInit {
         String password = "1234";
         String encodePassword = passwordEncoder.encode(password);
         Student student1 = Student.builder()
-                .name("박영진")
+                .name("짱구")
                 .userId("pyjs2291").password(encodePassword)
                 .email("pyjs2291@naver.com")
                 .phoneNumber("010-1111-3311").schoolName("용호초등학교")
@@ -50,35 +52,45 @@ public class TestDataInit {
         Record record1 = Record.builder()
                 .student(student1)
                 .teacher(teacher1)
+                .title("제목인건가")
                 .content("1번 피드백 입니다.")
+                .view(0)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
         Record record2 = Record.builder()
                 .student(student1)
                 .teacher(teacher1)
+                .title("제목인건가")
                 .content("2번 피드백 입니다.")
+                .view(0)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
         Record record3 = Record.builder()
                 .student(student1)
                 .teacher(teacher1)
+                .title("제목인건가")
                 .content("3번 피드백 입니다.")
+                .view(0)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
         Record record4 = Record.builder()
                 .student(student1)
                 .teacher(teacher1)
+                .title("제목인건가")
                 .content("4번 피드백 입니다.")
+                .view(0)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
         Record record5 = Record.builder()
                 .student(student1)
                 .teacher(teacher1)
+                .title("제목인건가")
                 .content("5번 피드백 입니다.")
+                .view(0)
                 .status(RecordStatus.PUBLISHED)
                 .build();
 
@@ -108,17 +120,25 @@ public class TestDataInit {
     }
 
     public void createDummyRecordData(Student student, Teacher teacher) {
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 200; i++) {
+            LocalDateTime randomCreateDate = LocalDateTime.now().minusDays((long) (Math.random() * 365));
+
             Record record = Record.builder()
                     .student(student)
                     .teacher(teacher)
+                    .title((i + 1) + "번 피드백 제목 입니다.")
                     .content((i + 1) + "번 테스트 피드백 입니다.")
                     .status(RecordStatus.PUBLISHED)
+                    .view(0)
                     .build();
             record.addStudent(student);
             record.addTeacher(teacher);
 
+//            record.setCreateDate(randomCreateDate);
+//            record.setModifiedDate(randomCreateDate);
+
             recordRepository.save(record);
+            record.getCreateDate();
         }
     }
 
@@ -246,23 +266,24 @@ public class TestDataInit {
         teacherRepository.save(teacher4);
 
     }
-@PostConstruct
-public void createDummyTeacher() {
-    String password = "1234";
-    String encodePassword = passwordEncoder.encode(password);
-    for (int i = 0; i < 100; i++) {
-        Teacher teacher = Teacher.builder()
-                        .name("테스트선생" + i)
-                .password(encodePassword)
-                .phoneNumber("010-1111-1111")
-                .email("test"+i+"@naver.com")
-                .position(Position.TEACHER)
-                .memberType(MemberType.TEACHER)
-                .gender(GenderType.MALE)
-                .build();
-        teacherRepository.save(teacher);
+
+    @PostConstruct
+    public void createDummyTeacher() {
+        String password = "1234";
+        String encodePassword = passwordEncoder.encode(password);
+        for (int i = 0; i < 100; i++) {
+            Teacher teacher = Teacher.builder()
+                    .name("테스트선생" + i)
+                    .password(encodePassword)
+                    .phoneNumber("010-1111-1111")
+                    .email("test" + i + "@naver.com")
+                    .position(Position.TEACHER)
+                    .memberType(MemberType.TEACHER)
+                    .gender(GenderType.MALE)
+                    .build();
+            teacherRepository.save(teacher);
+        }
     }
-}
 
 
 }
