@@ -7,11 +7,7 @@
 </head>
 <body>
 <!-- 헤더 시작 -->
-<div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-    </header>
-</div>
+<th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
 <!-- 헤더 끝 -->
 
 <div class="container mt-3" th:object="${basicClassRoomInfoDto}">
