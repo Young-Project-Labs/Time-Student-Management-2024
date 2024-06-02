@@ -1,8 +1,8 @@
 package com.time.studentmanage.web.teacher;
 
-import com.time.studentmanage.domain.dto.student.SearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
+import com.time.studentmanage.domain.dto.teacher.TeacherSearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.enums.SearchType;
@@ -10,7 +10,6 @@ import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.service.TeacherService;
 import com.time.studentmanage.web.login.SessionConst;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,8 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @Slf4j
@@ -36,10 +33,10 @@ public class TeacherController {
 
     //선생 목록 페이지
     @GetMapping("/teacher")
-    public String teacherList(@ModelAttribute("SearchReqDto") SearchReqDto searchReqDto,
+    public String teacherList(@ModelAttribute("SearchReqDto") TeacherSearchReqDto searchReqDto,
                               Model model, HttpSession session) {
         model.addAttribute("page", searchReqDto.getPage());
-        log.info("SearchReqDto={}",searchReqDto.toString());
+        log.info("SearchReqDto={}", searchReqDto.toString());
 
         Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
         //세션이 없는 경우 or 선생이 아닌 경우 main redirect
@@ -119,7 +116,7 @@ public class TeacherController {
             //수정 후 세션에 저장된 값 변경
             session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, teacher);
         }
-        return "redirect:/teacher/edit/"+id;
+        return "redirect:/teacher/edit/" + id;
 
     }
 

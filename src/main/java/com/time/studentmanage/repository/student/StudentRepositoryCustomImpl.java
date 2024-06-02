@@ -27,17 +27,20 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<String> findAllSchoolName() {
+    public List<SchoolRespDto> findAllSchoolName() {
 
         QStudent student = QStudent.student;
 
-        List<String> result = query.selectDistinct(
-                        student.schoolName)
+        List<SchoolRespDto> fetch = query.selectDistinct(
+                        new QSchoolRespDto(
+                                student.classType,
+                                student.schoolName
+                        ))
                 .from(student)
                 .orderBy(student.schoolName.asc())
                 .fetch();
 
-        return result;
+        return fetch;
     }
 
     /**

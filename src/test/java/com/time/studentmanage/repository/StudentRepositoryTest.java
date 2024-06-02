@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository;
 
+import com.time.studentmanage.domain.dto.student.SchoolRespDto;
 import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
@@ -275,7 +276,7 @@ class StudentRepositoryTest {
         studentRepository.save(studentZZ);
 
         //when
-        List<String> result = studentRepository.findAllSchoolName();
+        List<SchoolRespDto> result = studentRepository.findAllSchoolName();
 
         for (int i = 0; i < result.size(); i++) {
             log.info("result={}", result.get(i));

@@ -1,11 +1,10 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.dto.student.SearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
+import com.time.studentmanage.domain.dto.teacher.TeacherSearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
 import com.time.studentmanage.domain.enums.Position;
-import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
@@ -18,9 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,7 +29,7 @@ public class TeacherService {
 
     // 선생_정보_조회
     @Transactional(readOnly = true)
-    public TeacherRespDto getTeacherInfo(Long teacherId){
+    public TeacherRespDto getTeacherInfo(Long teacherId) {
         Optional<Teacher> teacherOP = teacherRepository.findById(teacherId);
 
         if (!teacherOP.isPresent()) {
@@ -42,7 +39,7 @@ public class TeacherService {
         //존재 시 teacher 리턴.
         return new TeacherRespDto(teacherOP.get());
     }
-    
+
     // 선생_정보_수정
     public Teacher updateTeacherInfo(Long id, TeacherUpdateReqDto updateReqDto) {
         Optional<Teacher> teacherOP = teacherRepository.findById(id);
@@ -67,12 +64,12 @@ public class TeacherService {
 
     //선생_목록(관리자 페이지)
     @Transactional(readOnly = true)
-    public Page<TeacherRespDto> getTeacherList(SearchReqDto searchReqDto) {
+    public Page<TeacherRespDto> getTeacherList(TeacherSearchReqDto searchReqDto) {
 
 
         Pageable pageable = PageRequest.of(searchReqDto.getPage(), 10);
-        Page<TeacherRespDto> teacherList = teacherRepository.findSearchDtoPaging(searchReqDto,pageable);
-        log.info("page확인={}",teacherList.toString());
+        Page<TeacherRespDto> teacherList = teacherRepository.findSearchDtoPaging(searchReqDto, pageable);
+        log.info("page확인={}", teacherList.toString());
 
 
         //Teacher -> TeacherRespDto
@@ -102,7 +99,7 @@ public class TeacherService {
         // 정규표현식 만족 X (@time.com)
         if (!email.matches(regexp)) {
             throw new IllegalArgumentException("아이디 형식을 확인해주세요.");
-        } else{
+        } else {
             //존재 -> 중복
             if (teacherOP.isPresent()) {
                 throw new IllegalArgumentException("이미 존재하는 이메일입니다.");

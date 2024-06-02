@@ -138,36 +138,25 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public StudentSchoolListRespDto getAllSchoolName() {
-        List<String> allSchoolName = studentRepository.findAllSchoolName();
+        List<SchoolRespDto> allSchoolName = studentRepository.findAllSchoolName();
 
         StudentSchoolListRespDto schoolRespDto = new StudentSchoolListRespDto();
 
-        for (String name : allSchoolName) {
-            if (name.contains("초등학교")) {
-                schoolRespDto.getElementarySchools().add(name);
-            } else if (name.contains("중학교")) {
-                schoolRespDto.getMiddleSchools().add(name);
-            } else if (name.contains("고등학교")) {
-                schoolRespDto.getHighSchools().add(name);
+        if (!allSchoolName.isEmpty()) {
+            for (SchoolRespDto target : allSchoolName) {
+                if (target.getSchoolName() == null || target.getSchoolName() == ""){
+                    continue;
+                }
+
+                switch (target.getClassType()) {
+                    case ELEMENTARY -> schoolRespDto.getElementarySchools().add(target.getSchoolName());
+                    case MIDDLE -> schoolRespDto.getMiddleSchools().add(target.getSchoolName());
+                    case HIGH -> schoolRespDto.getHighSchools().add(target.getSchoolName());
+                }
             }
         }
 
         return schoolRespDto;
-    }
-
-    @Transactional(readOnly = true)
-    public List<SelectedSchoolRespDto> getAllStudentsBySchoolName(String schoolName) {
-
-        List<Student> studentList = studentRepository.findAllBySchoolNameOrderByGradeAsc(schoolName);
-        List<SelectedSchoolRespDto> resultDto = studentList.stream()
-                .map(s -> new SelectedSchoolRespDto(s.getId(), s.getName(), s.getGrade()))
-                .collect(Collectors.toList());
-
-        if (resultDto == null || resultDto.size() == 0) {
-            throw new DataNotFoundException("검색 결과가 존재하지 않습니다.");
-        }
-
-        return resultDto;
     }
 
     @Transactional(readOnly = true)
