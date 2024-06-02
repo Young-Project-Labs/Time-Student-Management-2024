@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClassRoomRepository extends JpaRepository<ClassRoom, Long> {
+public interface ClassRoomRepository extends JpaRepository<ClassRoom, Long>, ClassRoomRepositoryCustom {
     List<ClassRoom> findAllByTeacherOrderByClassType(Teacher teacher);
 }
