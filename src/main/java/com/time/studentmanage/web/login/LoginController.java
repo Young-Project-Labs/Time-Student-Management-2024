@@ -40,7 +40,6 @@ public class LoginController {
         }
         //카카오 로그인 시 필요한 code 요청 API 주소 (code를 성공적으로 받으면, redirect_uri로)
         String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+client_id+"&redirect_uri="+redirect_uri;
-        log.info("location={}", location);
         model.addAttribute("location", location);
         return "login/login_form";
     }

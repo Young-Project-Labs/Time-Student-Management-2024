@@ -1,5 +1,6 @@
 package com.time.studentmanage.web.student;
 
+import com.time.studentmanage.config.Auth;
 import com.time.studentmanage.domain.dto.student.*;
 import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Student;
@@ -38,15 +39,9 @@ public class StudentController {
 
         return filteredSearchTypes;
     }
-
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN, Auth.Role.TEACHER})
     @GetMapping("/student/list")
-    public String updateStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto,
-                                        HttpSession session, Model model) {
-        //학생이거나 혹은 세션이 없는 경우 접근 X
-        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) == null || session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
-            return "redirect:/";
-        }
-
+    public String updateStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, Model model) {
         Page<StudentSearchRespDto> pagingResult = studentService.getSearchedResult(studentSearchReqDto);
 
         model.addAttribute("studentSearchReqDto", studentSearchReqDto);
@@ -76,13 +71,7 @@ public class StudentController {
 
     // 학생 개인 정보 수정 폼(마이페이지)
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable("id") Long id, HttpSession session, Model model) {
-        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        // 세션이 없는 경우 진입X
-        if (sessionObject == null) {
-            return "redirect:/";
-        }
-
+    public String editForm(@PathVariable("id") Long id, Model model) {
         StudentRespDto studentRespDto = studentService.getStudentInfo(id);
 
         model.addAttribute("studentRespDto", studentRespDto);
@@ -95,13 +84,7 @@ public class StudentController {
      */
     @PostMapping("/edit/{id}")
     public String editInfo(@PathVariable("id") int id, @Validated @ModelAttribute StudentRespDto studentRespDto,
-            BindingResult bindingResult, HttpSession session, Model model) {
-        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        // 세션이 없는 경우 진입X
-        if (sessionObject == null) {
-            return "redirect:/";
-        }
-
+            BindingResult bindingResult, HttpSession session,Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("studentRespDto", studentRespDto);
             return "student/edit_form";
@@ -116,7 +99,7 @@ public class StudentController {
         Student updateStudent = studentService.updateStudentInfo(studentUpdateReqDto.getId(), studentUpdateReqDto);
 
         //선생이 학생 정보 수정 시 세션 변경X
-        if (sessionObject.getClass().equals(Student.class)) {
+        if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION).getClass().equals(Student.class)) {
             //본인이 수정 시 세션 변경
             session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, updateStudent);
         }
