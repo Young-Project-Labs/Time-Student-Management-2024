@@ -1,4 +1,4 @@
-package com.time.studentmanage.domain.dto.student;
+package com.time.studentmanage.domain.dto.teacher;
 
 import com.time.studentmanage.domain.enums.SearchType;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class SearchReqDto {
+public class TeacherSearchReqDto {
 
     private SearchType searchType;
     private String content;

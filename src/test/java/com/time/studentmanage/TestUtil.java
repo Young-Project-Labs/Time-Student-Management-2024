@@ -17,6 +17,7 @@ public class TestUtil {
         return Record.builder()
                 .teacher(teacher)
                 .student(student)
+                .title("학생 피드백 제목 입니다.")
                 .content("문법 수준이 높습니다. 테스트 후 초등 고학년 문법반으로 올려도 될 것 같습니다.")
                 .status(RecordStatus.PUBLISHED)
                 .build();

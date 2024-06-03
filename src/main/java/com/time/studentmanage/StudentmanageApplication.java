@@ -2,9 +2,11 @@ package com.time.studentmanage;
 
 import com.time.studentmanage.config.TestDataInit;
 import com.time.studentmanage.config.dataInit;
+import com.time.studentmanage.repository.classroom.ClassRoomRepository;
 import com.time.studentmanage.repository.record.RecordRepository;
 import com.time.studentmanage.repository.student.StudentRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
+import com.time.studentmanage.service.StudentService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -23,12 +25,12 @@ public class StudentmanageApplication {
 
     @Bean
     @Profile("local")
-    public TestDataInit testDataInit(StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        return new TestDataInit(studentRepository, teacherRepository, recordRepository, bCryptPasswordEncoder);
+    public TestDataInit testDataInit(StudentService studentService,StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, ClassRoomRepository classRoomRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        return new TestDataInit(studentService, studentRepository, teacherRepository, recordRepository, classRoomRepository, bCryptPasswordEncoder);
     }
 
-    @Bean
-    @Profile("prod")
+//    @Bean
+//    @Profile("prod")
     public dataInit init(TeacherRepository teacherRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new dataInit(teacherRepository, bCryptPasswordEncoder);
     }

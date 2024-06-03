@@ -13,5 +13,4 @@ public class ClassStudentRespDto {
     private int grade;
     private String name;
     private String phoneNumber;
-
 }

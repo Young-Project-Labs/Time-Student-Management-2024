@@ -78,9 +78,9 @@
                                         <span class="input-group-text" id="basic-addon1"><i
                                                 class="fas fa-search"></i></span>
                                         <input type="text" th:field="*{content}" class="form-control" placeholder="검색"
-                                               aria-label="검색"
-                                               aria-describedby="basic-addon1">
-                                        <input type="submit" value="검색" class="btn btn-outline-primary">
+                                               aria-label="검색" aria-describedby="basic-addon1">
+                                        <input type="submit" value="검색" class="btn btn-outline-primary"
+                                               onclick="resetPage()">
                                     </div>
                                 </div>
                             </div>
@@ -94,32 +94,41 @@
             <!--테이블 렌더링 부분 시작-->
             <!-- recordList가 비어있을 때 메시지 표시 시작-->
             <div th:if="${pagingResult.isEmpty()}">
-                <div class="alert alert-warning text-center" role="alert" th:text="#{record.noResult}">
+                <div class="alert alert-warning text-center mt-3" role="alert" th:text="#{record.noResult}">
                     피드백이 없습니다.
                 </div>
             </div>
             <!-- recordList가 비어있을 때 메시지 표시 끝-->
 
-            <div class="main-content" th:if="${!pagingResult.isEmpty()}">
+            <div class="main-content table-responsive" th:if="${!pagingResult.isEmpty()}">
                 <!-- 페이징 시작-->
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">피드백 번호</th>
-                        <th scope="col">피드백 제목</th>
+                        <th scope="col">번호</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">작성일시</th>
                         <th scope="col">작성자</th>
+                        <th scope="col">조회수</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     <tr th:each="record, recordStat : ${pagingResult}">
-                        <th th:text="${recordStat.count}" scope="row">피드백 번호</th>
-                        <td>
+                        <th th:text="${record.recordId}" scope="row">피드백 번호</th>
+                        <td class="text-truncate" style="max-width: 150px;">
                             <a th:href="@{/record/detail/{recordId}(recordId=${record.recordId}, studentId=${studentId})}"
-                               th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')} 작성 피드백|"></a>
+                               th:text="|${record.title}|"></a>
                         </td>
+                        <td class="text-truncate" style="max-width: 150px;"
+                            th:text="|${#temporals.format(record.createDate, 'yyyy년 MM월 dd일 HH:mm')}|"></td>
                         <td th:text="|${record.teacherName}|">작성자</td>
-                    <tr>
+                        <td>
+                            <span>
+                                <i class="fa-solid fa-eye"></i>
+                                <span th:text="|${record.view}|"></span>
+                            </span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -170,7 +179,8 @@
                         <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
                             th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
                             th:classappend="${page == pagingResult.number} ? 'active'">
-                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}|}">페이지
+                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
+                               th:href="@{|?page=${page}|}">페이지
                                 표시</a>
                         </li>
                         <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
@@ -187,6 +197,10 @@
             </div>
             <!--테이블 렌더링 부분 끝 -->
         </div>
+
+        <!-- footer 시작 -->
+        <th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
+        <!-- footer 끝 -->
     </div>
 </div>
 
@@ -207,8 +221,9 @@
         });
     });
 
-
-
+    function resetPage() {
+        document.querySelector('input[name="page"]').value = 0;
+    }
 </script>
 
 </body>

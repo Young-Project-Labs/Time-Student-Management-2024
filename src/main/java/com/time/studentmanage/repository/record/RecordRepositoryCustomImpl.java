@@ -40,10 +40,12 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
         List<RecordRespDto> fetch = query.select(
                         new QRecordRespDto(
                                 record.id,
+                                record.title,
                                 record.content,
                                 record.teacher.name,
                                 record.student.name,
                                 record.status,
+                                record.view,
                                 record.createDate,
                                 record.modifiedDate)
                 )
@@ -74,10 +76,12 @@ public class RecordRepositoryCustomImpl implements RecordRepositoryCustom {
 
         List<RecordRespDto> fetch = query.select(
                         new QRecordRespDto(record.id,
+                                record.title,
                                 record.content,
                                 record.teacher.name,
                                 record.student.name,
                                 record.status,
+                                record.view,
                                 record.createDate,
                                 record.modifiedDate)
                 )

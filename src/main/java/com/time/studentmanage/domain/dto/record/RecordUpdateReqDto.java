@@ -15,5 +15,7 @@ public class RecordUpdateReqDto {
     @NotNull
     Long studentId;
     @NotBlank
+    String title;
+    @NotBlank
     String content;
 }

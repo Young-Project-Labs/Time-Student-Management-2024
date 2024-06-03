@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -38,15 +40,21 @@ public class Record extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RecordStatus status;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+    private String title;
+
     /**
      * 생성자 메서드
      */
     @Builder
-    public Record(String content, Teacher teacher, Student student, RecordStatus status) {
+    public Record(String content, Teacher teacher, Student student, RecordStatus status, String title, int view) {
         this.content = content;
+        this.title = title;
         this.teacher = teacher;
         this.student = student;
         this.status = status;
+        this.view = view;
     }
 
     /**
@@ -68,5 +76,13 @@ public class Record extends BaseTimeEntity {
 
     public void changeRecordStatus(RecordStatus status) {
         this.status = status;
+    }
+
+    public void addViewCount(int view) {
+        this.view = view + 1;
+    }
+
+    public void changeTitle(String title) {
+        this.title = title;
     }
 }

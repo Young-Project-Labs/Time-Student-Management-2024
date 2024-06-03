@@ -9,11 +9,7 @@
 <body>
 
 <!-- 헤더 시작 -->
-<div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <th:block th:replace="~{template/layout/base_body_component :: common-body-header-home-logo}"></th:block>
-    </header>
-</div>
+<th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
 <!-- 헤더 끝 -->
 
 
@@ -30,7 +26,7 @@
                 data-bs-target="#staticBackdrop">
             학생 등록
         </button>
-        <a class="btn btn-outline-danger btn-sm" th:href="@{/class/list}" role="button">뒤로 가기</a>
+        <a class="btn btn-outline-danger btn-sm" th:href="@{/class/{teacherId}(teacherId=${session.loginMember.id})}" role="button">뒤로 가기</a>
     </div>
 
     <!-- 모달 창 시작 -->
@@ -81,7 +77,7 @@
             <th scope="col">학교</th>
             <th scope="col">학년</th>
             <th scope="col">학생 이름</th>
-            <th scope="col">학생 연락처</th>
+            <th scope="col">피드백 목록</th>
             <th scope="col">삭제</th>
         </tr>
         </thead>
@@ -91,7 +87,12 @@
             <td th:text="${student.schoolName}"></td>
             <td th:text="${student.grade}"></td>
             <td th:text="${student.name}"></td>
-            <td th:text="${student.phoneNumber}"></td>
+            <td>
+                <!-- 피드백 목록 이동-->
+                <button type="button" class="btn btn-primary btn mb-3 me-3"
+                        th:onclick="|location.href='@{/record/{id}(id=${student.id})}'|">피드백
+                </button>
+            </td>
             <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/class/{classId}/delete/student(classId=${classId}, studentId=${student.id})}'|">삭제</button></td>
         </tr>
         </tbody>

@@ -34,6 +34,15 @@ public class RecordController {
     private final RecordService recordService;
     private final StudentService studentService;
 
+    private static RecordUpdateReqDto createRecordUpdateReqDto(Long studentId, RecordRespDto recordRespDto) {
+        RecordUpdateReqDto recordUpdateReqDto = new RecordUpdateReqDto();
+        recordUpdateReqDto.setRecordId(recordRespDto.getRecordId());
+        recordUpdateReqDto.setStudentId(studentId);
+        recordUpdateReqDto.setTitle(recordRespDto.getTitle());
+        recordUpdateReqDto.setContent(recordRespDto.getContent());
+        return recordUpdateReqDto;
+    }
+
     @ModelAttribute("searchTypeOptions")
     public SearchType[] searchType() {
         SearchType[] filteredSearchTypes = Arrays.stream(SearchType.values())
@@ -74,7 +83,11 @@ public class RecordController {
                                            Model model) {
 
         Page<RecordRespDto> pagingResult = recordService.getPaginationResultWithSearchCondition(recordSearchDto, studentId);
+        StudentRespDto studentInfo = studentService.getStudentInfo(studentId);
+        String studentName = studentInfo.getName();
+
         model.addAttribute("pagingResult", pagingResult);
+        model.addAttribute("studentName", studentName);
 
         return "record/record_list";
     }
@@ -82,12 +95,21 @@ public class RecordController {
     @GetMapping("/record/detail/{id}")
     public String showRecordDetail(@PathVariable("id") Long recordId,
                                    @RequestParam("studentId") Long studentId,
-                                   Model model) {
+                                   Model model,
+                                   HttpServletRequest request) {
+        Object loginSession = request.getSession().getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        RecordRespDto record = recordService.getRecord(recordId);
+        if (loginSession instanceof Teacher teacher) {
+            RecordRespDto record = recordService.getRecord(recordId, teacher);
+            model.addAttribute("record", record);
+        }
+        if (loginSession instanceof Student student) {
+            RecordRespDto record = recordService.getRecord(recordId, student);
+            model.addAttribute("record", record);
+        }
+
 
         model.addAttribute("studentId", studentId);
-        model.addAttribute("record", record);
         return "record/record_detail";
     }
 
@@ -154,17 +176,12 @@ public class RecordController {
         }
 
         // 선생님으로 로그인한 것이 아니라면 홈페이지로 redirect
-        if (!(loginSession instanceof Teacher)) {
+        if (!(loginSession instanceof Teacher teacher)) {
             return "redirect:/";
         }
 
-        RecordRespDto recordRespDto = recordService.getRecord(recordId);
-
-        RecordUpdateReqDto recordUpdateReqDto = new RecordUpdateReqDto();
-        recordUpdateReqDto.setRecordId(recordId);
-        recordUpdateReqDto.setStudentId(studentId);
-        recordUpdateReqDto.setContent(recordRespDto.getContent());
-
+        RecordRespDto recordRespDto = recordService.getRecord(recordId, teacher);
+        RecordUpdateReqDto recordUpdateReqDto = createRecordUpdateReqDto(studentId, recordRespDto);
         model.addAttribute("recordUpdateReqDto", recordUpdateReqDto);
 
         return "record/record_update_form";
@@ -190,7 +207,7 @@ public class RecordController {
             return "record/record_update_form";
         }
 
-        recordService.modifyContent(recordUpdateReqDto.getRecordId(), recordUpdateReqDto.getContent());
+        recordService.modifyContent(recordUpdateReqDto.getRecordId(), recordUpdateReqDto.getTitle(), recordUpdateReqDto.getContent());
 
         return "redirect:/record/" + recordUpdateReqDto.getStudentId();
     }

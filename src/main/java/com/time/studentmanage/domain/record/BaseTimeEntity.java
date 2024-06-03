@@ -19,4 +19,22 @@ public abstract class BaseTimeEntity {
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    /**
+     * 기간 별 조회를 확인하기 위한 필드 설정
+     */
+//    @CreatedDate
+//    protected LocalDateTime createDate;
+//
+//    @LastModifiedDate
+//    protected LocalDateTime modifiedDate;
+//
+//
+//    public void setCreateDate(LocalDateTime createDate) {
+//        this.createDate = createDate;
+//    }
+//
+//    public void setModifiedDate(LocalDateTime modifiedDate) {
+//        this.modifiedDate = modifiedDate;
+//    }
 }
