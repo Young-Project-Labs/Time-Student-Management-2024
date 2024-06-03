@@ -149,11 +149,11 @@ public class ClassRoomController {
     public String deleteClassStudent(@PathVariable("classId") Long classId,
                                      @RequestParam("studentId") Long studentId) {
         studentService.disconnectClassRoom(studentId);
-
         return "redirect:/class/" + classId + "/student/info";
     }
 
     @PostMapping("/class/delete/{id}")
+
     public String deleteClassRoom(@PathVariable("id") Long id, @RequestParam("teacherId") Long teacherId) {
         ClassRoom classRoom = classRoomService.findById(id);
 
@@ -163,5 +163,6 @@ public class ClassRoomController {
 
         classRoomService.deleteClassRoom(id);
         return "redirect:/class/" + teacherId;
+
     }
 }

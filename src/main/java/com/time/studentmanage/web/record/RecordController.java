@@ -1,5 +1,6 @@
 package com.time.studentmanage.web.record;
 
+import com.time.studentmanage.config.Auth;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordSaveReqDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchDto;
@@ -59,12 +60,7 @@ public class RecordController {
                           @ModelAttribute("recordSearchDto") RecordSearchDto recordSearchDto,
                           @RequestParam(value = "page", defaultValue = "0") int page,
                           HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        if (session == null || loginSession == null) {
-            return "redirect:/login";
-        }
         StudentRespDto studentInfo = studentService.getStudentInfo(id);
         String studentName = studentInfo.getName();
         Page<RecordRespDto> pagingResult = recordService.getAllStudentRecord(id, page);
@@ -113,8 +109,10 @@ public class RecordController {
         return "record/record_detail";
     }
 
+    @Auth(role = {Auth.Role.TEACHER, Auth.Role.ADMIN, Auth.Role.CHIEF})
     @GetMapping("/record/create")
     public String showCreateRecordForm(@RequestParam(value = "studentId", required = false) Long studentId, Model model, HttpServletRequest request) {
+
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -141,7 +139,7 @@ public class RecordController {
 
         return "record/record_create_form";
     }
-
+    @Auth(role = {Auth.Role.TEACHER, Auth.Role.ADMIN, Auth.Role.CHIEF})
     @PostMapping("/record/create")
     public String createRecord(@Validated @ModelAttribute RecordSaveReqDto recordSaveReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -165,7 +163,7 @@ public class RecordController {
         recordService.saveRecord(recordSaveReqDto);
         return "redirect:/record/" + recordSaveReqDto.getStudentId();
     }
-
+    @Auth(role = {Auth.Role.TEACHER, Auth.Role.ADMIN, Auth.Role.CHIEF})
     @GetMapping("/record/update/{recordId}")
     public String showUpdateRecordForm(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -186,7 +184,7 @@ public class RecordController {
 
         return "record/record_update_form";
     }
-
+    @Auth(role = {Auth.Role.TEACHER, Auth.Role.ADMIN, Auth.Role.CHIEF})
     @PostMapping("/record/update/{recordId}")
     public String updateRecord(@Validated @ModelAttribute RecordUpdateReqDto recordUpdateReqDto, BindingResult bindingResult, HttpServletRequest request, Model model) {
 
@@ -211,7 +209,7 @@ public class RecordController {
 
         return "redirect:/record/" + recordUpdateReqDto.getStudentId();
     }
-
+    @Auth(role = {Auth.Role.TEACHER, Auth.Role.ADMIN, Auth.Role.CHIEF})
     @GetMapping("/record/delete/{recordId}")
     public String deleteRecord(@PathVariable("recordId") Long recordId, @RequestParam("studentId") Long studentId) {
         recordService.deleteRecord(recordId);

@@ -1,5 +1,8 @@
 package com.time.studentmanage.web.teacher;
 
+
+
+import com.time.studentmanage.config.Auth;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSearchReqDto;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,39 +36,26 @@ public class TeacherController {
     }
 
     //선생 목록 페이지
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @GetMapping("/teacher")
     public String teacherList(@ModelAttribute("SearchReqDto") TeacherSearchReqDto searchReqDto,
-                              Model model, HttpSession session) {
-        model.addAttribute("page", searchReqDto.getPage());
-        log.info("SearchReqDto={}", searchReqDto.toString());
-
-        Object sessionObject = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
-        //세션이 없는 경우 or 선생이 아닌 경우 main redirect
-        if (sessionObject == null || !sessionObject.getClass().equals(Teacher.class)) {
-            return "redirect:/";
-        }
-
-        //TEACHER 직급을 가진 경우 main redirect
-        Teacher teacher = (Teacher) sessionObject;
-        if (teacher.getPosition().equals(Position.TEACHER)) {
-            return "redirect:/";
-        }
+                              Model model) {
+        model.addAttribute("page", TeacherSearchReqDto.getPage());
 
         Page<TeacherRespDto> teacherList = teacherService.getTeacherList(searchReqDto);
-        log.info("확인={}", teacherList);
         model.addAttribute("pagingResult", teacherList);
         return "teacher/teacher_list";
     }
-    //선생 목록에서 검색
-
 
     //선생 등록 페이지
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @GetMapping("/teacher/create")
     public String createForm(@ModelAttribute("teacherSaveReqDto") TeacherSaveReqDto teacherSaveReqDto) {
         return "teacher/teacher_create_form";
     }
 
     //선생 등록 로직
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @PostMapping("/teacher/create")
     public String createTeacher(@Validated @ModelAttribute TeacherSaveReqDto teacherSaveReqDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -76,15 +67,17 @@ public class TeacherController {
     }
 
     //선생 수정 폼
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN, Auth.Role.TEACHER})
     @GetMapping("/teacher/edit/{id}")
     public String editTeacherForm(@PathVariable(value = "id") Long id, Model model, HttpSession session) {
         //로그인 한 선생 권한 확인을 위해 변수 선언.
         Teacher loginTeacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-        //세션이 없는 경우 or 선생이 아닌 경우 main redirect
-        if (loginTeacher == null || !loginTeacher.getClass().equals(Teacher.class)) {
-            return "redirect:/";
+        // 선생 권한을 가진 경우 자신의 정보만 수정 가능.
+        if (loginTeacher.getPosition().equals(Position.TEACHER) && loginTeacher.getId() != id) {
+            throw new AccessDeniedException("접근할 수 없는 페이지입니다.");
         }
+
         TeacherRespDto teacherRespDto = teacherService.getTeacherInfo(id);
 
         model.addAttribute("teacherRespDto", teacherRespDto);
@@ -98,18 +91,23 @@ public class TeacherController {
             return "teacher/teacher_edit_form_admin";
         }
     }
-
     //선생 수정 로직
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN, Auth.Role.TEACHER})
     @PostMapping("/teacher/edit/{id}")
     public String editTeacher(@PathVariable(value = "id") Long id, @Validated TeacherUpdateReqDto teacherUpdateReqDto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors() || session == null) {
             return "teacher/teacher_edit_form";
         }
-        //선생 정보 수정
-        Teacher teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
 
         //세션에 저장된 선생 정보
         Teacher loginTeacher = (Teacher) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
+        // 선생 권한을 가진 경우 자신의 정보만 수정 가능.
+        if (loginTeacher.getPosition().equals(Position.TEACHER) && loginTeacher.getId() != id) {
+            throw new AccessDeniedException("잘못된 요청입니다.");
+        }
+
+        //선생 정보 수정
+        Teacher teacher = teacherService.updateTeacherInfo(id, teacherUpdateReqDto);
 
         // 본인 정보 수정 시 세션에 저장된 값을 변경.
         if (loginTeacher.getId() == teacher.getId()) {
@@ -119,7 +117,7 @@ public class TeacherController {
         return "redirect:/teacher/edit/" + id;
 
     }
-
+    @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @DeleteMapping("/teacher/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteTeacher(@PathVariable(value = "id") Long id) {
