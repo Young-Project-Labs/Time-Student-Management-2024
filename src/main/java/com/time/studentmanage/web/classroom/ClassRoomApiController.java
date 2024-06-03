@@ -7,9 +7,11 @@ import com.time.studentmanage.service.StudentService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -17,12 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class ClassRoomApiController {
     private final ClassRoomService classRoomService;
     private final StudentService studentService;
-
-    @Data
-    static class StudentIdDto {
-        private Long studentId;
-    }
-
 
     @PostMapping("/class/{classId}/student/list")
     public ResponseEntity addClassRoomStudent(@PathVariable(value = "classId") Long classId,
@@ -32,6 +28,11 @@ public class ClassRoomApiController {
 
         return ResponseEntity.ok()
                 .body(new ClassRoomStudentUpdateResult("학생 추가 완료"));
+    }
+
+    @Data
+    static class StudentIdDto {
+        private Long studentId;
     }
 
 }

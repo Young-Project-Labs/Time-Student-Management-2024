@@ -1,17 +1,17 @@
 package com.time.studentmanage.service;
 
 import com.time.studentmanage.domain.classroom.ClassRoom;
-import com.time.studentmanage.domain.dto.classroom.ClassRoomBasicInfoDto;
-import com.time.studentmanage.domain.dto.classroom.ClassRoomInfoDto;
-import com.time.studentmanage.domain.dto.classroom.ClassSaveReqDto;
-import com.time.studentmanage.domain.dto.classroom.ClassStudentRespDto;
-import com.time.studentmanage.domain.member.Student;
+import com.time.studentmanage.domain.dto.classroom.*;
+import com.time.studentmanage.domain.enums.SearchType;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.classroom.ClassRoomRepository;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,13 +60,11 @@ public class ClassRoomService {
         classRoomRepository.delete(classRoomOp.get());
     }
 
-    public List<ClassRoomInfoDto> getAllTeacherClassRoom(Teacher teacher) {
-        List<ClassRoom> classRoomList = classRoomRepository.findAllByTeacherOrderByClassType(teacher);
+    public Page<ClassRoomRespDto> getAllTeacherClassRoom(Teacher teacher, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<ClassRoomRespDto> classRoomPagingResult = classRoomRepository.findAllPaging(teacher, pageable);
 
-        List<ClassRoomInfoDto> resultDtoList = classRoomList.stream()
-                .map(c -> new ClassRoomInfoDto(c.getId(), c.getName(), c.getClassInfo(), c.getClassType(), c.getStudentList().size()))
-                .collect(Collectors.toList());
-        return resultDtoList;
+        return classRoomPagingResult;
     }
 
     public ClassRoomBasicInfoDto getBasicClassRoomInfo(Long id) {
@@ -113,5 +111,13 @@ public class ClassRoomService {
 
     public ClassRoom findById(Long classId) {
         return classRoomRepository.findById(classId).get();
+    }
+
+    public Page<ClassRoomRespDto> getPageUpdateResult(Long teacherId, SearchType searchType, String content, int page) {
+
+        Pageable pageable = PageRequest.of(page, 10);
+        ClassRoomSearchReqDto classRoomSearchReqDto = new ClassRoomSearchReqDto(searchType, content, teacherId, page);
+        Page<ClassRoomRespDto> pageResult = classRoomRepository.findAllBySearchEngine(classRoomSearchReqDto, pageable);
+        return pageResult;
     }
 }
