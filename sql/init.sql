@@ -17,12 +17,14 @@ create table class_room (
 ) engine=InnoDB;
 
 create table record (
+                        view integer default 0 not null,
                         create_date datetime(6),
                         modified_date datetime(6),
                         record_id bigint not null auto_increment,
                         student_id bigint,
                         teacher_id bigint,
-                        content tinytext,
+                        title varchar(255),
+                        content TEXT,
                         status enum ('PUBLISHED','DELETED'),
                         primary key (record_id)
 ) engine=InnoDB;
@@ -35,7 +37,6 @@ create table student (
                          quit_date datetime(6),
                          student_id bigint not null auto_increment,
                          teacher_id bigint,
-                         provider varchar(100),
                          detail_address varchar(255),
                          email varchar(255),
                          name varchar(255),
@@ -51,8 +52,9 @@ create table student (
                          class_type enum ('ELEMENTARY','MIDDLE','HIGH'),
                          gender enum ('MALE','FEMALE'),
                          member_type enum ('TEACHER','PARENT','STUDENT'),
+                         provider enum ('GENERAL','KAKAO'),
                          primary key (student_id)
-) engine=InnoDB;
+) engine=InnoDB
 
 create table teacher (
                          create_date datetime(6),
@@ -66,7 +68,7 @@ create table teacher (
                          member_type enum ('TEACHER','PARENT','STUDENT'),
                          position enum ('CHIEF','TEACHER','ADMIN'),
                          primary key (teacher_id)
-) engine=InnoDB;
+) engine=InnoDB
 
 alter table student
     add constraint unique_student_email unique (email);

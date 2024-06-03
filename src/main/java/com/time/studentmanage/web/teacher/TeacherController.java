@@ -1,5 +1,7 @@
 package com.time.studentmanage.web.teacher;
 
+
+
 import com.time.studentmanage.config.Auth;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
@@ -21,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.standard.processor.StandardHrefTagProcessor;
 
 @Controller
 @Slf4j
@@ -37,9 +38,9 @@ public class TeacherController {
     //선생 목록 페이지
     @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @GetMapping("/teacher")
-    public String teacherList(@ModelAttribute("SearchReqDto") SearchReqDto searchReqDto,
+    public String teacherList(@ModelAttribute("SearchReqDto") TeacherSearchReqDto searchReqDto,
                               Model model) {
-        model.addAttribute("page", searchReqDto.getPage());
+        model.addAttribute("page", TeacherSearchReqDto.getPage());
 
         Page<TeacherRespDto> teacherList = teacherService.getTeacherList(searchReqDto);
         model.addAttribute("pagingResult", teacherList);

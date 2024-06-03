@@ -255,6 +255,7 @@ class StudentRepositoryTest {
                     .name("학생" + i)
                     .grade(i)
                     .schoolName(String.format("학교" + (char) (schoolNameIdx + i)))
+                    .classType(ClassType.ELEMENTARY)
                     .build();
 
             studentRepository.save(student);
@@ -264,12 +265,14 @@ class StudentRepositoryTest {
                 .name("학생Z")
                 .grade(6)
                 .schoolName("학교Z")
+                .classType(ClassType.ELEMENTARY)
                 .build();
 
         Student studentZZ = Student.builder()
                 .name("학생ZZ")
                 .grade(5)
                 .schoolName("학교Z")
+                .classType(ClassType.ELEMENTARY)
                 .build();
 
         studentRepository.save(studentZ);
@@ -284,7 +287,7 @@ class StudentRepositoryTest {
 
         //then
         assertThat(result.size()).isEqualTo(7);
-        assertThat(result.get(result.size() - 1)).isEqualTo(studentZ.getSchoolName());
+        assertThat(result.get(result.size() - 1).getSchoolName()).isEqualTo(studentZ.getSchoolName());
     }
 
     @Test

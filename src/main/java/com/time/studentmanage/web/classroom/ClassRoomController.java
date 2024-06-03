@@ -93,7 +93,8 @@ public class ClassRoomController {
 
     @PostMapping("/class/create")
     public String createClassRoom(@Validated @ModelAttribute("classSaveReqDto") ClassSaveReqDto classSaveReqDto, BindingResult bindingResult,
-                                  HttpServletRequest request, Model model) {
+                                  @RequestParam("teacherId") Long teacherId,
+                                  HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object loginSession = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
@@ -115,7 +116,7 @@ public class ClassRoomController {
             studentService.connectClassRoom(Long.valueOf(strId), savedClassRoom);
         }
 
-        return "redirect:/class/list";
+        return "redirect:/class/" + teacherId;
     }
 
     @GetMapping("/class/{id}/basic/info")
@@ -127,11 +128,13 @@ public class ClassRoomController {
     }
 
     @PostMapping("/class/{id}/basic/info")
-    public String updateBasicInfo(@PathVariable("id") Long id, @ModelAttribute("basicClassRoomInfoDto") ClassRoomBasicInfoDto classRoomBasicInfoDto) {
+    public String updateBasicInfo(@PathVariable("id") Long id,
+                                  @RequestParam("teacherId") Long teacherId,
+                                  @ModelAttribute("basicClassRoomInfoDto") ClassRoomBasicInfoDto classRoomBasicInfoDto) {
 
         classRoomService.updateClassRoomBasicInfo(id, classRoomBasicInfoDto);
 
-        return "redirect:/class/list";
+        return "redirect:/class/" + teacherId;
     }
 
     @GetMapping("/class/{classId}/student/info")
@@ -142,15 +145,15 @@ public class ClassRoomController {
         return "classroom/class_student";
     }
 
-    @GetMapping("/class/{classId}/delete/student")
+    @PostMapping("/class/{classId}/delete/student")
     public String deleteClassStudent(@PathVariable("classId") Long classId,
                                      @RequestParam("studentId") Long studentId) {
         studentService.disconnectClassRoom(studentId);
-
         return "redirect:/class/" + classId + "/student/info";
     }
 
-    @GetMapping("/class/delete/{id}")
+    @PostMapping("/class/delete/{id}")
+
     public String deleteClassRoom(@PathVariable("id") Long id, @RequestParam("teacherId") Long teacherId) {
         ClassRoom classRoom = classRoomService.findById(id);
 
@@ -159,6 +162,7 @@ public class ClassRoomController {
         }
 
         classRoomService.deleteClassRoom(id);
-        return "redirect:/class/list/" + teacherId;
+        return "redirect:/class/" + teacherId;
+
     }
 }
