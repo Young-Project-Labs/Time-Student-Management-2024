@@ -1,7 +1,6 @@
 package com.time.studentmanage.web.teacher;
 
 
-
 import com.time.studentmanage.config.Auth;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherSaveReqDto;
@@ -91,6 +90,7 @@ public class TeacherController {
             return "teacher/teacher_edit_form_admin";
         }
     }
+
     //선생 수정 로직
     @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN, Auth.Role.TEACHER})
     @PostMapping("/teacher/edit/{id}")
@@ -117,6 +117,7 @@ public class TeacherController {
         return "redirect:/teacher/edit/" + id;
 
     }
+
     @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN})
     @DeleteMapping("/teacher/{id}")
     @ResponseBody

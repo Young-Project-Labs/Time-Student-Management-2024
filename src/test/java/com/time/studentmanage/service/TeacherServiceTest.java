@@ -14,8 +14,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static com.time.studentmanage.TestUtil.*;
-import static org.mockito.Mockito.*;
+import static com.time.studentmanage.TestUtil.createTeacher;
+import static com.time.studentmanage.TestUtil.updateTeacherDto;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,11 +28,11 @@ class TeacherServiceTest {
     private TeacherRepository teacherRepository;
 
     @Test
-    void 선생_정보_수정_테스트(){
+    void 선생_정보_수정_테스트() {
         //given
         Long id = 1L;
         Teacher teacher = createTeacher();
-        ReflectionTestUtils.setField(teacher,"id",id);
+        ReflectionTestUtils.setField(teacher, "id", id);
         log.info("수정 전 teacherName={}", teacher.getName());
         log.info("수정 전 teacher={}", teacher);
 
@@ -48,7 +49,6 @@ class TeacherServiceTest {
         Assertions.assertThat(teacher.getName()).isEqualTo(updateReqDto.getName());
 
     }
-
 
 
 }

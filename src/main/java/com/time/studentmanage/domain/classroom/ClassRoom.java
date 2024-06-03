@@ -1,10 +1,9 @@
 package com.time.studentmanage.domain.classroom;
 
-import com.time.studentmanage.domain.record.BaseTimeEntity;
-import com.time.studentmanage.domain.enums.ClassStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity

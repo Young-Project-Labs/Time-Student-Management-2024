@@ -16,7 +16,8 @@
 
 <div class="container p-2">
 
-    <form id="recordUpdateForm" th:action="@{/record/update/{recordId}(recordId=${recordUpdateReqDto.recordId})}" method="post" th:object="${recordUpdateReqDto}">
+    <form id="recordUpdateForm" th:action="@{/record/update/{recordId}(recordId=${recordUpdateReqDto.recordId})}"
+          method="post" th:object="${recordUpdateReqDto}">
 
         <div class="alert alert-warning text-center" th:errors="*{recordId}">피드백 id 오류</div>
         <div class="alert alert-warning text-center" th:errors="*{studentId}">학생 id 오류</div>
@@ -64,7 +65,7 @@
 
     const form = document.getElementById('recordUpdateForm'); // 폼 선택
 
-    form.addEventListener('submit', function() {
+    form.addEventListener('submit', function () {
         // 토스트 UI 에디터의 현재 내용을 가져옵니다.
         const editorContent = editor.getMarkdown();
         // 숨겨진 textarea의 값으로 설정합니다.

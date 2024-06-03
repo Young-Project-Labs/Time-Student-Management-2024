@@ -1,9 +1,9 @@
 package com.time.studentmanage.domain.member;
 
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
+import com.time.studentmanage.domain.record.Record;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class Teacher extends BaseMemberEntity {
     private String password;
     private String name;
     private String phoneNumber;
-//    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
+    //    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -67,6 +67,7 @@ public class Teacher extends BaseMemberEntity {
         this.memberType = updateTeacher.getMemberType();
         this.gender = updateTeacher.getGender();
     }
+
     //패스워드만 변경
     public void setPassword(String password) {
         this.password = password;

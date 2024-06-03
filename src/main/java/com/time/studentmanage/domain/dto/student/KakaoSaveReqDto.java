@@ -7,9 +7,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.HashMap;
-
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -24,14 +23,15 @@ public class KakaoSaveReqDto {
     private String parentName;
 
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
 
     @NotBlank
     private String schoolName;
 
     @NotNull
-    @Min(1) @Max(6)
+    @Min(1)
+    @Max(6)
     private Integer grade;
 
     private AttendanceStatus attendanceStatus;
@@ -46,6 +46,7 @@ public class KakaoSaveReqDto {
 
     @Valid
     private Address address;
+
     //dto -> student
     public Student toEntity() {
         Student student = Student.builder()

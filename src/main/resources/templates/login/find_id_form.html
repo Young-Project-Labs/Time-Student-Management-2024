@@ -19,14 +19,16 @@
         <input type="hidden" id="searchType" value="USERID">
         <div class="d-flex flex-column justify-content-center mb-3">
             <label for="name" class="form-check-label mb-1">이름</label>
-            <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요." th:field="*{name}" th:errorclass="field-error">
+            <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요." th:field="*{name}"
+                   th:errorclass="field-error">
             <div th:class="field-error" th:errors="*{name}">이름 오류 메시지</div>
             <div><span id="name_error"></span></div>
         </div>
         <div class="d-flex flex-column justify-content-center mb-3">
             <label for="email" class="form-check-label mb-1">이메일</label>
             <div class="input-group">
-                <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요." th:field="*{email}" th:errorclass="field-error">
+                <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요." th:field="*{email}"
+                       th:errorclass="field-error">
                 <button class="btn btn-outline-primary ml-2" id="checkEmail" type="button">이메일 전송</button>
             </div>
             <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
@@ -45,7 +47,8 @@
         <button type="submit" class="btn btn-primary">아이디 찾기</button>
         <hr>
         <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/login'">로그인</button>
-        <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findpwd'">비밀번호 찾기</button>
+        <button type="button" class="btn btn-outline-primary ml-2" onclick="location.href='/student/findpwd'">비밀번호 찾기
+        </button>
     </form>
 </div>
 
@@ -81,7 +84,7 @@
                 $("#verificationSection")
                     .css("display", "flex")
                     .addClass("d-flex flex-column justify-content-center mb-3");
-            },error: function(error) {
+            }, error: function (error) {
                 console.log(error)
                 // 영역을 초기화 한 후에 에러 메시지를 출력.
                 $("#name_error").empty();
@@ -91,7 +94,7 @@
                 button.disabled = false; // 처리가 완료되면 버튼을 다시 활성화시킵니다.
 
                 if (error.responseJSON && Array.isArray(error.responseJSON)) {
-                    error.responseJSON.forEach(function(err) {
+                    error.responseJSON.forEach(function (err) {
                         // 각 오류에 대한 처리
                         if (err.code == "name") {
                             $("#name_error").html(err.message).css("color", "red");
@@ -103,12 +106,12 @@
                     });
                 } else {
 
-                    if (error.responseJSON.code == "name"){
+                    if (error.responseJSON.code == "name") {
                         $("#name_error").html(err.message).css("color", "red");
-                    }else if (error.responseJSON.code == "email"){
+                    } else if (error.responseJSON.code == "email") {
                         // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
                         $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
-                    }else{
+                    } else {
                         $("#result_emailSend").html(error.responseJSON.message).css("color", "red");
                     }
                 }
@@ -137,12 +140,12 @@
             success: function (res) {
                 $("#result_authCode").html(res).css("color", "green");
                 submitAuthCode = true;
-            },error: function(error){
-               // 인증 실패한 경우 처리
+            }, error: function (error) {
+                // 인증 실패한 경우 처리
                 $("#result_authCode").html(error.responseJSON.message).css("color", "red");
                 $("#authCode").trigger("focus");
                 if (error.responseJSON && Array.isArray(error.responseJSON)) {
-                    error.responseJSON.forEach(function(err) {
+                    error.responseJSON.forEach(function (err) {
                         // 각 오류에 대한 처리
                         if (err.code == "authCode") {
                             $("#result_authCode").html(err.message).css("color", "red");
@@ -153,9 +156,9 @@
                         }
                     });
                 } else {
-                    if (error.responseJSON.code == "authCode"){
+                    if (error.responseJSON.code == "authCode") {
                         $("#result_authCode").html(err.message).css("color", "red");
-                    }else if (error.responseJSON.code == "email"){
+                    } else if (error.responseJSON.code == "email") {
                         // 여러 이메일 오류 메시지가 있을 수 있으므로, 이를 적절히 처리
                         $("#result_emailSend").append($('<div>').text(err.message).css("color", "red"));
                     }
@@ -168,7 +171,7 @@
 <script>
     function valid() {
         var isValid = true; // 유효성 검사 결과를 저장할 변수
-        if (submitAuthCode == false){
+        if (submitAuthCode == false) {
             alert("이메일 인증이 진행되지 않았습니다. \n이메일 인증을 진행한 후 아이디 찾기를 진행 해주세요.");
             $("#email").trigger("focus");
             return false;

@@ -1,9 +1,9 @@
 package com.time.studentmanage.domain.dto.record;
 
-import com.time.studentmanage.domain.record.Record;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

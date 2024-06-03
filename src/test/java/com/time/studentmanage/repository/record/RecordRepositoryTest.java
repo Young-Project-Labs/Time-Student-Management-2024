@@ -1,7 +1,6 @@
 package com.time.studentmanage.repository.record;
 
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
-import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchReqCondition;
 import com.time.studentmanage.domain.enums.*;
 import com.time.studentmanage.domain.member.Address;
@@ -24,7 +23,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -185,7 +183,7 @@ class RecordRepositoryTest {
         log.info("pageResult={}", pageResult);
         assertThat(pageResult.get().collect(Collectors.toList()).size()).isEqualTo(8);
 
-        Page<RecordRespDto> pagingResultNameSearch = recordRepository.findAllBySearchEngine(new RecordSearchReqCondition(s, SearchType.TEACHER_NAME, "안샘", null, null, PageRequest.of(2,8)));
+        Page<RecordRespDto> pagingResultNameSearch = recordRepository.findAllBySearchEngine(new RecordSearchReqCondition(s, SearchType.TEACHER_NAME, "안샘", null, null, PageRequest.of(2, 8)));
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).size()).isEqualTo(4);
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).get(3).getTeacherName()).isEqualTo("안샘");
         assertThat(pagingResultNameSearch.get().collect(Collectors.toList()).get(0).getCreateDate()).isAfter(pagingResultNameSearch.get().collect(Collectors.toList()).get(3).getCreateDate());

@@ -1,6 +1,5 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.repository.student.StudentRepository;
@@ -19,7 +18,6 @@ public class LoginService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final BCryptPasswordEncoder pwEncoder;
-
 
 
     public Optional<?> login(String loginId, String password) {

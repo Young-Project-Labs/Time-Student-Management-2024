@@ -1,143 +1,167 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
-  <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component.html :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: field-error-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: form-check-label-bold-style}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: main-min-height}"></th:block>
 
 
-  <title>선생 목록</title>
+    <title>선생 목록</title>
 </head>
 <body>
 <div>
     <!-- 헤더 시작 -->
-  <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_body_component :: common-body-header}"></th:block>
     <!-- 헤더 끝 -->
 
-  <!--브레드 크럼 시작-->
-  <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
-    <li class="breadcrumb-item">
-      <a class="link-body-emphasis text-dark" href="/">
-        <i class="fa-solid fa-house"></i>
-      </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">선생 목록</li>
-  </ol>
-  <!--브레드 크럼 끝-->
+    <!--브레드 크럼 시작-->
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis text-dark" href="/">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">선생 목록</li>
+    </ol>
+    <!--브레드 크럼 끝-->
 
-  <div class="container-fluid ">
-    <div class="row">
-      <!-- 사이드바 -->
-      <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
+    <div class="container-fluid ">
+        <div class="row">
+            <!-- 사이드바 -->
+            <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
 
-    <div class="col-md-10 container">
-      <h2 class="text-center">선생 목록</h2>
-      <!-- 선생 추가 버튼 -->
-      <button class="btn btn-outline-primary ml-2 float-start" th:onclick="|location.href='@{/teacher/create}'|">등록하기</button>
+            <div class="col-md-10 container">
+                <h2 class="text-center">선생 목록</h2>
+                <!-- 선생 추가 버튼 -->
+                <button class="btn btn-outline-primary ml-2 float-start"
+                        th:onclick="|location.href='@{/teacher/create}'|">등록하기
+                </button>
 
-      <!-- 검색 바 -->
-      <form action="#" id="teacherSearch" th:object="${SearchReqDto}" th:action="@{/teacher}" method="get">
-        <input type="hidden" id="page" name="page" th:value="${page}">
-          <div class="row justify-content-end">
-            <div class="col-auto">
-              <select class="form-select" th:field="*{searchType}">
-                <option value="TEACHER_NAME">이름</option>
-                <option value="EMAIL">이메일</option>
-              </select>
+                <!-- 검색 바 -->
+                <form action="#" id="teacherSearch" th:object="${SearchReqDto}" th:action="@{/teacher}" method="get">
+                    <input type="hidden" id="page" name="page" th:value="${page}">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <select class="form-select" th:field="*{searchType}">
+                                <option value="TEACHER_NAME">이름</option>
+                                <option value="EMAIL">이메일</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control" th:field="*{content}" placeholder="검색">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">검색</button>
+                                    <button type="button" th:onclick="|location.href='@{/teacher}'|"
+                                            class="btn btn-primary">초기화
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                <!-- 선생 목록 테이블-->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">선생번호</th>
+                        <th scope="col">직급</th>
+                        <th scope="col">이름</th>
+                        <th scope="col">전화번호</th>
+                        <th scope="col">이메일</th>
+                        <th scope="col">수정</th>
+                        <th scope="col">삭제</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="teacher : ${pagingResult}">
+                        <th scope="row" th:text="${teacher.id}"></th>
+                        <td th:text="${teacher.position}"></td>
+                        <td th:text="${teacher.name}"></td>
+                        <td th:text="${teacher.phoneNumber}"></td>
+                        <td th:text="${teacher.email}"></td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn mb-3 me-3"
+                                    th:onclick="|location.href='@{/teacher/edit/{id}(id=${teacher.id})}'|">수정
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn mb-3 me-3"
+                                    th:onclick="'deleteTeacher(' + ${teacher.id} + ')'">삭제
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <!--페이지네이션 시작-->
+                <nav th:if="${!pagingResult.isEmpty() && SearchReqDto.searchType == null && SearchReqDto.content == null}"
+                     aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number - 1}"
+                               th:href="@{|?page=${pagingResult.number - 1}|}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                            th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                            th:classappend="${page == pagingResult.number} ? 'active'">
+                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
+                               th:href="@{|?page=${page}|}">페이지 표시</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number + 1}"
+                               th:href="@{|?page=${pagingResult.number + 1}|}">Next</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+                               th:href="@{|?page=${pagingResult.totalPages - 1}|}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--페이지네이션 끝-->
+
+                <!--페이지네이션 시작-->
+                <nav th:if="${!pagingResult.isEmpty() && SearchReqDto.searchType != null && SearchReqDto.content != null}"
+                     aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" data-page="0"
+                               th:href="@{|?page=0&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number - 1}"
+                               th:href="@{|?page=${pagingResult.number - 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
+                            th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
+                            th:classappend="${page == pagingResult.number} ? 'active'">
+                            <a th:text="${page + 1}" class="page-link" th:data-page="${page}"
+                               th:href="@{|?page=${page}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">페이지
+                                표시</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.number + 1}"
+                               th:href="@{|?page=${pagingResult.number + 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">Next</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
+                            <a class="page-link" th:data-page="${pagingResult.totalPages - 1}"
+                               th:href="@{|?page=${pagingResult.totalPages - 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--페이지네이션 끝-->
             </div>
-            <div class="col-auto">
-              <div class="input-group">
-                <input type="text" class="form-control" th:field="*{content}" placeholder="검색">
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-primary">검색</button>
-                  <button type="button" th:onclick="|location.href='@{/teacher}'|" class="btn btn-primary">초기화</button>
-                </div>
-              </div>
-            </div>
-          </div>
-      </form>
-
-
-      <!-- 선생 목록 테이블-->
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col">선생번호</th>
-            <th scope="col">직급</th>
-            <th scope="col">이름</th>
-            <th scope="col">전화번호</th>
-            <th scope="col">이메일</th>
-            <th scope="col">수정</th>
-            <th scope="col">삭제</th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr th:each="teacher : ${pagingResult}">
-            <th scope="row" th:text="${teacher.id}"></th>
-            <td th:text="${teacher.position}"></td>
-            <td th:text="${teacher.name}"></td>
-            <td th:text="${teacher.phoneNumber}"></td>
-            <td th:text="${teacher.email}"></td>
-            <td><button type="button" class="btn btn-primary btn mb-3 me-3" th:onclick="|location.href='@{/teacher/edit/{id}(id=${teacher.id})}'|">수정</button></td>
-            <td><button type="button" class="btn btn-danger btn mb-3 me-3" th:onclick="'deleteTeacher(' + ${teacher.id} + ')'">삭제</button></td>
-          </tr>
-          </tbody>
-        </table>
-
-
-        <!--페이지네이션 시작-->
-        <nav th:if="${!pagingResult.isEmpty() && SearchReqDto.searchType == null && SearchReqDto.content == null}" aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            <li  class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-              <a class="page-link" data-page="0" th:href="@{|?page=0|}">&laquo;</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.number - 1}" th:href="@{|?page=${pagingResult.number - 1}|}">Previous</a>
-            </li>
-            <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
-                th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
-                th:classappend="${page == pagingResult.number} ? 'active'">
-              <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}|}">페이지 표시</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.number + 1}" th:href="@{|?page=${pagingResult.number + 1}|}">Next</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.totalPages - 1}" th:href="@{|?page=${pagingResult.totalPages - 1}|}">&raquo;</a>
-            </li>
-          </ul>
-        </nav>
-        <!--페이지네이션 끝-->
-
-        <!--페이지네이션 시작-->
-        <nav th:if="${!pagingResult.isEmpty() && SearchReqDto.searchType != null && SearchReqDto.content != null}" aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            <li  class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-              <a class="page-link" data-page="0" th:href="@{|?page=0&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">&laquo;</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasPrevious()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.number - 1}" th:href="@{|?page=${pagingResult.number - 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">Previous</a>
-            </li>
-            <li class="page-item" th:each="page : ${#numbers.sequence(0, pagingResult.totalPages-1)}"
-                th:if="${page >= pagingResult.number-5 and page <= pagingResult.number+5}"
-                th:classappend="${page == pagingResult.number} ? 'active'">
-              <a th:text="${page + 1}" class="page-link" th:data-page="${page}" th:href="@{|?page=${page}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">페이지 표시</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.number + 1}" th:href="@{|?page=${pagingResult.number + 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">Next</a>
-            </li>
-            <li class="page-item" th:classappend="${!pagingResult.hasNext()} ? 'disabled'">
-              <a class="page-link" th:data-page="${pagingResult.totalPages - 1}" th:href="@{|?page=${pagingResult.totalPages - 1}&searchType=${SearchReqDto.searchType}&content=${SearchReqDto.content}|}">&raquo;</a>
-            </li>
-          </ul>
-        </nav>
-        <!--페이지네이션 끝-->
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- footer 시작 -->
@@ -145,28 +169,28 @@
 <!-- footer 끝 -->
 
 <script>
-  document.getElementById('teacherSearch').addEventListener('submit', function(event) {
-    // 폼 제출 이전에 'page' input 필드의 값을 0으로 설정
-    document.getElementById('page').value = '0';
+    document.getElementById('teacherSearch').addEventListener('submit', function (event) {
+        // 폼 제출 이전에 'page' input 필드의 값을 0으로 설정
+        document.getElementById('page').value = '0';
 
-    // 폼이 제출됩니다. 이 코드 아래에 폼 제출을 중단하고 싶으면 event.preventDefault(); 를 추가하세요.
-  });
+        // 폼이 제출됩니다. 이 코드 아래에 폼 제출을 중단하고 싶으면 event.preventDefault(); 를 추가하세요.
+    });
 </script>
 <script>
-  function deleteTeacher(id){
+    function deleteTeacher(id) {
         var confirmAction = confirm("해당 선생님을 삭제 하시겠습니까?\n복구가 불가능하므로, 신중히 선택하세요.");
         if (confirmAction) {
             // 사용자가 '확인'을 클릭한 경우
             $.ajax({
                 url: `/teacher/${id}`, // 요청할 URL
                 type: 'DELETE', // HTTP 메소드
-                success: function(response) {
+                success: function (response) {
                     // 요청이 성공적으로 완료됐을 때 실행될 함수
                     console.log("Success:", response);
                     alert(response);
                     window.location.reload();
                 },
-                error: function(error) {
+                error: function (error) {
                     // 요청이 실패했을 때 실행될 함수
                     console.error("Failure:", error);
                     // 실패 시 처리 로직을 여기에 작성하세요.

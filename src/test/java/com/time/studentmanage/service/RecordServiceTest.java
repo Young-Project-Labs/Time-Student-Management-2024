@@ -167,7 +167,7 @@ class RecordServiceTest {
 
         when(recordRepository.findById(anyLong())).thenReturn(Optional.of(record));
 
-        recordService.modifyContent(record.getId(),title, content);
+        recordService.modifyContent(record.getId(), title, content);
         log.info("after save record={}", record.getContent());
 
         assertThat(record.getContent()).isEqualTo(content);

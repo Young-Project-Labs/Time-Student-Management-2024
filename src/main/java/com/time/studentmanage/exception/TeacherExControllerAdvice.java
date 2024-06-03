@@ -1,6 +1,5 @@
 package com.time.studentmanage.exception;
 
-import com.time.studentmanage.web.student.StudentController;
 import com.time.studentmanage.web.teacher.TeacherController;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

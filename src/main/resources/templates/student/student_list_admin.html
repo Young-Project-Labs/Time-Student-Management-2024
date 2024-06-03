@@ -54,7 +54,8 @@
                                 <input type="text" class="form-control" id="content" th:field="*{content}"
                                        placeholder="검색">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-outline-primary" onclick="resetPage()">검색</button>
+                                    <button type="submit" class="btn btn-outline-primary" onclick="resetPage()">검색
+                                    </button>
                                     <button type="button" th:onclick="|location.href='/student/list'|"
                                             class="btn btn-outline-primary">초기화
                                     </button>
@@ -86,7 +87,8 @@
                         <td th:text="${student.parentName}"></td>
                         <td th:text="${student.parentPhoneNumber}"></td>
                         <td>
-                            <span th:text="${student.attendanceStatus.getDescription}" style="font-weight: bold;"></span>
+                            <span th:text="${student.attendanceStatus.getDescription}"
+                                  style="font-weight: bold;"></span>
                             <!-- 재원 여부 변경 버튼-->
                             <button type="button" class="btn btn-outline-danger btn-sm" id="editAttendanceBtn"
                                     th:onclick="'editAttendance(' + ${student.id} + ')'">변경
@@ -197,13 +199,13 @@
             $.ajax({
                 url: `/student/${id}/attendance`, // 요청할 URL
                 type: 'PUT', // HTTP 메소드
-                success: function(response) {
+                success: function (response) {
                     // 요청이 성공적으로 완료됐을 때 실행될 함수
                     console.log("Success:", response);
                     alert(response);
                     window.location.reload();
                 },
-                error: function(error) {
+                error: function (error) {
                     // 요청이 실패했을 때 실행될 함수
                     console.error("Failure:", error);
                     // 실패 시 처리 로직을 여기에 작성하세요.
@@ -217,20 +219,20 @@
         }
     }
 
-    function deleteStudent(id){
+    function deleteStudent(id) {
         var confirmAction = confirm("학생을 삭제 하시겠습니까?\n복구가 불가능하므로, 신중히 선택하세요.");
         if (confirmAction) {
             // 사용자가 '확인'을 클릭한 경우
             $.ajax({
                 url: `/student/${id}`, // 요청할 URL
                 type: 'DELETE', // HTTP 메소드
-                success: function(response) {
+                success: function (response) {
                     // 요청이 성공적으로 완료됐을 때 실행될 함수
                     console.log("Success:", response);
                     alert(response);
                     window.location.reload();
                 },
-                error: function(error) {
+                error: function (error) {
                     // 요청이 실패했을 때 실행될 함수
                     console.error("Failure:", error);
                     // 실패 시 처리 로직을 여기에 작성하세요.

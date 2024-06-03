@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.time.studentmanage.domain.dto.record.QRecordRespDto;
 import com.time.studentmanage.domain.dto.record.RecordRespDto;
-import com.time.studentmanage.domain.dto.record.RecordSearchDto;
 import com.time.studentmanage.domain.dto.record.RecordSearchReqCondition;
 import com.time.studentmanage.domain.enums.RecordStatus;
 import com.time.studentmanage.domain.enums.SearchType;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;

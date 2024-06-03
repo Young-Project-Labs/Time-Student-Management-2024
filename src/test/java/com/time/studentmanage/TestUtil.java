@@ -1,13 +1,13 @@
 package com.time.studentmanage;
 
-import com.time.studentmanage.domain.member.Address;
-import com.time.studentmanage.domain.record.Record;
-import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
-import com.time.studentmanage.domain.enums.*;
-import com.time.studentmanage.domain.member.Student;
-import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.dto.teacher.TeacherUpdateReqDto;
+import com.time.studentmanage.domain.enums.*;
+import com.time.studentmanage.domain.member.Address;
+import com.time.studentmanage.domain.member.Student;
+import com.time.studentmanage.domain.member.Teacher;
+import com.time.studentmanage.domain.record.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,6 @@ public class TestUtil {
     }
 
 
-
     public static Teacher createTeacher() {
         return Teacher.builder()
                 .name("줄리아")
@@ -117,18 +116,18 @@ public class TestUtil {
     }
 
     public static StudentSaveReqDto createStudentDto() {
-        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수","cs@time.com","1234","010-1111-2222","철수어머님","010-9999-9999","용호초등학교","test@naver.com",1,AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE,ClassType.ELEMENTARY,new Address("반림동", "현대 아파트", "102-1201"));
+        StudentSaveReqDto saveReqDto = new StudentSaveReqDto("철수", "cs@time.com", "1234", "010-1111-2222", "철수어머님", "010-9999-9999", "용호초등학교", "test@naver.com", 1, AttendanceStatus.Y, MemberType.STUDENT, GenderType.MALE, ClassType.ELEMENTARY, new Address("반림동", "현대 아파트", "102-1201"));
 
         return saveReqDto;
     }
 
     public static StudentUpdateReqDto updateStudentDto() {
-        StudentUpdateReqDto updateReqDto = new StudentUpdateReqDto(1L, "수정엔티티","cs@time.com","010-1111-2222","용호중학교","수정어머님","010-1111-2223", 1, AttendanceStatus.Y, MemberType.STUDENT,GenderType.MALE, ClassType.ELEMENTARY, new Address("반림동", "현대 아파트", "102-1201"));
+        StudentUpdateReqDto updateReqDto = new StudentUpdateReqDto(1L, "수정엔티티", "cs@time.com", "010-1111-2222", "용호중학교", "수정어머님", "010-1111-2223", 1, AttendanceStatus.Y, MemberType.STUDENT, GenderType.MALE, ClassType.ELEMENTARY, new Address("반림동", "현대 아파트", "102-1201"));
         return updateReqDto;
     }
 
     public static TeacherUpdateReqDto updateTeacherDto() {
-        TeacherUpdateReqDto teacherUpdateReqDto = new TeacherUpdateReqDto(1L,"이름수정","010-1111-2222","cs@time.com",Position.TEACHER,MemberType.STUDENT, GenderType.MALE);
+        TeacherUpdateReqDto teacherUpdateReqDto = new TeacherUpdateReqDto(1L, "이름수정", "010-1111-2222", "cs@time.com", Position.TEACHER, MemberType.STUDENT, GenderType.MALE);
 
         return teacherUpdateReqDto;
     }

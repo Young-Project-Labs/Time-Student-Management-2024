@@ -1,6 +1,8 @@
 package com.time.studentmanage.repository;
 
-import com.time.studentmanage.domain.enums.*;
+import com.time.studentmanage.domain.enums.GenderType;
+import com.time.studentmanage.domain.enums.MemberType;
+import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.member.Teacher;
 import com.time.studentmanage.repository.teacher.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @Slf4j
@@ -22,6 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 class TeacherRepositoryTest {
     @Autowired
     TeacherRepository teacherRepository;
+
     @Test
     void 선생님_회원_가입_테스트() {
         //given
@@ -36,7 +39,7 @@ class TeacherRepositoryTest {
     }
 
     @Test
-    void 선생님_목록_테스트(){
+    void 선생님_목록_테스트() {
         //given
         Teacher teacher1 = createTeacher();
         Teacher teacher2 = createTeacher();

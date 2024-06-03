@@ -25,7 +25,7 @@ public class Student extends BaseMemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
     private Long id;
-//    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
+    //    @Column(unique = true) TODO: 더미데이터를 사용 하지 않을 때 주석 해제.(테스트 코드를 고쳐야 하는 번거로움 때문.)
     private String userId;
     private String password;
     private String name;
@@ -69,7 +69,7 @@ public class Student extends BaseMemberEntity {
 
 
     @Builder(toBuilder = true)
-    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate,String parentName, String parentPhoneNumber, Teacher teacher, ProviderType provider, String email) {
+    public Student(Long id, String name, String userId, String password, String phoneNumber, String schoolName, ClassType classType, int grade, MemberType memberType, GenderType gender, Address address, AttendanceStatus attendanceStatus, LocalDateTime quitDate, String parentName, String parentPhoneNumber, Teacher teacher, ProviderType provider, String email) {
         this.id = id;
         this.name = name;
         this.userId = userId;

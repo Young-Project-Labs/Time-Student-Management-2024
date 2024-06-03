@@ -12,7 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherUpdateReqDto {
@@ -21,7 +22,7 @@ public class TeacherUpdateReqDto {
     @NotBlank
     private String name;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
     @NotBlank
     private String email;

@@ -21,20 +21,21 @@ public class StudentSaveReqDto {
     @NotBlank
     private String password;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
     @NotBlank
     private String schoolName;
     @NotBlank
     private String parentName;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
     @NotBlank
     @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$") // 이메일 정규표현식
     private String email;
     @NotNull
-    @Min(1) @Max(6)
+    @Min(1)
+    @Max(6)
     private Integer grade;
 
     private AttendanceStatus attendanceStatus;

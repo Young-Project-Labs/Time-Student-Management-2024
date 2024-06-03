@@ -15,14 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.SmartValidator;
-import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @RestController
@@ -36,6 +37,7 @@ public class MailController {
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
+
     // 이메일 전송
     @PostMapping("/mailSend")
     public ResponseEntity sendEmail(MailSendReqDto mailSendReqDto, BindingResult bindingResult, Locale locale) {

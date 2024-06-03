@@ -144,7 +144,7 @@ public class StudentService {
 
         if (!allSchoolName.isEmpty()) {
             for (SchoolRespDto target : allSchoolName) {
-                if (target.getSchoolName() == null || target.getSchoolName() == ""){
+                if (target.getSchoolName() == null || target.getSchoolName() == "") {
                     continue;
                 }
 

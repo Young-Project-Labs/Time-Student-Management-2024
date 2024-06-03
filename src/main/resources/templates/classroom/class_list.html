@@ -33,14 +33,16 @@
             <h2 class="text-center">학급 목록</h2>
 
             <!-- 학급 추가 버튼 시작 -->
-            <button class="btn btn-outline-primary ml-2 float-start" th:onclick="|location.href='@{/class/create(teacherId=${session.loginMember.id})}'|"
+            <button class="btn btn-outline-primary ml-2 float-start"
+                    th:onclick="|location.href='@{/class/create(teacherId=${session.loginMember.id})}'|"
                     th:text="|학급 생성하기|">등록하기
             </button>
             <!-- 학급 추가 버튼 끝 -->
 
 
             <!-- 폼 검색 바-->
-            <form action="#" id="searchForm" th:action="@{/class/list/{teacherId}(teacherId=${session.loginMember.id})}" method="get"
+            <form action="#" id="searchForm" th:action="@{/class/list/{teacherId}(teacherId=${session.loginMember.id})}"
+                  method="get"
                   th:object="${classRoomSearchReqDto}">
                 <input type="hidden" name="page" th:value="${pagingResult != null ? pagingResult.number : 0}"/>
                 <div class="row justify-content-end">
@@ -62,7 +64,8 @@
                                    placeholder="검색">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-primary" onclick="resetPage()">검색</button>
-                                <button type="button" th:onclick="|location.href='@{/class/{teacherId}(teacherId=${session.loginMember.id})}'|"
+                                <button type="button"
+                                        th:onclick="|location.href='@{/class/{teacherId}(teacherId=${session.loginMember.id})}'|"
                                         class="btn btn-outline-primary">초기화
                                 </button>
                             </div>
@@ -94,18 +97,23 @@
                         <td th:text="${class.classSize}"></td>
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm mb-3 me-3"
-                                    th:onclick="|location.href='@{/class/{id}/basic/info(id=${class.classId}, teacherId=${session.loginMember.id})}'|">수정
+                                    th:onclick="|location.href='@{/class/{id}/basic/info(id=${class.classId}, teacherId=${session.loginMember.id})}'|">
+                                수정
                             </button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm mb-3 me-3"
-                                    th:onclick="|location.href='@{/class/{id}/student/info(id=${class.classId}, teacherId=${session.loginMember.id})}'|">관리
+                                    th:onclick="|location.href='@{/class/{id}/student/info(id=${class.classId}, teacherId=${session.loginMember.id})}'|">
+                                관리
                             </button>
                         </td>
                         <td>
-                            <form method="post" th:action="@{/class/delete/{classId}(classId=${class.classId})}" class="d-inline">
+                            <form method="post" th:action="@{/class/delete/{classId}(classId=${class.classId})}"
+                                  class="d-inline">
                                 <input type="hidden" name="teacherId" th:value="${session.loginMember.id}">
-                                <button type="submit" class="btn btn-outline-danger btn-sm mb-3 me-3" onclick="return confirmDelete()">학급 삭제</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm mb-3 me-3"
+                                        onclick="return confirmDelete()">학급 삭제
+                                </button>
                             </form>
                         </td>
                     </tr>
