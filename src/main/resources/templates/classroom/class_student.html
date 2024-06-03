@@ -13,7 +13,6 @@
 <!-- 헤더 끝 -->
 
 
-
 <!-- 학생 목록 테이블 시작-->
 <div class="container" id="studentList">
     <input type="hidden" id="classId" th:value="${classId}">
@@ -26,7 +25,8 @@
                 data-bs-target="#staticBackdrop">
             학생 등록
         </button>
-        <a class="btn btn-outline-danger btn-sm" th:href="@{/class/{teacherId}(teacherId=${session.loginMember.id})}" role="button">뒤로 가기</a>
+        <a class="btn btn-outline-danger btn-sm" th:href="@{/class/{teacherId}(teacherId=${session.loginMember.id})}"
+           role="button">뒤로 가기</a>
     </div>
 
     <!-- 모달 창 시작 -->
@@ -44,7 +44,8 @@
                     <form id="searchForm" th:action="@{/class/student/search}" method="get">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-                            <input id="search-input" name="content" type="text" class="form-control" placeholder="검색" aria-label="검색"
+                            <input id="search-input" name="content" type="text" class="form-control" placeholder="검색"
+                                   aria-label="검색"
                                    aria-describedby="basic-addon1">
                             <input type="submit" value="검색" class="btn btn-outline-primary student__search__bar">
                         </div>
@@ -59,7 +60,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button id="add-students-button" type="button" class="btn btn-primary"
-                            th:onclick="|location.href='@{/class/{id}/student/info(id=${classId})}'|">학생 선택 완료</button>
+                            th:onclick="|location.href='@{/class/{id}/student/info(id=${classId})}'|">학생 선택 완료
+                    </button>
                 </div>
             </div>
         </div>
@@ -89,11 +91,16 @@
             <td th:text="${student.name}"></td>
             <td>
                 <!-- 피드백 목록 이동-->
-                <button type="button" class="btn btn-primary btn mb-3 me-3"
+                <button type="button" class="btn btn-outline-primary btn-sm mb-3 me-3"
                         th:onclick="|location.href='@{/record/{id}(id=${student.id})}'|">피드백
                 </button>
             </td>
-            <td><button type="submit" class="btn btn-danger btn mb-3 me-3" th:onclick="|location.href='@{/class/{classId}/delete/student(classId=${classId}, studentId=${student.id})}'|">삭제</button></td>
+            <td>
+                <form method="post" th:action="@{/class/{classId}/delete/student(classId=${classId})}">
+                    <input type="hidden" name="studentId" th:value="${student.id}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm mb-3 me-3">삭제</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -166,18 +173,18 @@
     }
 
     // 학생 정보 행의 '추가' 버튼을 눌렸을 때 동작할 ajax 통신
-    $(document).on('click', '.add-student-button', function() {
+    $(document).on('click', '.add-student-button', function () {
         var $thisButton = $(this); // 현재 클릭된 버튼을 참조
         var studentId = $(this).data('id'); // 버튼에서 학생의 id를 가져옵니다.
         var classId = $('#classId').val();
 
         $.ajax({
-            url: '/class/'+ classId +'/student/list', // 요청을 보낼 URL
+            url: '/class/' + classId + '/student/list', // 요청을 보낼 URL
             type: 'POST', // HTTP 요청 방식
             data: JSON.stringify({studentId: studentId}), // 서버로 보낼 데이터
             contentType: 'application/json; charset=utf-8', // 보내는 데이터의 타입
             dataType: 'json', // 응답 받을 데이터의 타입
-            success: function(response) {
+            success: function (response) {
                 // 요청이 성공했을 때 실행될 함수
                 console.log('학생 추가 성공', response);
                 // 성공 메시지 처리나 UI 업데이트 로직을 여기에 추가할 수 있습니다.
@@ -185,7 +192,7 @@
 
                 $('#search-input').val('').focus(); // 검색창 검색어를 비우고 커서를 이동
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // 요청이 실패했을 때 실행될 함수
                 console.error('학생 추가 실패', error);
                 // 실패 메시지 처리나 UI 업데이트 로직을 여기에 추가할 수 있습니다.
