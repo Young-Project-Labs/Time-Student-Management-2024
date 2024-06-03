@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{template/layout/base_head_component :: common-header}"></th:block>
+    <th:block th:replace="~{template/layout/base_head_component :: font-awesome-load}"></th:block>
+</head>
+<body>
+
+<!--점보트론 시작-->
+<div class="p-5 text-center rounded-3">
+    <i class="fas fa-regular fa-triangle-exclamation fa-4x" style="color: #d62b1f;"></i>
+    <h1 class="display-5 fw-bold">오류! 접근할 수 없는 페이지입니다.</h1>
+    <p class="col-lg-8 mx-auto fs-5 text-muted" th:text="${errorMessage}">
+        Error Details
+    </p>
+    <div class="d-inline-flex gap-2 mb-5">
+        <button class="btn btn-outline-secondary btn-lg px-4 rounded-pill" type="button"  th:onclick="|location.href='/'|">
+            홈으로
+        </button>
+    </div>
+</div>
+
+<!--점보트론 끝-->
+
+</body>
+</html>
