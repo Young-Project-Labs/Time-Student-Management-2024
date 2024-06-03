@@ -27,13 +27,14 @@
         <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-school">Home</li>
     </ol>
     <!--브레드 크럼 끝-->
+
     <!-- 사이드바 시작 -->
     <div class="container-fluid ">
         <div class="row">
             <th:block th:replace="~{template/layout/base_body_component :: common-body-sidebar}"></th:block>
             <!-- 사이드바 끝-->
 
-            <div class="col-10 ">
+            <div class="col-md-10 ">
                 <div class="row">
 
                     <div class="col">
@@ -112,6 +113,7 @@
                 '    <tr>' +
                 '        <th scope="col">학년</th>' +
                 '        <th scope="col">이름</th>' +
+                '        <th scope="col">피드백 목록</th>' +
                 '    </tr>' +
                 '</thead>' +
                 '<tbody>';
@@ -121,10 +123,13 @@
                 resultHtml +=
                     '<tr>' +
                     '    <td>' +
-                    '        <a href="/record/' + student.id + '">' + student.grade + '</a>' +
+                    '        <a>' + student.grade + '</a>' +
                     '    </td>' +
                     '    <td>' +
-                    '        <a href="/record/' + student.id + '">' + student.name + '</a>' +
+                    '        <a>' + student.name + '</a>' +
+                    '    </td>' +
+                    '    <td>' +
+                    '       <button type="button" class="btn btn-outline-primary btn-sm mb-3 me-3" onclick="location.href=\'/record/' + student.id + '\'">피드백</button>' +
                     '    </td>' +
                     '</tr>';
             });
@@ -254,22 +259,6 @@
             var errorHtml = '<div class="alert alert-danger text-center">' + message + '</div>';
             $(".main-content").html(errorHtml);
         }
-    });
-
-    // 학급 버튼 클릭 시 꺽쇠 변경 이벤트
-    $(document).ready(function () {
-        $(".school__name__type").click(function () {
-            // 현재 클릭된 항목의 아이콘을 찾습니다.
-            var icon = $(this).find(".fa-solid");
-
-            // 아이콘이 'fa-chevron-right' 클래스를 가지고 있다면 'fa-chevron-down'으로 변경합니다.
-            // 그렇지 않다면 'fa-chevron-right'으로 변경합니다.
-            if (icon.hasClass("fa-chevron-right")) {
-                icon.removeClass("fa-chevron-right").addClass("fa-chevron-down");
-            } else {
-                icon.removeClass("fa-chevron-down").addClass("fa-chevron-right");
-            }
-        });
     });
 
     document.querySelectorAll('.nav-link').forEach(item => {

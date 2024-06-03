@@ -1,5 +1,6 @@
 package com.time.studentmanage.repository.student;
 
+import com.time.studentmanage.domain.dto.student.SchoolRespDto;
 import com.time.studentmanage.domain.dto.student.SelectedSchoolRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchReqDto;
 import com.time.studentmanage.domain.dto.student.StudentSearchRespDto;
@@ -11,11 +12,11 @@ import java.util.List;
 
 public interface StudentRepositoryCustom {
 
-    List<String> findAllSchoolName();
+    List<SchoolRespDto> findAllSchoolName();
 
     List<Student> findAllBySearchEngineWithNameNotIncludeClass(String studentName);
 
     Page<StudentSearchRespDto> findAllBySearchEngine(StudentSearchReqDto studentSearchReqDto, Pageable pageable);
 
-    public Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, String studentName, Pageable pageable);
+    Page<SelectedSchoolRespDto> findAllBySelectedSchoolName(String schoolName, String studentName, Pageable pageable);
 }

@@ -3,11 +3,10 @@ package com.time.studentmanage.repository.teacher;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.time.studentmanage.domain.dto.student.SearchReqDto;
 import com.time.studentmanage.domain.dto.teacher.QTeacherRespDto;
 import com.time.studentmanage.domain.dto.teacher.TeacherRespDto;
+import com.time.studentmanage.domain.dto.teacher.TeacherSearchReqDto;
 import com.time.studentmanage.domain.enums.SearchType;
-import com.time.studentmanage.domain.member.QStudent;
 import com.time.studentmanage.domain.member.QTeacher;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -15,13 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class TeacherRepositoryCustomImpl implements TeacherRepositoryCustom{
+public class TeacherRepositoryCustomImpl implements TeacherRepositoryCustom {
     private final JPAQueryFactory query;
 
     public TeacherRepositoryCustomImpl(EntityManager em) {
@@ -50,7 +48,7 @@ public class TeacherRepositoryCustomImpl implements TeacherRepositoryCustom{
         return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
     }
 
-    public Page<TeacherRespDto> findSearchDtoPaging(SearchReqDto searchReqDto, Pageable pageable) {
+    public Page<TeacherRespDto> findSearchDtoPaging(TeacherSearchReqDto searchReqDto, Pageable pageable) {
 
         QTeacher teacher = QTeacher.teacher;
 
@@ -73,7 +71,7 @@ public class TeacherRepositoryCustomImpl implements TeacherRepositoryCustom{
     }
 
     // SearchType에 따른 조건 생성
-    private BooleanExpression searchCondition(SearchReqDto searchReqDto) {
+    private BooleanExpression searchCondition(TeacherSearchReqDto searchReqDto) {
         QTeacher teacher = QTeacher.teacher;
         if (searchReqDto.getSearchType() != null && searchReqDto.getContent() != null) {
             if (searchReqDto.getSearchType().equals(SearchType.EMAIL)) {
