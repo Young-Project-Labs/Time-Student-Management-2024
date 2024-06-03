@@ -57,7 +57,7 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
                         )
                 ).from(student)
                 .where(student.attendanceStatus.eq(AttendanceStatus.Y)
-                        .and(student.schoolName.eq(schoolName)),
+                                .and(student.schoolName.eq(schoolName)),
                         likeStudentName(studentName)
                 )
                 .orderBy(student.grade.asc(), student.name.asc())
@@ -68,7 +68,7 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
         JPAQuery<Long> count = query.select(student.count())
                 .from(student)
                 .where(student.attendanceStatus.eq(AttendanceStatus.Y)
-                        .and(student.schoolName.eq(schoolName)),
+                                .and(student.schoolName.eq(schoolName)),
                         likeStudentName(studentName)
                 );
 

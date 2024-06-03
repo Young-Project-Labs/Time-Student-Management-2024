@@ -1,16 +1,19 @@
 package com.time.studentmanage.domain.dto.student;
 
-import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -24,14 +27,14 @@ public class StudentRespDto {
     private String userId;
     private String password;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
     @NotBlank
     private String schoolName;
     @NotBlank
     private String parentName;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
 
     private String provider; // 회원가입 유형 ex) KAKAO, GENERAL

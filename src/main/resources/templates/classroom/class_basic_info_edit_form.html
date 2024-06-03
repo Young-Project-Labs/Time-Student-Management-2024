@@ -12,7 +12,9 @@
 
 <div class="container mt-3" th:object="${basicClassRoomInfoDto}">
     <!--학급 기본 정보 수정 폼 시작-->
-    <form action th:action="@{/class/{id}/basic/info(id=${basicClassRoomInfoDto.id}, teacherId=${session.loginMember.id})}" method="post"
+    <form action
+          th:action="@{/class/{id}/basic/info(id=${basicClassRoomInfoDto.id}, teacherId=${session.loginMember.id})}"
+          method="post"
           class="border border-primary-subtle border-3 rounded p-3">
         <div class="row">
 
@@ -32,7 +34,8 @@
 
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary btn-sm me-1 mt-1">기본 정보 수정</button>
-                <a class="btn btn-danger btn-sm mt-1" th:href="@{/class{teacherId}(teacherId=${session.loginMember.id})}" role="button">취소</a>
+                <a class="btn btn-danger btn-sm mt-1"
+                   th:href="@{/class{teacherId}(teacherId=${session.loginMember.id})}" role="button">취소</a>
             </div>
 
         </div>

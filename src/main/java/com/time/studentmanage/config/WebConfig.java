@@ -10,9 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     /**
-     *
-     * @param registry
-     * 인터셉터들을 등록한다.
+     * @param registry 인터셉터들을 등록한다.
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -25,6 +23,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/student/**", "/school", "/search", "/teacher/**", "/record/**")
-                .excludePathPatterns("/css/**", "/error", "/error-page/**", "/login","/logout", "/join", "/student/findid", "/student/findpwd");
+                .excludePathPatterns("/css/**", "/error", "/error-page/**", "/login", "/logout", "/join", "/student/findid", "/student/findpwd");
     }
 }

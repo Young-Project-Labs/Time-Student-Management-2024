@@ -4,8 +4,6 @@ import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.member.Teacher;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -13,10 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherSaveReqDto {
@@ -34,7 +32,7 @@ public class TeacherSaveReqDto {
     private MemberType memberType;
     @NotNull
     private GenderType gender;
-    
+
 
     // 엔티티 변환
     public Teacher toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {

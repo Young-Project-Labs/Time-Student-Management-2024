@@ -19,19 +19,22 @@
     <h1 class="d-flex justify-content-center m-5">회원가입</h1>
 
     <div class="container d-flex justify-content-center md-3">
-        <form action="join" method="post" th:object="${studentSaveReqDto}" onsubmit="return valid()" class="border border-primary-subtle border-3 rounded p-3">
+        <form action="join" method="post" th:object="${studentSaveReqDto}" onsubmit="return valid()"
+              class="border border-primary-subtle border-3 rounded p-3">
             <input type="hidden" name="attendanceStatus" value="Y">
             <input type="hidden" name="memberType" value="STUDENT">
-            <div class="row" >
+            <div class="row">
                 <div class="col-md-6 mb-3 form-check">
                     <label class="form-check-label mb-2" for="name">학생 이름</label>
-                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="학생 이름" th:errorclass="field-error">
+                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="학생 이름"
+                           th:errorclass="field-error">
                     <div th:class="field-error" th:errors="*{name}">학생 이름 오류 메시지</div>
                 </div>
 
                 <div class="col-md-6 mb-3 form-check">
                     <label class="form-check-label mb-2" for="phoneNumber">학생 전화번호</label>
-                    <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber" th:field="*{phoneNumber}" placeholder="학생 휴대 전화번호" th:errorclass="field-error"/>
+                    <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="phoneNumber"
+                           th:field="*{phoneNumber}" placeholder="학생 휴대 전화번호" th:errorclass="field-error"/>
                     <div th:class="field-error" th:errors="*{phoneNumber}">학생 전화번호 오류 메시지</div>
                 </div>
             </div>
@@ -39,13 +42,16 @@
             <div class="row">
                 <div class="col-md-6 mb-3 form-check">
                     <label class="form-check-label mb-2" for="parentName">부모님 성함</label>
-                    <input type="text" class="form-control" id="parentName" th:field="*{parentName}" placeholder="부모님 성함" th:errorclass="field-error">
+                    <input type="text" class="form-control" id="parentName" th:field="*{parentName}"
+                           placeholder="부모님 성함" th:errorclass="field-error">
                     <div th:class="field-error" th:errors="*{parentName}">부모님 성함 오류 메시지</div>
                 </div>
 
                 <div class="col-md-6 mb-3 form-check">
                     <label class="form-check-label mb-2" for="parentPhoneNumber">부모님 전화번호</label>
-                    <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13" id="parentPhoneNumber" name="parentPhoneNumber" th:field="*{parentPhoneNumber}" placeholder="부모님 휴대 전화번호" th:errorclass="field-error"/>
+                    <input type="text" class="form-control" oninput="autoHyphen(this)" maxlength="13"
+                           id="parentPhoneNumber" name="parentPhoneNumber" th:field="*{parentPhoneNumber}"
+                           placeholder="부모님 휴대 전화번호" th:errorclass="field-error"/>
                     <div th:class="field-error" th:errors="*{parentPhoneNumber}">부모님 전화번호 오류 메시지</div>
                 </div>
             </div>
@@ -54,111 +60,117 @@
                 <div class="col-md-12 mb-3 form-check">
                     <label class="form-check-label mb-2" for="userId">아이디</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="userId" th:field="*{userId}" th:errorclass="field-error" maxlength="20">
-                        <button type="button" id="duplicationBtn" class="btn btn-outline-primary ml-2" onclick="checkIdDuplication()">중복 체크</button>
+                        <input type="text" class="form-control" id="userId" th:field="*{userId}"
+                               th:errorclass="field-error" maxlength="20">
+                        <button type="button" id="duplicationBtn" class="btn btn-outline-primary ml-2"
+                                onclick="checkIdDuplication()">중복 체크
+                        </button>
                     </div>
                     <div id="userIdHelp" class="form-text">아이디는 소문자,숫자 조합으로 6~20자 내로 작성해주세요.</div>
                     <div><span id="result_checkId"></span></div>
                     <div th:class="field-error" th:errors="*{userId}">아이디 오류 메시지</div>
                 </div>
             </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="password">패스워드</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" th:errorclass="field-error" maxlength="20">
-                        <div id="passwordHelp" class="form-text">패스워드는 소문자,특수문자,숫자 조합으로 8~20자 내로 작성해주세요.</div>
-                        <div><span id="result_checkPassword"></span></div>
-                        <div th:class="field-error" th:errors="*{password}">패스워드 오류 메시지</div>
-                    </div>
+            <div class="row">
+                <div class="col-md-12 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="password">패스워드</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}"
+                           th:errorclass="field-error" maxlength="20">
+                    <div id="passwordHelp" class="form-text">패스워드는 소문자,특수문자,숫자 조합으로 8~20자 내로 작성해주세요.</div>
+                    <div><span id="result_checkPassword"></span></div>
+                    <div th:class="field-error" th:errors="*{password}">패스워드 오류 메시지</div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-12 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="password">패스워드 확인</label>
-                        <input type="password" class="form-control" id="checkPassword" maxlength="20">
-                        <div><span id="result_checkRePassword"></span></div>
-                    </div>
+            <div class="row">
+                <div class="col-md-12 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="password">패스워드 확인</label>
+                    <input type="password" class="form-control" id="checkPassword" maxlength="20">
+                    <div><span id="result_checkRePassword"></span></div>
                 </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12 mb-3 form-check">
                     <label class="form-check-label mb-2" for="password">이메일</label>
-                    <input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="field-error" maxlength="20">
+                    <input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="field-error"
+                           maxlength="20">
                     <div id="emailHelp" class="form-text">이메일은 아이디/패스워드를 찾을 때 사용됩니다. 정확하게 입력해주세요.</div>
                     <div th:class="field-error" th:errors="*{email}">이메일 오류 메시지</div>
                 </div>
             </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="classType">학교 단계</label>
-                        <select class="form-select" id="classType" name="classType" th:errorclass="field-error">
-                            <option selected value="">학교 단계를 선택 하세요.</option>
-                            <option value="ELEMENTARY">초등학생</option>
-                            <option value="MIDDLE">중학생</option>
-                            <option value="HIGH">고등학생</option>
-                        </select>
-                        <div th:class="field-error" th:errors="*{classType}">학급 오류 메시지</div>
-                    </div>
-
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="schoolName">학교 이름</label>
-                        <input type="text" class="form-control" id="schoolName" th:field="*{schoolName}" placeholder="학교 이름" th:errorclass="field-error">
-                        <div th:class="field-error" th:errors="*{schoolName}">학교 이름 오류 메시지</div>
-                    </div>
+            <div class="row">
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="classType">학교 단계</label>
+                    <select class="form-select" id="classType" name="classType" th:errorclass="field-error">
+                        <option selected value="">학교 단계를 선택 하세요.</option>
+                        <option value="ELEMENTARY">초등학생</option>
+                        <option value="MIDDLE">중학생</option>
+                        <option value="HIGH">고등학생</option>
+                    </select>
+                    <div th:class="field-error" th:errors="*{classType}">학급 오류 메시지</div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="grade">학년</label>
-                        <select class="form-select" name="grade" id="grade" th:errorclass="field-error">
-                            <option selected value="">학년을 선택 하세요.</option>
-                            <option value="1">1학년</option>
-                            <option value="2">2학년</option>
-                            <option value="3">3학년</option>
-                            <option value="4">4학년</option>
-                            <option value="5">5학년</option>
-                            <option value="6">6학년</option>
-                        </select>
-                        <div th:class="field-error" th:errors="*{grade}">학년 오류 메시지</div>
-                    </div>
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="schoolName">학교 이름</label>
+                    <input type="text" class="form-control" id="schoolName" th:field="*{schoolName}" placeholder="학교 이름"
+                           th:errorclass="field-error">
+                    <div th:class="field-error" th:errors="*{schoolName}">학교 이름 오류 메시지</div>
+                </div>
+            </div>
 
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="gender">성별</label>
-                        <div class="input-group" id="gender">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="male" value="MALE" name="gender">
-                                <label class="form-check-label" for="male">남</label>
-                            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="grade">학년</label>
+                    <select class="form-select" name="grade" id="grade" th:errorclass="field-error">
+                        <option selected value="">학년을 선택 하세요.</option>
+                        <option value="1">1학년</option>
+                        <option value="2">2학년</option>
+                        <option value="3">3학년</option>
+                        <option value="4">4학년</option>
+                        <option value="5">5학년</option>
+                        <option value="6">6학년</option>
+                    </select>
+                    <div th:class="field-error" th:errors="*{grade}">학년 오류 메시지</div>
+                </div>
 
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="female" value="FEMALE" name="gender">
-                                <label class="form-check-label" for="female">여</label>
-                            </div>
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="gender">성별</label>
+                    <div class="input-group" id="gender">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="male" value="MALE" name="gender">
+                            <label class="form-check-label" for="male">남</label>
                         </div>
-                        <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="address">주소</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="address" readonly>
-                            <input type="hidden" id ="streetAddress" th:field="*{Address.streetAddress}">
-                            <input type="hidden" id ="zipCode" th:field="*{Address.zipCode}">
-                            <button type="button" class="btn btn-outline-primary" onclick="openZipSearch()">주소 검색</button>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="female" value="FEMALE" name="gender">
+                            <label class="form-check-label" for="female">여</label>
                         </div>
-                        <div th:class="field-error" th:errors="*{address.streetAddress}">주소 오류 메시지</div>
-
                     </div>
-
-                    <div class="col-md-6 mb-3 form-check">
-                        <label class="form-check-label mb-2" for="address">상세 주소</label>
-                        <input type="text" class="form-control" id="detail_address" th:field="*{Address.detailAddress}">
-                        <div th:class="field-error" th:errors="*{address.detailAddress}">주소 오류 메시지</div>
-                    </div>
+                    <div th:class="field-error" th:errors="*{gender}">성별 오류 메시지</div>
                 </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="address">주소</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="address" readonly>
+                        <input type="hidden" id="streetAddress" th:field="*{Address.streetAddress}">
+                        <input type="hidden" id="zipCode" th:field="*{Address.zipCode}">
+                        <button type="button" class="btn btn-outline-primary" onclick="openZipSearch()">주소 검색</button>
+                    </div>
+                    <div th:class="field-error" th:errors="*{address.streetAddress}">주소 오류 메시지</div>
+
+                </div>
+
+                <div class="col-md-6 mb-3 form-check">
+                    <label class="form-check-label mb-2" for="address">상세 주소</label>
+                    <input type="text" class="form-control" id="detail_address" th:field="*{Address.detailAddress}">
+                    <div th:class="field-error" th:errors="*{address.detailAddress}">주소 오류 메시지</div>
+                </div>
+            </div>
 
             <div class="d-flex justify-content-center mt-5 mb-5">
                 <button type="submit" class="btn btn-primary btn mb-3 me-3">회원가입</button>
@@ -171,84 +183,79 @@
 <!-- footer 시작 -->
 <th:block th:replace="~{template/layout/base_body_component :: common-body-footer}"></th:block>
 <!-- footer 끝 -->
-    <!-- 하이픈 자동 추가 -->
-    <script>
+<!-- 하이픈 자동 추가 -->
+<script>
     const autoHyphen = (target) => {
         target.value = target.value
-         .replace(/[^0-9]/g, '')
-         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+            .replace(/[^0-9]/g, '')
+            .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
     }
 
-    </script>
+</script>
 
-    <!-- 폼 숫자 입력 함수 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-           var numericInputs = document.querySelectorAll('.numeric-only');
+<!-- 폼 숫자 입력 함수 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var numericInputs = document.querySelectorAll('.numeric-only');
 
-           numericInputs.forEach(function(input) {
-               input.addEventListener('input', enforceNumericOnly);
-           });
-       });
+        numericInputs.forEach(function (input) {
+            input.addEventListener('input', enforceNumericOnly);
+        });
+    });
 
-       function enforceNumericOnly(event) {
-           event.target.value = event.target.value.replace(/[^0-9]/g, '');
-       }
-    </script>
+    function enforceNumericOnly(event) {
+        event.target.value = event.target.value.replace(/[^0-9]/g, '');
+    }
+</script>
 
 
+<!-- 다음 우편주소 API -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function openZipSearch(data) {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                var addr = '';
 
-    <!-- 다음 우편주소 API -->
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script>
-        function openZipSearch(data){
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    var addr = '';
-
-                    if (data.userSelectedType === 'R') {
-                        addr = data.roadAddress;
-                    } else {
-                        addr = data.jibunAddress;
-                    }
-
-                    document.getElementById("zipCode").value = data.zonecode;
-                    document.getElementById("address").value = addr;
-                    document.getElementById("streetAddress").value = addr;
-                    document.getElementById("detail_address").focus();
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
                 }
-            }).open();
-        }
-    </script>
 
-    <script>
+                document.getElementById("zipCode").value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("streetAddress").value = addr;
+                document.getElementById("detail_address").focus();
+            }
+        }).open();
+    }
+</script>
+
+<script>
     let submitCheckId = false;
     let submitCheckPassword = false;
     let submitCheckRePassword = false;
 
     function valid() {
-      var isValid = true; // 유효성 검사 결과를 저장할 변수
-      var confirmAction = confirm("회원가입을 진행 하시겠습니까?");
-      if (confirmAction) {
-          if(submitCheckId == false){
-            alert('아이디 중복 체크가 필요합니다.');
-            $("#userId").focus();
-            isValid = false; // 유효하지 않으므로 false로 설정
-          }
+        var isValid = true; // 유효성 검사 결과를 저장할 변수
+        var confirmAction = confirm("회원가입을 진행 하시겠습니까?");
+        if (confirmAction) {
+            if (submitCheckId == false) {
+                alert('아이디 중복 체크가 필요합니다.');
+                $("#userId").focus();
+                isValid = false; // 유효하지 않으므로 false로 설정
+            } else if (submitCheckPassword == false) {
+                alert('패스워드가 유효하지 않습니다.');
+                $("#password").focus();
+                isValid = false; // 유효하지 않으므로 false로 설정
+            } else if (submitCheckRePassword == false) {
+                alert('패스워드 확인이 필요합니다.');
+                $("#checkPassword").focus();
+                isValid = false; // 유효하지 않으므로 false로 설정
+            }
 
-          else if(submitCheckPassword == false){
-            alert('패스워드가 유효하지 않습니다.');
-            $("#password").focus();
-            isValid = false; // 유효하지 않으므로 false로 설정
-          }
-
-          else if(submitCheckRePassword == false){
-            alert('패스워드 확인이 필요합니다.');
-            $("#checkPassword").focus();
-            isValid = false; // 유효하지 않으므로 false로 설정
-          }
-
-          return isValid; // 최종 유효성 검사 결과 반환
+            return isValid; // 최종 유효성 검사 결과 반환
 
         } else {
             // 사용자가 '취소' 클릭 한 경우 전송 취소
@@ -258,21 +265,21 @@
     }
 
     <!-- 중복 체크 Ajax-->
-    function checkIdDuplication(){
+    function checkIdDuplication() {
 
         $.ajax({
             url: '/student/id',
             type: 'GET',
             contentType: 'application/json',
-            data:{
+            data: {
                 userId: $('#userId').val()
             },
-            success: function(result){
+            success: function (result) {
                 // 사용 가능한 아이디
                 $("#result_checkId").html(result).css("color", "green");
                 $("#userId").trigger("focus");
                 submitCheckId = true;
-            },error: function(error){
+            }, error: function (error) {
                 $("#result_checkId").html(error.responseJSON.message).css("color", "red");
                 $("#userId").trigger("focus");
                 submitCheckId = false;
@@ -280,58 +287,39 @@
             }
 
 
-         });
-    }
-        <!-- 패스워드 정규 표현식-->
-        document.getElementById("password").addEventListener("input", function() {
-            var passwordInput = this.value;
-            // 정규 표현식
-            var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
-            // 길이 검증
-
-
-            // 패스워드 검증
-            if(reg.test(passwordInput)) {
-                $("#result_checkPassword").html("패스워드가 유효합니다.").css("color", "green");
-                this.style.borderColor = "green";
-                submitCheckPassword = true;
-            } else {
-                 if (passwordInput.length < 8){
-                    $("#result_checkPassword").html("패스워드 길이가 8자 미만입니다.").css("color", "red");
-                    this.style.borderColor = "red";
-                    submitCheckPassword = false;
-                }else{
-                    $("#result_checkPassword").html("패스워드가 유효하지 않습니다.").css("color", "red");
-                    this.style.borderColor = "red";
-                    submitCheckPassword = false;
-                }
-            }
-
-            var checkPasswordInput = document.getElementById("checkPassword").value;
-            if(checkPasswordInput != ''){
-                // 패스워드 검증
-                if(passwordInput == checkPasswordInput) {
-                    $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
-                    this.style.borderColor = "green";
-                    submitCheckRePassword = true;
-                } else {
-                    $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
-                    this.style.borderColor = "red";
-                    submitCheckRePassword = false;
-                }
-            }
-
-
         });
+    }
 
-        <!-- 패스워드 재입력 확인 -->
-        document.getElementById("checkPassword").addEventListener("input", function() {
-            var passwordInput = document.getElementById("password").value;;
-            var checkPasswordInput = document.getElementById("checkPassword").value;
-;
+    <!-- 패스워드 정규 표현식-->
+    document.getElementById("password").addEventListener("input", function () {
+        var passwordInput = this.value;
+        // 정규 표현식
+        var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+        // 길이 검증
+
+
+        // 패스워드 검증
+        if (reg.test(passwordInput)) {
+            $("#result_checkPassword").html("패스워드가 유효합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckPassword = true;
+        } else {
+            if (passwordInput.length < 8) {
+                $("#result_checkPassword").html("패스워드 길이가 8자 미만입니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            } else {
+                $("#result_checkPassword").html("패스워드가 유효하지 않습니다.").css("color", "red");
+                this.style.borderColor = "red";
+                submitCheckPassword = false;
+            }
+        }
+
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+        if (checkPasswordInput != '') {
             // 패스워드 검증
-            if(passwordInput == checkPasswordInput) {
+            if (passwordInput == checkPasswordInput) {
                 $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
                 this.style.borderColor = "green";
                 submitCheckRePassword = true;
@@ -340,9 +328,30 @@
                 this.style.borderColor = "red";
                 submitCheckRePassword = false;
             }
-        });
+        }
 
-    </script>
+
+    });
+
+    <!-- 패스워드 재입력 확인 -->
+    document.getElementById("checkPassword").addEventListener("input", function () {
+        var passwordInput = document.getElementById("password").value;
+        ;
+        var checkPasswordInput = document.getElementById("checkPassword").value;
+        ;
+        // 패스워드 검증
+        if (passwordInput == checkPasswordInput) {
+            $("#result_checkRePassword").html("패스워드가 일치합니다.").css("color", "green");
+            this.style.borderColor = "green";
+            submitCheckRePassword = true;
+        } else {
+            $("#result_checkRePassword").html("패스워드가 일치하지 않습니다.").css("color", "red");
+            this.style.borderColor = "red";
+            submitCheckRePassword = false;
+        }
+    });
+
+</script>
 
 </div>
 </body>

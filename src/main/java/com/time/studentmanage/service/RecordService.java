@@ -71,7 +71,7 @@ public class RecordService {
         return result.getId();
     }
 
-    public void modifyContent(Long recordId,String title, String content) {
+    public void modifyContent(Long recordId, String title, String content) {
         Optional<Record> recordOP = recordRepository.findById(recordId);
 
         if (!recordOP.isPresent()) {

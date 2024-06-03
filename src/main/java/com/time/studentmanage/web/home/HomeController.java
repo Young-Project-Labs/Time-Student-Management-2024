@@ -10,11 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -32,9 +29,9 @@ public class HomeController {
     @GetMapping("/")
     public String home(HttpServletRequest request) {
         HttpSession session = request.getSession();
-            /**
-             * 로그인한 사용자가 학생
-             */
+        /**
+         * 로그인한 사용자가 학생
+         */
         if (session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION) instanceof Student) {
             Long id = ((Student) session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION)).getId();
             log.info("student id ={}", id);

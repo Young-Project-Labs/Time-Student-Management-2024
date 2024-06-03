@@ -8,11 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.springframework.security.access.AccessDeniedException;
 import java.util.Arrays;
 
 @Slf4j
@@ -43,12 +43,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         if (auth == null) {
             return true;
 
-        }else{
-        // auth != null -> 권한 검증
+        } else {
+            // auth != null -> 권한 검증
             //1. 세션 저장 member 조회
             Object loginMember = session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION);
 
-            if (loginMember instanceof Teacher){
+            if (loginMember instanceof Teacher) {
                 Teacher loginTeacher = (Teacher) loginMember;
                 Position loginTeacherPosition = loginTeacher.getPosition();
 
@@ -58,7 +58,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
                 } else {
                     throw new AccessDeniedException("접근할 수 없습니다.");
                 }
-            }else{
+            } else {
                 //학생은 권한 검증 X
                 throw new AccessDeniedException("접근할 수 없습니다.");
             }

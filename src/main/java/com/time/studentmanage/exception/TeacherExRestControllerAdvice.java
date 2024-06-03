@@ -18,6 +18,7 @@ public class TeacherExRestControllerAdvice {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
+
     /**
      * 접근 불가 페이지에 접근 시 처리하는 메서드
      */

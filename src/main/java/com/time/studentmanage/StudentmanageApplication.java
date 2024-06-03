@@ -25,11 +25,11 @@ public class StudentmanageApplication {
 
     @Bean
     @Profile("local")
-    public TestDataInit testDataInit(StudentService studentService,StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, ClassRoomRepository classRoomRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public TestDataInit testDataInit(StudentService studentService, StudentRepository studentRepository, TeacherRepository teacherRepository, RecordRepository recordRepository, ClassRoomRepository classRoomRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new TestDataInit(studentService, studentRepository, teacherRepository, recordRepository, classRoomRepository, bCryptPasswordEncoder);
     }
 
-//    @Bean
+    //    @Bean
 //    @Profile("prod")
     public dataInit init(TeacherRepository teacherRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new dataInit(teacherRepository, bCryptPasswordEncoder);

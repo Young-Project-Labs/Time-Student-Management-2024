@@ -10,15 +10,16 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class StudentController {
 
         return filteredSearchTypes;
     }
+
     @Auth(role = {Auth.Role.CHIEF, Auth.Role.ADMIN, Auth.Role.TEACHER})
     @GetMapping("/student/list")
     public String updateStudentManagePage(@ModelAttribute("studentSearchReqDto") StudentSearchReqDto studentSearchReqDto, Model model) {
@@ -57,7 +59,7 @@ public class StudentController {
 
     @PostMapping("/join")
     public String joinStudent(@Validated @ModelAttribute StudentSaveReqDto studentSaveReqDto, BindingResult bindingResult,
-            Model model) {
+                              Model model) {
         log.info("studentSaveReqDto={}", studentSaveReqDto);
 
         if (bindingResult.hasErrors()) {
@@ -84,7 +86,7 @@ public class StudentController {
      */
     @PostMapping("/edit/{id}")
     public String editInfo(@PathVariable("id") int id, @Validated @ModelAttribute StudentRespDto studentRespDto,
-            BindingResult bindingResult, HttpSession session,Model model) {
+                           BindingResult bindingResult, HttpSession session, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("studentRespDto", studentRespDto);
             return "student/edit_form";
@@ -104,7 +106,7 @@ public class StudentController {
             session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, updateStudent);
         }
 
-        return "redirect:/edit/"+id;
+        return "redirect:/edit/" + id;
     }
 
     @GetMapping("/student/findid")

@@ -4,7 +4,7 @@
 <body>
 <!-- header 시작 -->
 <th:block th:fragment="common-body-header">
-    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom" >
+    <header class="d-flex flex-wrap justify-content-center mb-2 border-bottom">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
             <img src="/img/time_logo.jpg" alt="홈으로 가기" width="60" height="60">
             <span class="fs-4">타임 영어 전문 학원</span>
@@ -19,28 +19,28 @@
         <!--로그인이 되었을 때 보여줄 버튼 시작-->
         <div th:if="${session.loginMember != null}" class="d-flex justify-content-center align-items-center me-2">
             <div class="btn-group">
-                    <div class="dropdown-item">
-                        <i class="fa-solid fa-heart"></i>
-                        <span th:text="|${session.loginMember.name}님|"></span>
-                    </div>
-                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
-                        <i class="fa-solid fa-user-gear"></i>
-                        <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
-                           class="link-dark text-decoration-none">내 정보 수정</a>
-                    </div>
-                    <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'STUDENT')}">
-                        <i class="fa-solid fa-user-gear"></i>
-                        <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
-                           class="link-dark text-decoration-none">내 정보 수정</a>
-                    </div>
-                    <div class="dropdown-item">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        <form method="post" action="/logout" class="d-inline">
-                            <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
-                                로그아웃
-                            </button>
-                        </form>
-                    </div>
+                <div class="dropdown-item">
+                    <i class="fa-solid fa-heart"></i>
+                    <span th:text="|${session.loginMember.name}님|"></span>
+                </div>
+                <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'TEACHER')}">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <a th:href="@{/teacher/edit/{id}(id=${session.loginMember.id})}"
+                       class="link-dark text-decoration-none">내 정보 수정</a>
+                </div>
+                <div class="dropdown-item" th:if="${#strings.equals(session.loginMember.memberType, 'STUDENT')}">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <a th:href="@{/edit/{id}(id=${session.loginMember.id})}"
+                       class="link-dark text-decoration-none">내 정보 수정</a>
+                </div>
+                <div class="dropdown-item">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <form method="post" action="/logout" class="d-inline">
+                        <button type="submit" class="btn btn-link p-0 m-0 link-dark text-decoration-none">
+                            로그아웃
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
         <!--로그인이 되었을 때 보여줄 버튼 끝-->
@@ -96,7 +96,8 @@
 
                 <li th:if="${!session.isEmpty() and #strings.equals(session.loginMember.memberType, 'TEACHER')}">
                     <hr class="dropdown-divider">
-                    <a th:href="@{/class/{teacherId}(teacherId=${session.loginMember.id})}" class="nav-link fs-5 fw-semibold" id="class__manage__page__link" >학급 관리 페이지</a>
+                    <a th:href="@{/class/{teacherId}(teacherId=${session.loginMember.id})}"
+                       class="nav-link fs-5 fw-semibold" id="class__manage__page__link">학급 관리 페이지</a>
                 </li>
 
                 <!-- 학교 목록 시작 -->
@@ -195,7 +196,7 @@
             <div class="row">
                 <div class="col text-center">
                     <!-- 학원 명 -->
-                    <img src="/img/time_logo.jpg" style="width: 80px; height: 75px; margin: 20px;" >
+                    <img src="/img/time_logo.jpg" style="width: 80px; height: 75px; margin: 20px;">
                     <h5>타임 영어 전문학원</h5>
                     <!-- 학원 위치 -->
                     <p><i class="fa-solid fa-location-dot"></i> 학원 위치 : 경남 창원시 성산구 반송로 148-9 아이필상가 3층</p>

@@ -1,9 +1,9 @@
 spring:
 
   datasource:
-    url: {input_your_source_db_url}
-    username: {username}
-    password: {user_password}
+    url: { input_your_source_db_url }
+    username: { username }
+    password: { user_password }
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   config:
@@ -68,6 +68,6 @@ server:
       tracking-modes: cookie
 
 kakao:
-  client_id: {사용자 애플리케이션 REST API 키 삽입} # REST API 앱키
+  client_id: { 사용자 애플리케이션 REST API 키 삽입 } # REST API 앱키
   redirect_uri: https://timenglish.site/oauth/kakao
 

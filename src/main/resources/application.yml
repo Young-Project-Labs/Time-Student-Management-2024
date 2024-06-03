@@ -11,7 +11,7 @@ spring:
     include: secret
 
   jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
+    #    database-platform: org.hibernate.dialect.H2Dialect TODO: db 변경 시 세팅하기
     hibernate:
       ddl-auto: create # create-drop
     properties:
@@ -57,6 +57,6 @@ server:
       tracking-modes: cookie
 
 kakao:
-  client_id: {사용자 애플리케이션 REST API 키 삽입} # REST API 앱키
+  client_id: { 사용자 애플리케이션 REST API 키 삽입 } # REST API 앱키
   redirect_uri: https://timenglish.site/oauth/kakao
 

@@ -1,10 +1,10 @@
 package com.time.studentmanage.service;
 
-import com.time.studentmanage.domain.enums.AttendanceStatus;
-import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.domain.dto.student.StudentRespDto;
 import com.time.studentmanage.domain.dto.student.StudentSaveReqDto;
 import com.time.studentmanage.domain.dto.student.StudentUpdateReqDto;
+import com.time.studentmanage.domain.enums.AttendanceStatus;
+import com.time.studentmanage.domain.member.Student;
 import com.time.studentmanage.exception.DataNotFoundException;
 import com.time.studentmanage.repository.student.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +61,9 @@ class StudentServiceTest {
         assertThat(successId).isEqualTo(fakeId);
 
     }
+
     @Test
-    void 중복_회원_가입_예외_처리_테스트(){
+    void 중복_회원_가입_예외_처리_테스트() {
         //given
         StudentSaveReqDto studentDto = createStudentDto();
         Student student = createStudent();
@@ -72,7 +73,7 @@ class StudentServiceTest {
         when(studentRepository.findByNameAndPhoneNumber(any(), any())).thenReturn(Optional.of(student));
 
         //then
-        assertThatThrownBy(()-> studentService.saveStudent(studentDto))
+        assertThatThrownBy(() -> studentService.saveStudent(studentDto))
                 .isInstanceOf(IllegalArgumentException.class);
 
     }
@@ -107,7 +108,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void 학생_정보_수정시_조회_실패_테스트(){
+    void 학생_정보_수정시_조회_실패_테스트() {
         //given
         StudentUpdateReqDto updateReqDto = updateStudentDto();
         Long id = 1L;

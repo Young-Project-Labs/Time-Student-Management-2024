@@ -1,6 +1,5 @@
 package com.time.studentmanage.domain.dto.student;
 
-import com.time.studentmanage.domain.enums.GenderType;
 import lombok.*;
 
 import java.util.HashMap;

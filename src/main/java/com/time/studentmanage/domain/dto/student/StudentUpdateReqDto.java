@@ -1,10 +1,10 @@
 package com.time.studentmanage.domain.dto.student;
 
-import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.enums.AttendanceStatus;
 import com.time.studentmanage.domain.enums.ClassType;
 import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
+import com.time.studentmanage.domain.member.Address;
 import com.time.studentmanage.domain.member.Student;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -22,17 +22,18 @@ public class StudentUpdateReqDto {
     @NotBlank
     private String userId;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String phoneNumber;
     @NotBlank
     private String schoolName;
     @NotBlank
     private String parentName;
     @NotBlank
-    @Pattern(regexp="^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$")
     private String parentPhoneNumber;
     @NotNull
-    @Min(1) @Max(6)
+    @Min(1)
+    @Max(6)
     private Integer grade;
     @NotNull
     private AttendanceStatus attendanceStatus;

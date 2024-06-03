@@ -13,15 +13,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 @Slf4j
 @Service
 public class OAuthService {
     /**
-     *
      * 카카오 로그인 엑세스 토큰 요청(POST)
      * code -> 카카오 서버에서 accessToken를 받아오는 요청.
      */
-    public String getKakaoAccessToken(String client_id, String redirect_uri, String code){
+    public String getKakaoAccessToken(String client_id, String redirect_uri, String code) {
         try {
             //POST 요청으로 accessToken 받기
             String reqURL = "https://kauth.kakao.com/oauth/token?grant_type=authorization_code&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&code=" + code;

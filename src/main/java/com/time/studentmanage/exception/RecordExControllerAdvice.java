@@ -1,7 +1,6 @@
 package com.time.studentmanage.exception;
 
 import com.time.studentmanage.web.record.RecordController;
-import com.time.studentmanage.web.student.StudentController;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

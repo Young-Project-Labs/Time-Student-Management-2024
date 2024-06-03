@@ -15,7 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
@@ -36,8 +40,8 @@ public class OAuthController {
 
     /**
      * 카카오 로그인 redirectUrI
-     * @param code -> kakao Server에 Access Token 요청
      *
+     * @param code -> kakao Server에 Access Token 요청
      */
     @GetMapping("/oauth/kakao")
     public String kakaoLogin(@RequestParam("code") String code, Model model, HttpServletRequest request) throws IOException {
@@ -56,12 +60,11 @@ public class OAuthController {
         log.info("사용자 정보 추출 kakaoUserInfo={}", kakaoUserInfo);
 
 
-
         /**
          * 카카오 로그인 시도
          * - 가입 여부 확인 (checkJoinKakaoStudent)
-             - 가입 한 학생인 경우 로그인 진행 후 세션 저장
-             - 미가입 학생인 경우 회원가입을 진행한 후 로그인
+         - 가입 한 학생인 경우 로그인 진행 후 세션 저장
+         - 미가입 학생인 경우 회원가입을 진행한 후 로그인
          *
          */
         //3. 가입 여부 확인 (checkJoinKakaoStudent)
@@ -72,7 +75,7 @@ public class OAuthController {
             log.info("이미 가입된 학생으로, 로그인을 진행합니다.");
             HttpSession session = request.getSession(true);
             // 세션에 객체 저장
-            session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION,studentOP.get());
+            session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, studentOP.get());
         } else {
             //3-2. 미가입 한 경우 추가 정보 폼으로 이동.
             log.info("미가입 학생으로, 카카오 회원가입을 진행합니다.");
@@ -94,14 +97,14 @@ public class OAuthController {
             return "student/kakao_join_form";
         }
         // 회원가입 진행
-        log.info("카카오 회원가입 : kakaoSaveReqDto={}",kakaoSaveReqDto);
+        log.info("카카오 회원가입 : kakaoSaveReqDto={}", kakaoSaveReqDto);
         studentService.saveStudentKaKao(kakaoSaveReqDto);
 
         // 회원가입을 정상적으로 처리한 경우 바로 로그인 진행.
         HttpSession session = request.getSession(true);
         // 세션에 객체 저장
         Optional<Student> loginStudentOP = studentService.checkJoinKakaoStudent(kakaoSaveReqDto.getKakaoAccount().getEmail());
-        session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION,loginStudentOP.get());
+        session.setAttribute(SessionConst.LOGIN_MEMBER_SESSION, loginStudentOP.get());
         log.info("회원가입을 완료 했으며, 로그인을 진행합니다.{}", session.getAttribute(SessionConst.LOGIN_MEMBER_SESSION));
 
         return "redirect:/";

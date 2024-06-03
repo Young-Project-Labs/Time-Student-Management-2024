@@ -5,11 +5,13 @@ import com.time.studentmanage.domain.enums.GenderType;
 import com.time.studentmanage.domain.enums.MemberType;
 import com.time.studentmanage.domain.enums.Position;
 import com.time.studentmanage.domain.member.Teacher;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherRespDto {
@@ -20,7 +22,7 @@ public class TeacherRespDto {
     private Position position;
     private MemberType memberType;
     private GenderType gender;
-    
+
     @QueryProjection
     public TeacherRespDto(Teacher teacher) {
         this.id = teacher.getId();
