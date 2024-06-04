@@ -39,7 +39,7 @@ public class TeacherController {
     @GetMapping("/teacher")
     public String teacherList(@ModelAttribute("SearchReqDto") TeacherSearchReqDto searchReqDto,
                               Model model) {
-        model.addAttribute("page", TeacherSearchReqDto.getPage());
+        model.addAttribute("page", searchReqDto.getPage());
 
         Page<TeacherRespDto> teacherList = teacherService.getTeacherList(searchReqDto);
         model.addAttribute("pagingResult", teacherList);
